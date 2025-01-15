@@ -21,9 +21,18 @@ public class Association {
 
     // faire une demande de don / subvention
     public void demandeDeDon(int montant, String donateur) {
+        // s'assurer que montant > 0 et donateur != null
         Recette don = ... // Création de l'objet Recette
         dons.add(don); // Ajout à la liste des dons
         this.recette(montant); // Ajout au solde
+        // Persistance de données
+    }
+
+    // inscrire un membre
+    public void inscrire() {
+        // passer en argument les infos nécessaires à l'inscription
+        Membre membre = new Membre(...); // créer l'instance
+        this.membres.add(membre); 
         // Persistance de données
     }
 
