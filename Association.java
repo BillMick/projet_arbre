@@ -72,6 +72,12 @@ public class Association {
         VISITE
     }
 
+    // type Recette
+    enum typeRecette {
+        COTISATION,
+        DON
+    }
+
     // payer ses dettes
     public boolean payerDette (Dette dette) {
         recette(-dette.montant); // retirer le montant, de la dette, du solde
