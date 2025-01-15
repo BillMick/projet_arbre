@@ -36,4 +36,11 @@ public class Association {
         // Persistance de données
     }
 
+    // désinscrire un membre
+    public void desinscrire(Membre membre) {
+        // à la place de "membre", on pourrait donner un identificateur unique
+        this.membres.remove(membre);
+        // Persistance de données
+    }
+
 }
