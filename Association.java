@@ -84,6 +84,12 @@ public class Association {
         EXECUTEE
     }
 
+    //enum statut Cotisation
+    enum statutCotisation {
+        PAYE,
+        NONPAYE
+    }
+
     // payer ses dettes
     public boolean payerDette (Dette dette) {
         recette(-dette.montant); // retirer le montant, de la dette, du solde
@@ -96,8 +102,8 @@ public class Association {
 
     // révocation de membre
     public void revoquerMembre() {
-        for (Membre m : this.membres) {
-            if (m.cotisation.statut != statutCotisation.PAYE) {
+        for (Membre m: this.membres) {
+            if (m.cotisation.statut == statutCotisation.NONPAYE) {
                 desinscrire(m);
             }
         }
