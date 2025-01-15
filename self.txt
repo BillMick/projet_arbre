@@ -1,7 +1,7 @@
 Association
 - Nom_Association
 - liste des membres
-- budget 
+- budget / solde
 - liste des activités => ( visite arbres )
 - classification retenue  ( la liste des 5 arbres qui sont proposé par l’association au service des espaces verts )
 - président 

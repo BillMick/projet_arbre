@@ -62,11 +62,16 @@ public class Association {
     }
 
     // type de dette
-    enum typeDette{
+    enum typeDette {
         FACTURE,
         DEFRAIEMENT
     }
-    
+
+    // type activités
+    enum typeActivite {
+        VISITE
+    }
+
     // payer ses dettes
     public boolean payerDette (Dette dette) {
         recette(-dette.montant); // retirer le montant, de la dette, du solde
