@@ -11,6 +11,7 @@ public class Association {
     private ArrayList<Rapport> rapports = new ArrayList<Rapport>;
     private ArrayList<Recette> dons = new ArrayList<Recette>;
     private ArrayList<Recette> cotisations = new ArrayList<Recette>;
+    private ArrayList<Dette> dettes = new ArrayList<Dette>;
 
     // modifier le solde
     public int recette(int montant) {
@@ -58,6 +59,16 @@ public class Association {
         // Persistance de données
         retirerAbonne(this.nom);
         return true;
+    }
+
+    // payer ses dettes
+    public boolean payerDette (Dette dette) {
+        recette(-dette.montant); // retirer le montant, de la dette, du solde
+        if (dette.type = 'DEFRAIEMENT') {
+            // rembourser aussi le membre
+        }
+        return true;
+        // Persistance de données
     }
 
 }
