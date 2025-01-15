@@ -47,7 +47,7 @@ public class Association {
     }
 
     // s'abonner aux notifications du service des espaces verts
-    public boolean abonner() {
+    public boolean sAbonner() {
         // Persistance de données
         ajoutAbonne(this.nom); // ajout à la liste des abonnés (fonction de la classe unique ServiceDesEspacesVerts)
         return true;
