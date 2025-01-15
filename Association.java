@@ -12,7 +12,7 @@ public class Association {
     private ArrayList<Recette> dons = new ArrayList<Recette>;
     private ArrayList<Recette> cotisations = new ArrayList<Recette>;
 
-    public boolean demandeDeDon(int montant, String donateur) {
+    public void demandeDeDon(int montant, String donateur) {
         Recette don = ... // Création de l'objet Recette
         dons.add(don); // Ajout à la liste des dons
         this.recette(montant); // Ajout au budget
