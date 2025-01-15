@@ -94,4 +94,13 @@ public class Association {
         // Persistance de données
     }
 
+    // révocation de membre
+    public void revoquerMembre() {
+        for (Membre m : this.membres) {
+            if (m.cotisation.statut != statutCotisation.PAYE) {
+                desinscrire(m);
+            }
+        }
+    }
+
 }
