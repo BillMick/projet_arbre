@@ -8,6 +8,6 @@ public class Association {
     private ArrayList<int> annees_exercice= new ArrayList<int>;
     private ArrayList<Arbre> classification = new ArrayList<Arbre>;
     private ArrayList<Activite> activites = new ArrayList<Activite>;
-    private ArrayList<Rapport> rapports = new ArrayList<Rapport>
+    private ArrayList<Rapport> rapports = new ArrayList<Rapport>;
 
 }
