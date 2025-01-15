@@ -1,0 +1,24 @@
+Association
+- Nom_Association
+- liste des membres
+- budget 
+- liste des activités => ( visite arbres )
+- classification retenue  ( la liste des 5 arbres qui sont proposé par l’association au service des espaces verts )
+- président 
+- liste des dépenses => (défraiement des visites , paiement des factures )
+- liste années d’exercice budgétaire
+- liste rapport d’activités pour chaque année  => (regardez en haut la partie fin d’exercice budgétaire)
+
++ faire une demande de don(montant, nomDonateur) => (ajouter le don automatiquement sans attente de validation d’un donateur, pas nécessaire , on va appeler ici la méthode recette (montant ))
++ inscrire un membre()
++ désinscrire(membre)
++ s’abonner ()(au service des espaces verts => on vas enregistrer une liste des membres abonnées dans un fichier json )
++ se désabonner () (on supprime les membres désabonnées de la liste enregistrée dans le fichier json d’avant )
++ paiement(facture)
++ recette(montant)
++ fin d’exercice() ( fonction relié à l’attribut  liste rapport)
+    révocation de membres (on doit faire une méthode ici pour vérifier  pour chaque membre si le statut de cotisation et payé ou non p , on fait appele a la fonction désinscrire(membre))
+    constituer la classification
+    transmettre la classification
+    générer un rapport d’activités
+    envoi des demandes de subventions
