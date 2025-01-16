@@ -41,4 +41,8 @@ public class Recette {
     public String debiteur() {
         return this.debiteur;
     }
+
+    public TypeRecette typeRecette() {
+        return this.type;
+    }
 }
