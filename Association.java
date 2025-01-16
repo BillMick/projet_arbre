@@ -1,17 +1,22 @@
+import java.util.ArrayList;
+
+import dependances.Arbre;
+import dependances.Membre;
+
 public class Association {
 
     private String nom;
     private int solde;
     private Membre president;
-    private ArrayList<Depense> = new ArrayList<Depense>;
-    private ArrayList<Membre> membres = new ArrayList<Membre>;
-    private ArrayList<int> annees_exercice= new ArrayList<int>;
-    private ArrayList<Arbre> classification = new ArrayList<Arbre>;
-    private ArrayList<Activite> activites = new ArrayList<Activite>;
-    private ArrayList<Rapport> rapports = new ArrayList<Rapport>;
-    private ArrayList<Recette> dons = new ArrayList<Recette>;
-    private ArrayList<Recette> cotisations = new ArrayList<Recette>;
-    private ArrayList<Dette> dettes = new ArrayList<Dette>;
+    private ArrayList<Depense> depenses = new ArrayList<Depense>();
+    private ArrayList<Membre> membres = new ArrayList<Membre>();
+    private ArrayList<Integer> annees_exercice = new ArrayList<Integer>();
+    private ArrayList<Arbre> classification = new ArrayList<Arbre>();
+    private ArrayList<Activite> activites = new ArrayList<Activite>();
+    private ArrayList<Rapport> rapports = new ArrayList<Rapport>();
+    private ArrayList<Recette> dons = new ArrayList<Recette>();
+    private ArrayList<Recette> cotisations = new ArrayList<Recette>();
+    private ArrayList<Dette> dettes = new ArrayList<Dette>();
 
     // modifier le solde
     public int recette(int montant) {
