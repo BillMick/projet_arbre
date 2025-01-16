@@ -11,19 +11,22 @@ enum StatutRecette {
 }
 
 public class Recette {
-    private int montant;
-    private TypeRecette type;
-    private String donateur;
+    private final int montant;
+    private final TypeRecette type;
+    private final String debiteur;
     private StatutRecette statut = StatutRecette.NONPERCUE;
 
-    public Recette(int montant, TypeRecette type, String donateur) {
+    public Recette(int montant, TypeRecette type, String debiteur) {
         this.montant = montant;
         this.type = type;
-        this.donateur = donateur;
+        this.debiteur = debiteur;
         // Persistance des données ...
     }
 
     public void modifierStatut(StatutRecette statut) {
+        if (statut == StatutRecette.NONPERCUE) {
+            throw new IllegalStateException("Opération non autorisée: statut non modifiable.");
+        }
         this.statut = statut;
     }
 }
