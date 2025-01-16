@@ -13,7 +13,7 @@ enum StatutRecette {
 public class Recette {
     private final int montant;
     private final TypeRecette type;
-    private final String debiteur;
+    private final String debiteur; // nom ou email
     private StatutRecette statut = StatutRecette.NONPERCUE;
 
     public Recette(int montant, TypeRecette type, String debiteur) {
@@ -36,5 +36,9 @@ public class Recette {
 
     public int montant() {
         return this.montant;
+    }
+
+    public String debiteur() {
+        return this.debiteur;
     }
 }
