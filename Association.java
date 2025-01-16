@@ -19,7 +19,7 @@ public class Association {
     private ArrayList<Dette> dettes = new ArrayList<Dette>();
 
     // modifier le solde
-    public int recette(int montant) {
+    public int ajoutSolde(int montant) {
         this.solde += montant;
         return this.solde;
         // Persistance de données
@@ -27,10 +27,18 @@ public class Association {
 
     // faire une demande de don / subvention
     public boolean demandeDeDon(int montant, String donateur) {
-        // s'assurer que montant > 0 et donateur != null
-        Recette don = ... // Création de l'objet Recette
+        // Verifier que le montant est bien positif.
+        if (montant < 0) {
+            throw new IllegalArgumentException("Le montant à transférer doit être strictement positif.");
+        }
+        // Verifier que l'émetteur est différent du récepteur.
+        if (donateur.equals(this.nom) || donateur == null) {
+            throw new IllegalArgumentException("Vous ne pouvez pas vous faire une demande de don.");
+        }
+        Recette don = new Recette(montant, TypeRecette.DON, donateur); // Création de l'objet Recette
         dons.add(don); // Ajout à la liste des dons
-        this.recette(montant); // Ajout au solde
+        this.ajoutSolde(montant); // Ajout au solde
+        don.modifierStatut(StatutRecette.PERCUE);
         // Persistance de données
         return true;
     }
@@ -77,11 +85,7 @@ public class Association {
         VISITE
     }
 
-    // type Recette
-    enum typeRecette {
-        COTISATION,
-        DON
-    }
+    
 
     // statut Visite
     enum statutVisite {
@@ -89,15 +93,11 @@ public class Association {
         EXECUTEE
     }
 
-    //enum statut Cotisation
-    enum statutCotisation {
-        PAYE,
-        NONPAYE
-    }
+    
 
     // payer ses dettes
     public boolean payerDette (Dette dette) {
-        recette(-dette.montant); // retirer le montant, de la dette, du solde
+        ajoutSolde(-dette.montant); // retirer le montant, de la dette, du solde
         if (dette.type = typeDette.DEFRAIEMENT) {
             // rembourser aussi le membre
         }
