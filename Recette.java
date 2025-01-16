@@ -29,4 +29,8 @@ public class Recette {
         }
         this.statut = statut;
     }
+
+    public StatutRecette statutRecette() {
+        return this.statut;
+    }
 }
