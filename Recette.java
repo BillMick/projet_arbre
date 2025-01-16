@@ -33,4 +33,8 @@ public class Recette {
     public StatutRecette statutRecette() {
         return this.statut;
     }
+
+    public int montant() {
+        return this.montant;
+    }
 }
