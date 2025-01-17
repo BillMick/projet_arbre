@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Date;
 
 import dependances.Arbre;
 import dependances.Membre;
@@ -114,4 +115,48 @@ public class Association {
         }
     }
 
+
+    // Record Recette
+    // private final int montant;
+    // private final TypeRecette type;
+    // private final String debiteur; // nom ou email
+    // private final Date date = new Date(); // à revoir pour question de test
+    // private StatutRecette statut = StatutRecette.NONPERCUE;
+    public record Cotisation(int montant, Membre debiteur, Date date, StatutRecette statut) {
+        public Cotisation {
+            if (montant < 0) {
+                throw new IllegalArgumentException("Le montant à créditer doit être strictement positif.");
+            }
+            // Effectuer une copie du débiteur
+            debiteur = new Membre(debiteur.nom(), debiteur.prenom(), debiteur.email());
+
+            // Accesseur avec copie défensive
+            // @Override
+            // public Membre membre() {
+            //     return new Membre(debiteur.nom(), debiteur.prenom(), debiteur.email()); 
+            // }
+        }
+    }
+
+    public record Don(int montant, String donateur, Date date, StatutRecette statut) {
+        public Don {
+            if (montant < 0) {
+                throw new IllegalArgumentException("Le montant à créditer doit être strictement positif.");
+            }
+        }
+    }
+
+    public record Virement (TypeDeVirement type_de_virement, Personne emetteur, Personne recepteur, int montant, String description)
+    {
+        public Virement {
+            // Verifier que le montant est bien positif à la création du virement.
+            if (montant < 0) {
+                throw new IllegalArgumentException("Le montant à transférer doit être strictement positif.");
+            }
+            // Verifier que l'émetteur est différent du récepteur.
+            if (emetteur.equals(recepteur)) {
+                throw new IllegalArgumentException("L'émetteur doit être différent du récepteur");
+            }
+        }
+    }
 }

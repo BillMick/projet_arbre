@@ -33,12 +33,12 @@ public class Recette {
         this.statut = statut;
     }
 
-    public void percevoirMontant() {
+    public void payer() {
         // ...
     }
 
     public Date date() {
-        return this.date;
+        return this.date; // vérifier le format de retour
     }
 
     public StatutRecette statutRecette() {
