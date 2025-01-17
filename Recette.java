@@ -1,3 +1,5 @@
+import java.util.Date;
+
 // type Recette
 enum TypeRecette {
     COTISATION,
@@ -14,6 +16,7 @@ public class Recette {
     private final int montant;
     private final TypeRecette type;
     private final String debiteur; // nom ou email
+    private final Date date = new Date(); // à revoir pour question de test
     private StatutRecette statut = StatutRecette.NONPERCUE;
 
     public Recette(int montant, TypeRecette type, String debiteur) {
@@ -28,6 +31,10 @@ public class Recette {
             throw new IllegalStateException("Opération non autorisée: statut non modifiable.");
         }
         this.statut = statut;
+    }
+
+    public void percevoirMontant() {
+
     }
 
     public StatutRecette statutRecette() {
