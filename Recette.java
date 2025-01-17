@@ -34,7 +34,11 @@ public class Recette {
     }
 
     public void percevoirMontant() {
+        // ...
+    }
 
+    public Date date() {
+        return this.date;
     }
 
     public StatutRecette statutRecette() {
