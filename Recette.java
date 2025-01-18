@@ -15,11 +15,12 @@ enum StatutRecette {
 public class Recette {
     private final int montant;
     private final TypeRecette type;
-    private final String debiteur; // nom ou email
+    private final Entite debiteur; // nom ou email
     private final Date date = new Date(); // à revoir pour question de test
     private StatutRecette statut = StatutRecette.NONPERCUE;
+    private boolean modifie = false;
 
-    public Recette(int montant, TypeRecette type, String debiteur) {
+    public Recette(int montant, TypeRecette type, Entite debiteur) {
         this.montant = montant;
         this.type = type;
         this.debiteur = debiteur;
@@ -27,10 +28,11 @@ public class Recette {
     }
 
     public void modifierStatut(StatutRecette statut) {
-        if (statut == StatutRecette.NONPERCUE) {
+        if (this.modifie == true) {
             throw new IllegalStateException("Opération non autorisée: statut non modifiable.");
         }
         this.statut = statut;
+        this.modifie = true;
     }
 
     public void payer() {
@@ -49,7 +51,7 @@ public class Recette {
         return this.montant;
     }
 
-    public String debiteur() {
+    public Entite debiteur() {
         return this.debiteur;
     }
 

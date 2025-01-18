@@ -23,3 +23,5 @@ Association
     générer un rapport d’activités
     envoi des demandes de subventions
 
+Ceux-ci sont versés par des donateurs présents dans une liste et qui peuvent être de différentes natures (ex. services municipaux, entreprises, associations, individus)
+La liste des donateurs, seriait-ce une liste par défaut ?
