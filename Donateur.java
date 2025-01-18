@@ -20,6 +20,5 @@ public class Donateur extends Entite {
         return this.type;
     }
 
-
 }
         

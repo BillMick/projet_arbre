@@ -27,3 +27,6 @@ Ceux-ci sont versés par des donateurs présents dans une liste et qui peuvent �
 La liste des donateurs, seriait-ce une liste par défaut ?
 // penser à une façon de créer des factures à régler ...
 // prévoir une fonction de recharge de compte pour les membres.
+// liste de cotisations
+// peut-être penser à une variable "cotisation" qui va contenir la cotisation courante (de l'année budgétaire en cours..)
+

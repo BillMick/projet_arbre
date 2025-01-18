@@ -141,7 +141,7 @@ public class Association extends Entite {
     // révocation de membre
     public void revoquerMembre() {
         for (Membre m: this.membres) {
-            if (m.cotisation.statut == statutCotisation.NONPAYE) {
+            if (m.cotisation().statut == StatutRecette.NONPERCUE) {
                 desinscrire(m);
             }
         }
