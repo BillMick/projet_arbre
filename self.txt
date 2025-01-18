@@ -25,3 +25,5 @@ Association
 
 Ceux-ci sont versés par des donateurs présents dans une liste et qui peuvent être de différentes natures (ex. services municipaux, entreprises, associations, individus)
 La liste des donateurs, seriait-ce une liste par défaut ?
+// penser à une façon de créer des factures à régler ...
+// prévoir une fonction de recharge de compte pour les membres.

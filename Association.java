@@ -130,6 +130,10 @@ public class Association extends Entite {
         if (dette.type() == TypeDette.DEFRAIEMENT) {
             // rembourser aussi le membre
         }
+        else if (dette.type() == TypeDette.FACTURE) {
+            // payer facture
+            // penser à une façon de créer des factures à régler ...
+        }
         return true;
         // Persistance de données
     }
