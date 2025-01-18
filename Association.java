@@ -110,19 +110,12 @@ public class Association extends Entite {
         return true;
     }
 
-    // type de dette
-    enum typeDette {
-        FACTURE,
-        DEFRAIEMENT
-    }
-
     // type activités
     enum typeActivite {
         VISITE
     }
 
     
-
     // statut Visite
     enum statutVisite {
         PLANIFIEE, 
@@ -133,8 +126,8 @@ public class Association extends Entite {
 
     // payer ses dettes
     public boolean payerDette (Dette dette) {
-        ajoutSolde(-dette.montant); // retirer le montant, de la dette, du solde
-        if (dette.type = typeDette.DEFRAIEMENT) {
+        ajoutSolde(-dette.montant()); // retirer le montant, de la dette, du solde
+        if (dette.type() == TypeDette.DEFRAIEMENT) {
             // rembourser aussi le membre
         }
         return true;
