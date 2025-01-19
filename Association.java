@@ -87,20 +87,6 @@ public class Association extends Entite {
     }
     
 
-    // type activités
-    enum typeActivite {
-        VISITE
-    }
-
-    
-    // statut Visite
-    enum statutVisite {
-        PLANIFIEE, 
-        EXECUTEE
-    }
-
-    
-
     // modifier montant de la cotisation
     public boolean modifierCotisation(int m) {
         if (m < 0) {
@@ -188,14 +174,15 @@ public class Association extends Entite {
         // }
         if (this.anneesExercice.isEmpty()) {
             this.anneeExercice = LocalDate.now().getYear();
-            this.anneesExercice.add(this.annee_exercice);
+            this.anneesExercice.add(this.anneeExercice);
             return true;
         }
         this.anneeExercice += 1;
-        this.anneesExercice.add(this.annee_exercice);
+        this.anneesExercice.add(this.anneeExercice);
 
         for (Membre membre: this.membres) {
             Recette r = new Recette(this.montantCotisation, TypeRecette.COTISATION, membre);
+            this.cotisations.add(r);
         }
 
         return true;
@@ -261,6 +248,11 @@ public class Association extends Entite {
                 desinscrire(m);
             }
         }
+    }
+
+    // planification de visite
+    public boolean planifierActivite() {
+
     }
 
     // proposition de liste d'arbres
