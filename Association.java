@@ -1,6 +1,13 @@
+import java.lang.reflect.Member;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import dependances.Arbre;
 import dependances.Membre;
@@ -13,6 +20,8 @@ public class Association extends Entite {
     private ArrayList<Depense> depenses = new ArrayList<Depense>();
     private ArrayList<Membre> membres = new ArrayList<Membre>();
     private ArrayList<Integer> annees_exercice = new ArrayList<Integer>();
+    private int annee_exercice; // année d'exercice en cours
+    private int montantCotisation;
     private ArrayList<Arbre> classification = new ArrayList<Arbre>();
     private ArrayList<Activite> activites = new ArrayList<Activite>();
     private ArrayList<Rapport> rapports = new ArrayList<Rapport>();
@@ -96,6 +105,14 @@ public class Association extends Entite {
         return true;
     }
 
+    // supprimer un donateur
+    public boolean supprimerDonateur(Donateur d) {
+        // à la place de "membre", on pourrait donner un identificateur unique
+        this.donateurs.remove(d);
+        // Persistance de données
+        return true;
+    }
+
     // s'abonner aux notifications du service des espaces verts
     public boolean sAbonner() {
         // Persistance de données
@@ -141,10 +158,93 @@ public class Association extends Entite {
     // révocation de membre
     public void revoquerMembre() {
         for (Membre m: this.membres) {
-            if (m.cotisation().statut == StatutRecette.NONPERCUE) {
+            if (m.cotisation().statutRecette() == StatutRecette.NONPERCUE) {
                 desinscrire(m);
             }
         }
+    }
+
+    // proposition de liste d'arbres
+    public List<Arbre> classification(int nombre) {
+        if (nombre < 1 ) {
+            throw new IllegalArgumentException("Le nombre d'arbres à choisir ne peut pas être inférieur à 1.");
+        }
+
+        Map<Arbre, Integer> treeVotes = new HashMap<>();
+        for (Membre member: this.membres) {
+            for (Arbre tree: member.getProposedTrees()) {
+                treeVotes.put(tree, treeVotes.getOrDefault(tree, 0) + 1);
+            }
+        }
+
+        // Sort trees by votes in descending order
+        List<Map.Entry<Arbre, Integer>> sortedTrees = new ArrayList<>(treeVotes.entrySet());
+        sortedTrees.sort((e1, e2) -> Integer.compare(e2.getValue(), e1.getValue()));
+
+        // Get and set the top 5 trees
+        // List<Arbre> top5Trees = new ArrayList<>();
+        for (int i = 0; i < Math.min(nombre, sortedTrees.size()); i++) {
+            this.classification.add(sortedTrees.get(i).getKey());
+        }
+
+        // Persistance de données ...
+        return this.classification;
+        // ArrayList<ArrayList<String>> classification; //String or Arbre ???
+        // for (Membre m: this.membres) {
+        //     // get the proposition of each member and add it to a list
+        //     classification.add(m.classification);
+
+        //     // Step 1: Flatten the list
+        // List<String> all_votes = classification.stream()
+        //         .flatMap(List::stream)
+        //         .collect(Collectors.toList());
+
+        // // Step 2: Count the votes
+        // Map<String, Long> votes = all_votes.stream()
+        //     .collect(Collectors.groupingBy(
+        //         vote -> vote,
+        //         Collectors.counting()
+        //     ));
+
+        // // Step 3: Sort by vote count and select top 5
+        // List<String> top_5 = votes.entrySet().stream()
+        //     .sorted(Map.Entry.<String, Long>comparingByValue(Comparator.reverseOrder()))
+        //     .limit(5)
+        //     .map(Map.Entry::getKey)
+        //     .collect(Collectors.toList());
+        // }
+
+        // return top_5;
+
+    }
+
+    // definir un president
+    public Membre choisirPresident(Membre m) {
+        this.president = m;
+        return this.president;
+    }
+
+    // définir l'année d'exercice budgétaire (normalement, on doit l'appeler qu'une fois à la création de l'association...au début de sa première année d'activité)
+    public boolean lancerAnnee() {
+        // int numberOfDigits = Integer.toString(a).length();
+        // System.out.println("Number of digits: " + numberOfDigits);
+        // if (a < 2000) { // 
+        //     throw new IllegalArgumentException("Nous somme au 21e siècle.");
+        // }
+        if (this.annees_exercice.isEmpty()) {
+            this.annee_exercice = LocalDate.now().getYear();
+            this.annees_exercice.add(this.annee_exercice);
+            return true;
+        }
+        this.annee_exercice += 1;
+        this.annees_exercice.add(this.annee_exercice);
+
+        for (Membre membre: this.membres) {
+            Recette r = new Recette(this.montantCotisation, TypeRecette.COTISATION, membre);
+        }
+
+        return true;
+        // Persistance de données ...
     }
 
 
