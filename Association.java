@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import dependances.Arbre;
 import dependances.Membre;
+import dependances.Notification;
 
 public class Association extends Entite {
 
@@ -19,9 +20,10 @@ public class Association extends Entite {
     private Membre president;
     private ArrayList<Depense> depenses = new ArrayList<Depense>();
     private ArrayList<Membre> membres = new ArrayList<Membre>();
-    private ArrayList<Integer> annees_exercice = new ArrayList<Integer>();
-    private int annee_exercice; // année d'exercice en cours
+    private ArrayList<Integer> anneesExercice = new ArrayList<Integer>();
+    private int anneeExercice; // année d'exercice en cours
     private int montantCotisation;
+    private ArrayList<Notification> notifications = new ArrayList<Notification>();
     private ArrayList<Arbre> classification = new ArrayList<Arbre>();
     private ArrayList<Activite> activites = new ArrayList<Activite>();
     private ArrayList<Rapport> rapports = new ArrayList<Rapport>();
@@ -53,11 +55,151 @@ public class Association extends Entite {
     //     }
     // }
 
-    // modifier le solde
+    // ### setters ###
+
+    // solde
     public int ajoutSolde(int montant) {
         this.solde += montant;
         return this.solde;
         // Persistance de données
+    }
+
+    // president
+    public Membre choisirPresident(Membre m) {
+        this.president = m;
+        return this.president;
+    }
+
+    // ajouter donateur
+    public boolean ajouterDonateur(String nom, String email, TypeDonateur type) {
+        Donateur donateur = new Donateur(nom, email, type);
+        this.donateurs.add(donateur);
+        // Persistance de données
+        return true; 
+    }
+
+    // supprimer un donateur
+    public boolean supprimerDonateur(Donateur d) {
+        // à la place de "membre", on pourrait donner un identificateur unique
+        this.donateurs.remove(d);
+        // Persistance de données
+        return true;
+    }
+    
+
+    // type activités
+    enum typeActivite {
+        VISITE
+    }
+
+    
+    // statut Visite
+    enum statutVisite {
+        PLANIFIEE, 
+        EXECUTEE
+    }
+
+    
+
+    // modifier montant de la cotisation
+    public boolean modifierCotisation(int m) {
+        if (m < 0) {
+            throw new IllegalArgumentException("Montant non")
+        }
+        this.montantCotisation = m;
+        return true;
+    }
+
+    // // Getters
+
+    // membres
+    public ArrayList<Membre> membres() {
+        return this.membres;
+    }
+
+    // solde
+    public int solde() {
+        return this.solde;
+    }
+
+    // dépenses
+    public ArrayList<Depense> depenses() {
+        return this.depenses;
+    }
+
+    // année d'exercice budgétaire en cours
+    public int anneeExercice() {
+        return this.anneeExercice;
+    }
+
+    // années d'exercice budgétaire
+    public ArrayList<Integer> anneesExercice() {
+        return this.anneesExercice;
+    }
+
+    // recupérer le montant de la cotisation
+    public int montantCotisation() {
+        return this.montantCotisation;
+    }
+
+    // notifications
+    public ArrayList<Notification> notifications() {
+        return this.notifications;
+    }
+
+    // classification des arbres
+    public ArrayList<Arbre> classification() {
+        return this.classification;
+    }
+
+    // activités
+    public ArrayList<Activite> activites() {
+        return this.activites;
+    }
+
+    // dons
+    public ArrayList<Recette> dons() {
+        return this.dons;
+    }
+
+    // cotisations
+    public ArrayList<Recette> cotisations() {
+        return this.cotisations;
+    }
+
+    // dettes
+    public ArrayList<Dette> dettes() {
+        return this.dettes;
+    }
+
+    // donateurs
+    public ArrayList<Donateur> donateurs() {
+        return this.donateurs;
+    }
+
+    // ### Logic ###
+
+    // définir l'année d'exercice budgétaire (normalement, on doit l'appeler qu'une fois à la création de l'association...au début de sa première année d'activité)
+    public boolean lancerAnnee() {
+        // int numberOfDigits = Integer.toString(a).length();
+        // System.out.println("Number of digits: " + numberOfDigits);
+        // if (a < 2000) { // 
+        //     throw new IllegalArgumentException("Nous somme au 21e siècle.");
+        // }
+        if (this.anneesExercice.isEmpty()) {
+            this.anneeExercice = LocalDate.now().getYear();
+            this.anneesExercice.add(this.annee_exercice);
+            return true;
+        }
+        this.anneeExercice += 1;
+        this.anneesExercice.add(this.annee_exercice);
+
+        for (Membre membre: this.membres) {
+            Recette r = new Recette(this.montantCotisation, TypeRecette.COTISATION, membre);
+        }
+
+        return true;
+        // Persistance de données ...
     }
 
     // faire une demande de don / subvention
@@ -89,14 +231,6 @@ public class Association extends Entite {
         return true;
     }
 
-    // ajouter donateur
-    public boolean ajouterDonateur(String nom, String email, TypeDonateur type) {
-        Donateur donateur = new Donateur(nom, email, type);
-        this.donateurs.add(donateur);
-        // Persistance de données
-        return true; 
-    }
-
     // désinscrire un membre
     public boolean desinscrire(Membre membre) {
         // à la place de "membre", on pourrait donner un identificateur unique
@@ -105,41 +239,6 @@ public class Association extends Entite {
         return true;
     }
 
-    // supprimer un donateur
-    public boolean supprimerDonateur(Donateur d) {
-        // à la place de "membre", on pourrait donner un identificateur unique
-        this.donateurs.remove(d);
-        // Persistance de données
-        return true;
-    }
-
-    // s'abonner aux notifications du service des espaces verts
-    public boolean sAbonner() {
-        // Persistance de données
-        ajouterAbonne(this.nom); // ajout à la liste des abonnés (fonction de la classe unique ServiceDesEspacesVerts)
-        return true;
-    }
-
-    // se désabonner
-    public boolean SeDesabonner() {
-        // Persistance de données
-        retirerAbonne(this.nom);
-        return true;
-    }
-
-    // type activités
-    enum typeActivite {
-        VISITE
-    }
-
-    
-    // statut Visite
-    enum statutVisite {
-        PLANIFIEE, 
-        EXECUTEE
-    }
-
-    
 
     // payer ses dettes
     public boolean payerDette (Dette dette) {
@@ -218,35 +317,19 @@ public class Association extends Entite {
 
     }
 
-    // definir un president
-    public Membre choisirPresident(Membre m) {
-        this.president = m;
-        return this.president;
-    }
-
-    // définir l'année d'exercice budgétaire (normalement, on doit l'appeler qu'une fois à la création de l'association...au début de sa première année d'activité)
-    public boolean lancerAnnee() {
-        // int numberOfDigits = Integer.toString(a).length();
-        // System.out.println("Number of digits: " + numberOfDigits);
-        // if (a < 2000) { // 
-        //     throw new IllegalArgumentException("Nous somme au 21e siècle.");
-        // }
-        if (this.annees_exercice.isEmpty()) {
-            this.annee_exercice = LocalDate.now().getYear();
-            this.annees_exercice.add(this.annee_exercice);
-            return true;
-        }
-        this.annee_exercice += 1;
-        this.annees_exercice.add(this.annee_exercice);
-
-        for (Membre membre: this.membres) {
-            Recette r = new Recette(this.montantCotisation, TypeRecette.COTISATION, membre);
-        }
-
+    // s'abonner aux notifications du service des espaces verts
+    public boolean sAbonner() {
+        // Persistance de données
+        ajouterAbonne(this.nom); // ajout à la liste des abonnés (fonction de la classe unique ServiceDesEspacesVerts)
         return true;
-        // Persistance de données ...
     }
 
+    // se désabonner
+    public boolean SeDesabonner() {
+        // Persistance de données
+        retirerAbonne(this.nom);
+        return true;
+    }
 
     // Record Recette
     // private final int montant;
