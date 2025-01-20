@@ -1,3 +1,11 @@
-public class Rapport {
-    private int a;
+import java.util.Date;
+
+enum Appreciation {
+    PASBON,
+    BON,
+    TRESBON
+}
+
+public record Rapport (Appreciation appreciation, String message, Date dateAjout) {
+    // definir un toString() ...
 }

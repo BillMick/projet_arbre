@@ -15,12 +15,20 @@ enum StatutRecette {
 public class Recette {
     private final int montant;
     private final TypeRecette type;
-    private final Entite debiteur; // nom ou email
+    // private final Object debiteur; // nom ou email
+    private final String debiteur;
     private final Date date = new Date(); // à revoir pour question de test
     private StatutRecette statut = StatutRecette.NONPERCUE;
     private boolean modifie = false;
 
-    public Recette(int montant, TypeRecette type, Entite debiteur) {
+    // public Recette(int montant, TypeRecette type, Entite debiteur) {
+    //     this.montant = montant;
+    //     this.type = type;
+    //     this.debiteur = debiteur;
+    //     // Persistance des données ...
+    // }
+
+    public Recette(int montant, TypeRecette type, String debiteur) {
         this.montant = montant;
         this.type = type;
         this.debiteur = debiteur;

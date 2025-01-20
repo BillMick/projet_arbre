@@ -33,3 +33,5 @@ La liste des donateurs, seriait-ce une liste par défaut ?
 
 Gestion des années budgétaires
 Faudrait-il exiger que ce soit la municipalité qui lance la fin des exercices budgétaires ???
+
+Comment gérer les dates ?

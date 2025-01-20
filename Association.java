@@ -89,8 +89,8 @@ public class Association extends Entite {
 
     // modifier montant de la cotisation
     public boolean modifierCotisation(int m) {
-        if (m < 0) {
-            throw new IllegalArgumentException("Montant non")
+        if (m <= 0) {
+            throw new IllegalArgumentException("Montant négatif ou nul non autorisé.");
         }
         this.montantCotisation = m;
         return true;
@@ -251,8 +251,16 @@ public class Association extends Entite {
     }
 
     // planification de visite
-    public boolean planifierActivite() {
-
+    public boolean planifierActivite(TypeActivite type, Date dateDePlanification) {
+        if (type == TypeActivite.VISITE) {
+            Visite v = new Visite(type, dateDePlanification);
+            activites.add(v);
+        }
+        else {
+            Activite a = new Activite(type, dateDePlanification);
+            activites.add(a);
+        }
+        return true;
     }
 
     // proposition de liste d'arbres
