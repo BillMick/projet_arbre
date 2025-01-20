@@ -11,12 +11,16 @@ public class Visite extends Activite {
     private String nomArbre;
     private String localisationArbre;
 
-    Visite(TypeActivite type, Date dateDePlanification, String executeur) {
+    Visite(TypeActivite type, Date dateDePlanification, Arbre arbre, String executeur) {
         super(type, dateDePlanification, executeur);
+        this.nomArbre = arbre.nom();
+        this.localisationArbre = arbre.localisation();
     }
 
-    Visite(TypeActivite type, Date dateDePlanification) {
-        super(type, dateDePlanification);
+    Visite(TypeActivite type, Date dateDePlanification, Arbre arbre, int cout) {
+        super(type, dateDePlanification, cout);
+        this.nomArbre = arbre.nom();
+        this.localisationArbre = arbre.localisation();
     }
 
     public String nomArbre() {

@@ -1,24 +1,21 @@
-import java.lang.reflect.Member;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
+// import java.util.Arrays;
+// import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+// import java.util.stream.Collectors;
 
-import dependances.Arbre;
-import dependances.Membre;
-import dependances.Notification;
+import 
 
 public class Association extends Entite {
 
     // private String nom;
     // private int solde;
     private Membre president;
-    private ArrayList<Depense> depenses = new ArrayList<Depense>();
+    // private ArrayList<Depense> depenses = new ArrayList<Depense>();
     private ArrayList<Membre> membres = new ArrayList<Membre>();
     private ArrayList<Integer> anneesExercice = new ArrayList<Integer>();
     private int anneeExercice; // année d'exercice en cours
@@ -26,7 +23,7 @@ public class Association extends Entite {
     private ArrayList<Notification> notifications = new ArrayList<Notification>();
     private ArrayList<Arbre> classification = new ArrayList<Arbre>();
     private ArrayList<Activite> activites = new ArrayList<Activite>();
-    private ArrayList<Rapport> rapports = new ArrayList<Rapport>();
+    // private ArrayList<Rapport> rapports = new ArrayList<Rapport>();
     private ArrayList<Recette> dons = new ArrayList<Recette>();
     private ArrayList<Recette> cotisations = new ArrayList<Recette>();
     private ArrayList<Dette> dettes = new ArrayList<Dette>();
@@ -36,24 +33,6 @@ public class Association extends Entite {
     public Association(String nom, String email, int solde) {
         super(nom, email, solde);
     }
-
-    // public record Recette(int montant, TypeRecette type, Entite debiteur, Date date, StatutRecette statut) {
-    //     public Recette {
-    //         if (montant < 0) {
-    //             throw new IllegalArgumentException("Le montant à créditer doit être strictement positif.");
-    //         }
-    //         // Effectuer une copie du débiteur
-    //         // debiteur = new Entite(debiteur.nom(), debiteur.prenom(), debiteur.email());
-    //         debiteur = new Entite(debiteur.nom(), debiteur.email());
-
-
-    //         // Accesseur avec copie défensive
-    //         // @Override
-    //         // public Membre membre() {
-    //         //     return new Membre(debiteur.nom(), debiteur.prenom(), debiteur.email()); 
-    //         // }
-    //     }
-    // }
 
     // ### setters ###
 
@@ -86,13 +65,13 @@ public class Association extends Entite {
         return true;
     }
     
-
     // modifier montant de la cotisation
     public boolean modifierCotisation(int m) {
         if (m <= 0) {
             throw new IllegalArgumentException("Montant négatif ou nul non autorisé.");
         }
         this.montantCotisation = m;
+        // Persistance des données ...
         return true;
     }
 
@@ -109,9 +88,9 @@ public class Association extends Entite {
     }
 
     // dépenses
-    public ArrayList<Depense> depenses() {
-        return this.depenses;
-    }
+    // public ArrayList<Depense> depenses() {
+    //     return this.depenses;
+    // }
 
     // année d'exercice budgétaire en cours
     public int anneeExercice() {
@@ -181,7 +160,7 @@ public class Association extends Entite {
         this.anneesExercice.add(this.anneeExercice);
 
         for (Membre membre: this.membres) {
-            Recette r = new Recette(this.montantCotisation, TypeRecette.COTISATION, membre);
+            Recette r = new Recette(this.montantCotisation, TypeRecette.COTISATION, membre.email());
             this.cotisations.add(r);
         }
 
@@ -190,9 +169,9 @@ public class Association extends Entite {
     }
 
     // faire une demande de don / subvention
-    public boolean demandeDeDon(int montant, Entite donateur) {
+    public boolean demandeDeDon(int montant, Donateur donateur) {
         // Verifier que le montant est bien positif.
-        if (montant < 0) {
+        if (montant <= 0) {
             throw new IllegalArgumentException("Le montant à transférer doit être strictement positif.");
         }
         // Verifier que l'émetteur est différent du récepteur.
@@ -201,7 +180,7 @@ public class Association extends Entite {
         }
 
         // Date date = new Date();
-        Recette don = new Recette(montant, TypeRecette.DON, donateur); // Création de l'objet Recette
+        Recette don = new Recette(montant, TypeRecette.DON, donateur.email); // Création de l'objet Recette
         dons.add(don); // Ajout à la liste des dons
         this.ajoutSolde(montant); // Ajout au solde
         don.modifierStatut(StatutRecette.PERCUE);
@@ -213,7 +192,7 @@ public class Association extends Entite {
     public boolean inscrire(String nom, String prenom, String email) {
         // passer en argument les infos nécessaires à l'inscription
         Membre membre = new Membre(nom, prenom, email); // créer l'instance
-        this.membres.add(membre); 
+        this.membres.add(membre);
         // Persistance de données
         return true;
     }
@@ -251,13 +230,16 @@ public class Association extends Entite {
     }
 
     // planification de visite
-    public boolean planifierActivite(TypeActivite type, Date dateDePlanification) {
+    public boolean planifierActivite(TypeActivite type, Date dateDePlanification, int cout, Arbre arbre) {
+        if (cout <= 0) {
+            throw new IllegalArgumentException("Le cout doit être strictement positif.");
+        }
         if (type == TypeActivite.VISITE) {
-            Visite v = new Visite(type, dateDePlanification);
+            Visite v = new Visite(type, dateDePlanification, arbre, cout);
             activites.add(v);
         }
         else {
-            Activite a = new Activite(type, dateDePlanification);
+            Activite a = new Activite(type, dateDePlanification, cout);
             activites.add(a);
         }
         return true;
@@ -312,38 +294,68 @@ public class Association extends Entite {
         //     .map(Map.Entry::getKey)
         //     .collect(Collectors.toList());
         // }
-
         // return top_5;
 
     }
 
-    // s'abonner aux notifications du service des espaces verts
-    public boolean sAbonner() {
-        // Persistance de données
-        ajouterAbonne(this.nom); // ajout à la liste des abonnés (fonction de la classe unique ServiceDesEspacesVerts)
-        return true;
-    }
+    // // s'abonner aux notifications du service des espaces verts
+    // public boolean sAbonner() {
+    //     // Persistance de données
+    //     ajouterAbonne(this.nom); // ajout à la liste des abonnés (fonction de la classe unique ServiceDesEspacesVerts)
+    //     return true;
+    // }
 
-    // se désabonner
-    public boolean SeDesabonner() {
-        // Persistance de données
-        retirerAbonne(this.nom);
-        return true;
-    }
+    // // se désabonner
+    // public boolean SeDesabonner() {
+    //     // Persistance de données
+    //     retirerAbonne(this.nom);
+    //     return true;
+    // }
+  
+    public static void main(String[] args) {
+        // Faire une vérification du stockage pour savoir si c'est la première exécution ou non.
+            // si ce n'est pas la première, lancer l'interface de login
+            // si c'est la première, faire comme suit:
+        Association a1 = new Association("Assoc1", "assoc1@g.m", 100);
+        System.out.println("Solde après création:" + a1.solde());
 
-    // Record Recette
-    // private final int montant;
-    // private final TypeRecette type;
-    // private final String debiteur; // nom ou email
-    // private final Date date = new Date(); // à revoir pour question de test
-    // private StatutRecette statut = StatutRecette.NONPERCUE;
-    
+        // inscrire des membres
+        a1.inscrire("Thomas", "Anderson", "thomas@a.n");
+        a1.inscrire("Mouse", "jerry", "jerry@j.m");
+        a1.inscrire("Cat", "Tom", "tom@t.c");
+        System.out.println("Membres:" + a1.membres());
 
-    public record Don(int montant, String donateur, Date date, StatutRecette statut) {
-        public Don {
-            if (montant < 0) {
-                throw new IllegalArgumentException("Le montant à créditer doit être strictement positif.");
-            }
+        // définir montant de cotisation
+        a1.modifierCotisation(50);
+
+        // lancer le début de l'année d'exercice budgétaire
+        a1.lancerAnnee(); // mentionner l'année en argument ???
+        System.out.println("Cotisations attendues:" + a1.cotisations());
+
+        // créer quelques arbres
+        Arbre ar1 = new Arbre("Arbre1", "Ile-de-France");
+        Arbre ar2 = new Arbre("Arbre2", "Polynésie");
+        Arbre ar3 = new Arbre("Arbre3", "Essonne");
+
+        // planifier une visite
+        a1.planifierActivite(TypeActivite.VISITE, new Date(), 75, ar1);
+
+        // ajouter des donateurs
+        a1.ajouterDonateur("Donateur1", "don1@d.f", TypeDonateur.ENTREPRISE);
+        a1.ajouterDonateur("Donateur2", "don2@d.f", TypeDonateur.AUTRE);
+        System.out.println("Donateurs:" + a1.donateurs());
+
+        // faire une demande de don
+        for (Donateur d : a1.donateurs()) {
+            a1.demandeDeDon(250, d);
+            break;
         }
+        System.out.println("Solde après demande de don:" + a1.solde());
+
+        // payer cotisation
+        for (Membre m: a1.membres()) {
+            a1.ajoutSolde(a1.montantCotisation);
+        }
+        System.out.println("Solde après paiement des cotisations:" + a1.solde());
     }
 }

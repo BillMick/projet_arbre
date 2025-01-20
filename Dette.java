@@ -4,6 +4,11 @@ enum TypeDette {
     DEFRAIEMENT
 }
 
+enum StatutDepense {
+    PAYEE,
+    IMPAYEE
+}
+
 public class Dette {
     
     private int montant;

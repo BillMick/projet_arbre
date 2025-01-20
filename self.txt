@@ -31,7 +31,9 @@ La liste des donateurs, seriait-ce une liste par défaut ?
 // peut-être penser à une variable "cotisation" qui va contenir la cotisation courante (de l'année budgétaire en cours..)
 // 
 
-Gestion des années budgétaires
+Gestion des années budgétaires: comment gérer le lancement du début et de la fin des années d'exercice ?
 Faudrait-il exiger que ce soit la municipalité qui lance la fin des exercices budgétaires ???
 
 Comment gérer les dates ?
+
+Créditer le compte des associations lorsqu'un membre paie sa cotisation 

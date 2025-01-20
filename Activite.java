@@ -32,14 +32,19 @@ public class Activite {
     public Activite(TypeActivite type, Date dateDePlanification, String executeur) {
         this.type = type;
         this.dateDePlanification = dateDePlanification; // or new Date()
+        // this.cout = cout;
         this.executeur = executeur;
         this.statut = StatutActivte.PLANIFIEE;
     }
 
     // second constructeur (est utilisé par Association)
-    public Activite(TypeActivite type, Date dateDePlanification) {
+    public Activite(TypeActivite type, Date dateDePlanification, int cout) {
+        if (cout <= 0) {
+            throw new IllegalArgumentException("Le cout doit être strictement positif.");
+        }
         this.type = type;
         this.dateDePlanification = dateDePlanification; // or new Date()
+        this.cout = cout;
     }
 
     // setters

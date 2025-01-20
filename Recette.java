@@ -59,7 +59,7 @@ public class Recette {
         return this.montant;
     }
 
-    public Entite debiteur() {
+    public String debiteur() {
         return this.debiteur;
     }
 
