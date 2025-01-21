@@ -1,3 +1,5 @@
+package org.example.Models;
+
 enum TypeDonateur {
     MUNICIPALITE, 
     ENTREPRISE, 

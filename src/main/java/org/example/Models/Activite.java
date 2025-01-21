@@ -1,3 +1,5 @@
+package org.example.Models;
+
 import java.util.Date;
 // type activités
 enum TypeActivite {

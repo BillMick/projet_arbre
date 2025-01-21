@@ -1,3 +1,4 @@
+package org.example.Models;
 public class Entite {
     protected int solde;
     protected String nom;

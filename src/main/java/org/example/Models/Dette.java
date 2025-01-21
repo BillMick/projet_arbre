@@ -1,3 +1,5 @@
+package org.example.Models;
+
 // type de dette
 enum TypeDette {
     FACTURE,
