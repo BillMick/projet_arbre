@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="400.0" maxWidth="600.0" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AppPrincipale">
    <children>
@@ -14,7 +15,7 @@
          <children>
             <MenuBar maxHeight="400.0" maxWidth="600.0" minWidth="600.0">
               <menus>
-                <Menu mnemonicParsing="false" text="File">
+                <Menu mnemonicParsing="false" text="Notifications">
                   <items>
                     <MenuItem mnemonicParsing="false" text="Close" />
                   </items>
@@ -33,11 +34,20 @@
             </MenuBar>
             <HBox prefHeight="300.0" prefWidth="600.0">
                <children>
-                  <Button mnemonicParsing="false" text="Gestion des Arbres" />
-                  <Button mnemonicParsing="false" text="Liste des Arbres" />
+                  <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Gestion des Arbres" textFill="#06ba6b" translateX="100.0" translateY="170.0">
+                     <font>
+                        <Font name="Arial Narrow" size="18.0" />
+                     </font></Button>
+                  <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Liste des Arbres" textFill="#06ba6b" translateX="200.0" translateY="170.0">
+                     <font>
+                        <Font name="Arial Narrow" size="18.0" />
+                     </font></Button>
                </children>
             </HBox>
-            <Button alignment="TOP_LEFT" maxHeight="25.0" maxWidth="80.0" minHeight="25.0" minWidth="80.0" mnemonicParsing="false" text="Quitter" translateX="500.0" translateY="5.0" />
+            <Button alignment="CENTER" maxHeight="25.0" maxWidth="80.0" minHeight="25.0" minWidth="80.0" mnemonicParsing="false" text="Quitter" textFill="#06ba6b" translateX="500.0" translateY="25.0">
+               <font>
+                  <Font name="Arial Nova" size="12.0" />
+               </font></Button>
          </children>
       </VBox>
    </children>
