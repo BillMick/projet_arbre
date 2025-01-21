@@ -8,12 +8,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.AppPrincipaleView">
+<AnchorPane maxHeight="400.0" maxWidth="600.0" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AppPrincipale">
    <children>
       <VBox prefHeight="407.0" prefWidth="602.0">
          <children>
-            <MenuBar>
+            <MenuBar maxHeight="400.0" maxWidth="600.0" minWidth="600.0">
               <menus>
                 <Menu mnemonicParsing="false" text="File">
                   <items>
@@ -32,13 +31,13 @@
                 </Menu>
               </menus>
             </MenuBar>
-            <HBox prefHeight="334.0" prefWidth="602.0">
+            <HBox prefHeight="300.0" prefWidth="600.0">
                <children>
                   <Button mnemonicParsing="false" text="Gestion des Arbres" />
                   <Button mnemonicParsing="false" text="Liste des Arbres" />
                </children>
             </HBox>
-            <Button mnemonicParsing="false" text="Quitter" />
+            <Button alignment="TOP_LEFT" maxHeight="25.0" maxWidth="80.0" minHeight="25.0" minWidth="80.0" mnemonicParsing="false" text="Quitter" translateX="500.0" translateY="5.0" />
          </children>
       </VBox>
    </children>
