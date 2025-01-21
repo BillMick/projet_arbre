@@ -16,42 +16,44 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+
 public class Main extends Application {
-
     @Override
-    try {
-        // Charge le fichier FXML
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AppPrincipale.fxml"));
-        Parent root = loader.load();
+    public void start(Stage primaryStage) {
+        try {
+            // Charge le fichier FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AppGestion.fxml"));
+            Parent root = loader.load();
 
-        // Crée une image de fond
-        Image backgroundImage = new Image(getClass().getResource("/images/background1.jpg").toExternalForm());
-        BackgroundImage bgImage = new BackgroundImage(
-                backgroundImage,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER,
-                new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, false, true)
-        );
+            // Crée une image de fond
+            Image backgroundImage = new Image(getClass().getResource("/images/img.png").toExternalForm());
+            BackgroundImage bgImage = new BackgroundImage(
+                    backgroundImage,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.CENTER,
+                    new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, false, true)
+            );
 
-        // Applique l'image de fond à la racine
-        if (root instanceof Pane) {
-            ((Pane) root).setBackground(new Background(bgImage));
+            // Applique l'image de fond à la racine
+            if (root instanceof Pane) {
+                ((Pane) root).setBackground(new Background(bgImage));
+            }
+
+            Scene scene = new Scene(root);
+            primaryStage.setTitle("Espace Verts");
+            primaryStage.setScene(scene);
+            primaryStage.setResizable(false);
+            primaryStage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
 
-        Scene scene = new Scene(root);
-        primaryStage.setTitle("PACMAN");
-        primaryStage.setScene(scene);
-        primaryStage.setResizable(false);
-        primaryStage.show();
-
-    } catch (Exception e) {
-        e.printStackTrace();
+    public static void main(String[] args) {
+        launch(args);
     }
 }
 
-public static void main(String[] args) {
-    launch(args);
-}
-}
 
