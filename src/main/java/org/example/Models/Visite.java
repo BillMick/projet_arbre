@@ -2,22 +2,23 @@
 package org.example.Models;
 import java.util.Date;
 
-enum StatutVisite {
-    PLANIFIEE, 
-    EXECUTEE
-}
 
 public class Visite extends Activite {
     private String nomArbre;
     private String localisationArbre;
 
-    Visite(TypeActivite type, Date dateDePlanification, Arbre arbre, String executeur) {
+    public Visite(Activite.TypeActivite type, Date dateDePlanification, Arbre arbre, String executeur) {
         super(type, dateDePlanification, executeur);
         this.nomArbre = arbre.nom();
         this.localisationArbre = arbre.localisation();
     }
 
-    Visite(TypeActivite type, Date dateDePlanification, Arbre arbre, int cout) {
+    public enum StatutVisite {
+        PLANIFIEE,
+        EXECUTEE
+    }
+
+    public Visite(Activite.TypeActivite type, Date dateDePlanification, Arbre arbre, int cout) {
         super(type, dateDePlanification, cout);
         this.nomArbre = arbre.nom();
         this.localisationArbre = arbre.localisation();

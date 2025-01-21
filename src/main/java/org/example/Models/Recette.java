@@ -1,17 +1,6 @@
 package org.example.Models;
 import java.util.Date;
 
-// type Recette
-enum TypeRecette {
-    COTISATION,
-    DON
-}
-
-//enum statut Recette
-enum StatutRecette {
-    PERCUE,
-    NONPERCUE
-}
 
 public class Recette {
     private final int montant;
@@ -28,6 +17,18 @@ public class Recette {
     //     this.debiteur = debiteur;
     //     // Persistance des données ...
     // }
+
+    // type Recette
+    public enum TypeRecette {
+        COTISATION,
+        DON
+    }
+
+    //enum statut Recette
+    public enum StatutRecette {
+        PERCUE,
+        NONPERCUE
+    }
 
     public Recette(int montant, TypeRecette type, String debiteur) {
         this.montant = montant;

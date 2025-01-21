@@ -155,13 +155,17 @@ public class Association extends Entite {
         if (this.anneesExercice.isEmpty()) {
             this.anneeExercice = LocalDate.now().getYear();
             this.anneesExercice.add(this.anneeExercice);
+            for (Membre membre: this.membres) {
+                Recette r = new Recette(this.montantCotisation, Recette.TypeRecette.COTISATION, membre.getEmail());
+                this.cotisations.add(r);
+            }
             return true;
         }
         this.anneeExercice += 1;
         this.anneesExercice.add(this.anneeExercice);
 
         for (Membre membre: this.membres) {
-            Recette r = new Recette(this.montantCotisation, TypeRecette.COTISATION, membre.email());
+            Recette r = new Recette(this.montantCotisation, Recette.TypeRecette.COTISATION, membre.getEmail());
             this.cotisations.add(r);
         }
 
@@ -181,10 +185,10 @@ public class Association extends Entite {
         }
 
         // Date date = new Date();
-        Recette don = new Recette(montant, TypeRecette.DON, donateur.email); // Création de l'objet Recette
+        Recette don = new Recette(montant, Recette.TypeRecette.DON, donateur.email); // Création de l'objet Recette
         dons.add(don); // Ajout à la liste des dons
         this.ajoutSolde(montant); // Ajout au solde
-        don.modifierStatut(StatutRecette.PERCUE);
+        don.modifierStatut(Recette.StatutRecette.PERCUE);
         // Persistance de données
         return true;
     }
@@ -224,18 +228,18 @@ public class Association extends Entite {
     // révocation de membre
     public void revoquerMembre() {
         for (Membre m: this.membres) {
-            if (m.cotisation().statutRecette() == StatutRecette.NONPERCUE) {
+            if (m.getLastCotisation().statutRecette() == Recette.StatutRecette.NONPERCUE) {
                 desinscrire(m);
             }
         }
     }
 
     // planification de visite
-    public boolean planifierActivite(TypeActivite type, Date dateDePlanification, int cout, Arbre arbre) {
+    public boolean planifierActivite(Activite.TypeActivite type, Date dateDePlanification, int cout, Arbre arbre) {
         if (cout <= 0) {
             throw new IllegalArgumentException("Le cout doit être strictement positif.");
         }
-        if (type == TypeActivite.VISITE) {
+        if (type == Activite.TypeActivite.VISITE) {
             Visite v = new Visite(type, dateDePlanification, arbre, cout);
             activites.add(v);
         }
@@ -254,7 +258,7 @@ public class Association extends Entite {
 
         Map<Arbre, Integer> treeVotes = new HashMap<>();
         for (Membre member: this.membres) {
-            for (Arbre tree: member.getProposedTrees()) {
+            for (Arbre tree: member.getPropositionsClassification()) {
                 treeVotes.put(tree, treeVotes.getOrDefault(tree, 0) + 1);
             }
         }
@@ -312,51 +316,53 @@ public class Association extends Entite {
     //     retirerAbonne(this.nom);
     //     return true;
     // }
-  
-    public static void main(String[] args) {
-        // Faire une vérification du stockage pour savoir si c'est la première exécution ou non.
-            // si ce n'est pas la première, lancer l'interface de login
-            // si c'est la première, faire comme suit:
-        Association a1 = new Association("Assoc1", "assoc1@g.m", 100);
-        System.out.println("Solde après création:" + a1.solde());
 
-        // inscrire des membres
-        a1.inscrire("Thomas", "Anderson", "thomas@a.n");
-        a1.inscrire("Mouse", "jerry", "jerry@j.m");
-        a1.inscrire("Cat", "Tom", "tom@t.c");
-        System.out.println("Membres:" + a1.membres());
-
-        // définir montant de cotisation
-        a1.modifierCotisation(50);
-
-        // lancer le début de l'année d'exercice budgétaire
-        a1.lancerAnnee(); // mentionner l'année en argument ???
-        System.out.println("Cotisations attendues:" + a1.cotisations());
-
-        // créer quelques arbres
-        Arbre ar1 = new Arbre("Arbre1", "Ile-de-France");
-        Arbre ar2 = new Arbre("Arbre2", "Polynésie");
-        Arbre ar3 = new Arbre("Arbre3", "Essonne");
-
-        // planifier une visite
-        a1.planifierActivite(TypeActivite.VISITE, new Date(), 75, ar1);
-
-        // ajouter des donateurs
-        a1.ajouterDonateur("Donateur1", "don1@d.f", TypeDonateur.ENTREPRISE);
-        a1.ajouterDonateur("Donateur2", "don2@d.f", TypeDonateur.AUTRE);
-        System.out.println("Donateurs:" + a1.donateurs());
-
-        // faire une demande de don
-        for (Donateur d : a1.donateurs()) {
-            a1.demandeDeDon(250, d);
-            break;
-        }
-        System.out.println("Solde après demande de don:" + a1.solde());
-
-        // payer cotisation
-        for (Membre m: a1.membres()) {
-            a1.ajoutSolde(a1.montantCotisation);
-        }
-        System.out.println("Solde après paiement des cotisations:" + a1.solde());
-    }
+    // #############################################
+//    public static void main(String[] args) {
+//        // Faire une vérification du stockage pour savoir si c'est la première exécution ou non.
+//            // si ce n'est pas la première, lancer l'interface de login
+//            // si c'est la première, faire comme suit:
+//        Association a1 = new Association("Assoc1", "assoc1@g.m", 100);
+//        System.out.println("Solde après création:" + a1.solde());
+//
+//        // inscrire des membres
+//        a1.inscrire("Thomas", "Anderson", "thomas@a.n");
+//        a1.inscrire("Mouse", "jerry", "jerry@j.m");
+//        a1.inscrire("Cat", "Tom", "tom@t.c");
+//        System.out.println("Membres:" + a1.membres());
+//
+//        // définir montant de cotisation
+//        a1.modifierCotisation(50);
+//
+//        // lancer le début de l'année d'exercice budgétaire
+//        a1.lancerAnnee(); // mentionner l'année en argument ???
+//        System.out.println("Cotisations attendues:" + a1.cotisations());
+//
+//        // créer quelques arbres
+//        Arbre ar1 = new Arbre("Arbre1", "Ile-de-France");
+//        Arbre ar2 = new Arbre("Arbre2", "Polynésie");
+//        Arbre ar3 = new Arbre("Arbre3", "Essonne");
+//
+//        // planifier une visite
+//        a1.planifierActivite(Activite.TypeActivite.VISITE, new Date(), 75, ar1);
+//
+//        // ajouter des donateurs
+//        a1.ajouterDonateur("Donateur1", "don1@d.f", TypeDonateur.ENTREPRISE);
+//        a1.ajouterDonateur("Donateur2", "don2@d.f", TypeDonateur.AUTRE);
+//        System.out.println("Donateurs:" + a1.donateurs());
+//
+//        // faire une demande de don
+//        for (Donateur d : a1.donateurs()) {
+//            a1.demandeDeDon(250, d);
+//            break;
+//        }
+//        System.out.println("Solde après demande de don:" + a1.solde());
+//
+//        // payer cotisation
+//        for (Membre m: a1.membres()) {
+//            a1.ajoutSolde(a1.montantCotisation);
+//        }
+//        System.out.println("Solde après paiement des cotisations:" + a1.solde());
+//    }
+    // #############################################
 }

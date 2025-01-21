@@ -9,17 +9,17 @@ public class Membre {
     private String nom;
     private String prenom;
     private String email;
-    private double solde;
+    private double solde = 0;
     private List<Recette> cotisations;
     private List<Visite> visites;
     private List<Vote> votes;
-    private List<String> propositionsClassification;
+    private List<Arbre> propositionsClassification;
 
-    public Membre(String nom,String prenom, String email, double solde){
+    public Membre(String nom,String prenom, String email){
         this.nom=nom;
         this.prenom=prenom;
         this.email=email;
-        this.solde=solde;
+        // this.solde=solde;
         this.cotisations = new ArrayList<>();
         this.visites = new ArrayList<>();
         this.votes = new ArrayList<>();
@@ -31,7 +31,11 @@ public class Membre {
         this.nom = "";
         this.prenom = "";
         this.email = "";
-        this.solde = 0.0;
+        // this.solde = 0.0;
+        this.cotisations = new ArrayList<>();  // Ajouté ici
+        this.visites = new ArrayList<>();
+        this.votes = new ArrayList<>();
+        this.propositionsClassification = new ArrayList<>();
     }
 
     // Méthode pour afficher des données du membre
@@ -50,7 +54,7 @@ public class Membre {
     private void afficherCotisations() {
         System.out.println("\nStatut des cotisations :");
         for (Recette cotisation : cotisations) {
-            if (cotisation.typeRecette() == TypeRecette.COTISATION) {
+            if (cotisation.typeRecette() == COTISATION) {
                 System.out.println("- " + cotisation);
             }
         }
@@ -125,7 +129,7 @@ public class Membre {
         this.propositionsClassification.clear();
         System.out.println(nom + " a quitté l'association.");
     }
-    public void ajouterPropositionClassification(String proposition) {
+    public void ajouterPropositionClassification(Arbre proposition) {
         if (getPropositionsClassification().size() < 5) {
             getPropositionsClassification().add(proposition);
             System.out.println("Proposition de classification ajoutée pour " + getNom() + ": " + proposition);
@@ -198,6 +202,10 @@ public class Membre {
         }
     }
 
+    public Recette getLastCotisation() {
+        return cotisations.get(this.cotisations.size() - 1);
+    }
+
     public List<Visite> getVisites() {
         return visites;
     }
@@ -206,11 +214,11 @@ public class Membre {
         this.visites = visites;
     }
 
-    public List<String> getPropositionsClassification() {
+    public List<Arbre> getPropositionsClassification() {
         return propositionsClassification;
     }
 
-    public void setPropositionsClassification(List<String> propositionsClassification) {
+    public void setPropositionsClassification(List<Arbre> propositionsClassification) {
         this.propositionsClassification = propositionsClassification;
     }
 }

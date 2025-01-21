@@ -1,3 +1,5 @@
+package org.example.Models;
+
 public class Arbre {
     private String nom;
     private String localisation;

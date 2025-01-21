@@ -1,15 +1,7 @@
 package org.example.Models;
 
 import java.util.Date;
-// type activités
-enum TypeActivite {
-    VISITE
-}
-enum StatutActivte {
-    ATTENTE,
-    PLANIFIEE, 
-    EXECUTEE
-}
+
 
 public class Activite {
     private final TypeActivite type;
@@ -29,6 +21,16 @@ public class Activite {
     //     this.executeur = executeur;
 
     // }
+
+    // type activités
+    public enum TypeActivite {
+        VISITE
+    }
+    public enum StatutActivte {
+        ATTENTE,
+        PLANIFIEE,
+        EXECUTEE
+    }
 
     // utilisé par Membre
     public Activite(TypeActivite type, Date dateDePlanification, String executeur) {

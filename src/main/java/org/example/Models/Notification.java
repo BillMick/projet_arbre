@@ -1,4 +1,4 @@
-
+package org.example.Models;
 import java.util.Date;
 
 enum TypeNotification {
