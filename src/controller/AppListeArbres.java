@@ -1,182 +1,88 @@
 package controller;
 
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.layout.*;
-import javafx.stage.Stage;
-
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.FileChooser;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AppListeArbres {
 
     @FXML
-    private TableView<DataRow> tableView;
-
-    @FXML
-    private TableColumn<DataRow, String> IDBASE;
-    @FXML
-    private TableColumn<DataRow, String> TYPEEMPLACEMENT;
-    @FXML
-    private TableColumn<DataRow, String> DOMANIALITE;
-    @FXML
-    private TableColumn<DataRow, String> ARRODISSEMENT;
-    @FXML
-    private TableColumn<DataRow, String> COMPLEMENTADRESSE;
-    @FXML
-    private TableColumn<DataRow, String> NUMERO;
-    @FXML
-    private TableColumn<DataRow, String> LIEUADRESSE;
-    @FXML
-    private TableColumn<DataRow, String> IDEMPLACEMENT;
-    @FXML
-    private TableColumn<DataRow, String> LIBELLEFR;
-    @FXML
-    private TableColumn<DataRow, String> GENRE;
-    @FXML
-    private TableColumn<DataRow, String> ESPECE;
-    @FXML
-    private TableColumn<DataRow, String> VARIETE;
-    @FXML
-    private TableColumn<DataRow, String> CIRCONFERENCE;
-    @FXML
-    private TableColumn<DataRow, String> HAUTEUR;
-    @FXML
-    private TableColumn<DataRow, String> STADEDEVELOPPEMENT;
-    @FXML
-    private TableColumn<DataRow, String> REMARQUABLE;
-    @FXML
-    private TableColumn<DataRow, String> GEO_2D;
+    private TableView<ObservableList<String>> tableView;
 
     @FXML
     public void initialize() {
-        // Lier les colonnes du tableau aux propriétés de DataRow
-        IDBASE.setCellValueFactory(new PropertyValueFactory<>("IDBASE"));
-        TYPEEMPLACEMENT.setCellValueFactory(new PropertyValueFactory<>("TYPEEMPLACEMENT"));
-        DOMANIALITE.setCellValueFactory(new PropertyValueFactory<>("DOMANIALITE"));
-        ARRODISSEMENT.setCellValueFactory(new PropertyValueFactory<>("ARRODISSEMENT"));
-        COMPLEMENTADRESSE.setCellValueFactory(new PropertyValueFactory<>("COMPLEMENTADRESSE"));
-        NUMERO.setCellValueFactory(new PropertyValueFactory<>("NUMERO"));
-        LIEUADRESSE.setCellValueFactory(new PropertyValueFactory<>("LIEUADRESSE"));
-        IDEMPLACEMENT.setCellValueFactory(new PropertyValueFactory<>("IDEMPLACEMENT"));
-        LIBELLEFR.setCellValueFactory(new PropertyValueFactory<>("LIBELLEFR"));
-        GENRE.setCellValueFactory(new PropertyValueFactory<>("GENRE"));
-        ESPECE.setCellValueFactory(new PropertyValueFactory<>("ESPECE"));
-        VARIETE.setCellValueFactory(new PropertyValueFactory<>("VARIETE"));
-        CIRCONFERENCE.setCellValueFactory(new PropertyValueFactory<>("CIRCONFERENCE"));
-        HAUTEUR.setCellValueFactory(new PropertyValueFactory<>("HAUTEUR"));
-        STADEDEVELOPPEMENT.setCellValueFactory(new PropertyValueFactory<>("STADEDEVELOPPEMENT"));
-        REMARQUABLE.setCellValueFactory(new PropertyValueFactory<>("REMARQUABLE"));
-        GEO_2D.setCellValueFactory(new PropertyValueFactory<>("GEO_2D"));
-    }
+        if (tableView == null) {
+            System.err.println("Erreur : TableView non initialisé !");
+            return;
+        }
 
-    @FXML
-    public void listeArbres() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choisir un fichier CSV");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichiers CSV", "*.csv"));
-        File file = fileChooser.showOpenDialog(null);
-        if (file != null) {
-            loadCsvFile(file);
+        // Charger les données CSV
+        List<String[]> data = readCSV("liste_arbres.csv");
+
+        if (!data.isEmpty()) {
+            // Créer dynamiquement les colonnes à partir de l'en-tête
+            createColumns(data.get(0));
+
+            // Ajouter les lignes au TableView
+            populateTableView(data);
+        } else {
+            System.err.println("Erreur : Fichier CSV vide ou non valide.");
         }
     }
 
-    private void loadCsvFile(File file) {
-        ObservableList<DataRow> data = FXCollections.observableArrayList();
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+    /**
+     * Lire le fichier CSV et stocker les valeurs dans une liste.
+     */
+    private List<String[]> readCSV(String filePath) {
+        List<String[]> rows = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
-            boolean isFirstLine = true;
-            while ((line = reader.readLine()) != null) {
-                // Ignorer la première ligne (en-têtes)
-                if (isFirstLine) {
-                    isFirstLine = false;
-                    continue;
-                }
-                // Séparer les colonnes avec le délimiteur ";"
-                String[] columns = line.split(";");
-                if (columns.length >= 17) {
-                    data.add(new DataRow(columns));
-                }
+            while ((line = br.readLine()) != null) {
+                rows.add(line.split(";")); // Séparer les valeurs avec le délimiteur ';'
             }
-            tableView.setItems(data);
         } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("Erreur lors du chargement du fichier : " + e.getMessage());
-            alert.show();
+            System.err.println("Erreur lors de la lecture du fichier CSV : " + e.getMessage());
+            e.printStackTrace();
+        }
+        return rows;
+    }
+
+    /**
+     * Créer dynamiquement les colonnes en fonction de l'en-tête (première ligne du CSV).
+     */
+    private void createColumns(String[] headers) {
+        for (int i = 0; i < headers.length; i++) {
+            final int colIndex = i;
+            TableColumn<ObservableList<String>, String> column = new TableColumn<>(headers[i]);
+            column.setCellValueFactory(param ->
+                    new javafx.beans.property.SimpleStringProperty(param.getValue().get(colIndex))
+            );
+            tableView.getColumns().add(column);
         }
     }
 
-    public static class DataRow {
-        private final String IDBASE;
-        private final String TYPEEMPLACEMENT;
-        private final String DOMANIALITE;
-        private final String ARRODISSEMENT;
-        private final String COMPLEMENTADRESSE;
-        private final String NUMERO;
-        private final String LIEUADRESSE;
-        private final String IDEMPLACEMENT;
-        private final String LIBELLEFR;
-        private final String GENRE;
-        private final String ESPECE;
-        private final String VARIETE;
-        private final String CIRCONFERENCE;
-        private final String HAUTEUR;
-        private final String STADEDEVELOPPEMENT;
-        private final String REMARQUABLE;
-        private final String GEO_2D;
+    /**
+     * Ajouter les lignes de données au TableView.
+     */
+    private void populateTableView(List<String[]> data) {
+        ObservableList<ObservableList<String>> rows = FXCollections.observableArrayList();
 
-        public DataRow(String[] columns) {
-            this.IDBASE = columns[0];
-            this.TYPEEMPLACEMENT = columns[1];
-            this.DOMANIALITE = columns[2];
-            this.ARRODISSEMENT = columns[3];
-            this.COMPLEMENTADRESSE = columns[4];
-            this.NUMERO = columns[5];
-            this.LIEUADRESSE = columns[6];
-            this.IDEMPLACEMENT = columns[7];
-            this.LIBELLEFR = columns[8];
-            this.GENRE = columns[9];
-            this.ESPECE = columns[10];
-            this.VARIETE = columns[11];
-            this.CIRCONFERENCE = columns[12];
-            this.HAUTEUR = columns[13];
-            this.STADEDEVELOPPEMENT = columns[14];
-            this.REMARQUABLE = columns[15];
-            this.GEO_2D = columns[16];
+        // Parcourir les données (sauter la première ligne qui est l'en-tête)
+        for (int i = 1; i < data.size(); i++) {
+            ObservableList<String> row = FXCollections.observableArrayList(data.get(i));
+            rows.add(row);
         }
 
-        // Getters pour toutes les colonnes
-        public String getIDBASE() { return IDBASE; }
-        public String getTYPEEMPLACEMENT() { return TYPEEMPLACEMENT; }
-        public String getDOMANIALITE() { return DOMANIALITE; }
-        public String getARRODISSEMENT() { return ARRODISSEMENT; }
-        public String getCOMPLEMENTADRESSE() { return COMPLEMENTADRESSE; }
-        public String getNUMERO() { return NUMERO; }
-        public String getLIEUADRESSE() { return LIEUADRESSE; }
-        public String getIDEMPLACEMENT() { return IDEMPLACEMENT; }
-        public String getLIBELLEFR() { return LIBELLEFR; }
-        public String getGENRE() { return GENRE; }
-        public String getESPECE() { return ESPECE; }
-        public String getVARIETE() { return VARIETE; }
-        public String getCIRCONFERENCE() { return CIRCONFERENCE; }
-        public String getHAUTEUR() { return HAUTEUR; }
-        public String getSTADEDEVELOPPEMENT() { return STADEDEVELOPPEMENT; }
-        public String getREMARQUABLE() { return REMARQUABLE; }
-        public String getGEO_2D() { return GEO_2D; }
+        tableView.setItems(rows);
     }
 }
+
