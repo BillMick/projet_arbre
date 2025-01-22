@@ -17,11 +17,11 @@ public class AppPrincipale {
         try {
             // Chargement du fichier FXML de la nouvelle vue
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AppListeArbres.fxml"));
             Parent root = loader.load();
 
             // Crée une image de fond
-            Image backgroundImage = new Image(getClass().getResource("/images/background1.jpg").toExternalForm());
+            Image backgroundImage = new Image(getClass().getResource("/images/img2.png").toExternalForm());
             BackgroundImage bgImage = new BackgroundImage(
                     backgroundImage,
                     BackgroundRepeat.NO_REPEAT,
@@ -38,7 +38,49 @@ public class AppPrincipale {
 
             // Création de la nouvelle fenêtre
             Stage nouvelleFenetre = new Stage();
-            nouvelleFenetre.setTitle("PACMAN");
+            nouvelleFenetre.setTitle("Liste des Arbres");
+            nouvelleFenetre.setScene(new Scene(root));
+
+            // Fermeture de la fenêtre principale
+            Stage fenetrePrincipale = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            fenetrePrincipale.close();
+
+            // Affichage de la nouvelle fenêtre
+            nouvelleFenetre.setResizable(false);
+            nouvelleFenetre.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void gestionArbre(javafx.event.ActionEvent event){
+        try {
+            // Chargement du fichier FXML de la nouvelle vue
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AppGestion.fxml"));
+            Parent root = loader.load();
+
+            // Crée une image de fond
+            Image backgroundImage = new Image(getClass().getResource("/images/img2.png").toExternalForm());
+            BackgroundImage bgImage = new BackgroundImage(
+                    backgroundImage,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.CENTER,
+                    new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, false, true)
+            );
+
+            // Applique l'image de fond à la racine
+            if (root instanceof Pane) {
+                ((Pane) root).setBackground(new Background(bgImage));
+            }
+
+
+            // Création de la nouvelle fenêtre
+            Stage nouvelleFenetre = new Stage();
+            nouvelleFenetre.setTitle("Gestion Arbres");
             nouvelleFenetre.setScene(new Scene(root));
 
             // Fermeture de la fenêtre principale

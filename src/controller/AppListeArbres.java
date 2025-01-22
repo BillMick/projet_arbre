@@ -9,5 +9,5 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-public class AppGestion {
+public class AppListeArbres {
 }

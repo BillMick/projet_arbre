@@ -22,7 +22,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         try {
             // Charge le fichier FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AppGestion.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AppPrincipale.fxml"));
             Parent root = loader.load();
 
             // Crée une image de fond
