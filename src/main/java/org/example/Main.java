@@ -28,7 +28,7 @@ public class Main {
 
         // lancer le début de l'année d'exercice budgétaire
         a1.lancerAnnee(); // mentionner l'année en argument ???
-        System.out.println("Année en cours:" + a1.anneeExercice());
+        System.out.println("Année en cours:" + Association.dateFormat.format(a1.debutAnneeExercice()));
         System.out.println("Cotisations attendues:" + a1.cotisations());
 
 

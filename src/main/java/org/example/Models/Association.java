@@ -1,5 +1,6 @@
 package org.example.Models;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 // import java.util.Arrays;
@@ -15,11 +16,15 @@ public class Association extends Entite {
 
     // private String nom;
     // private int solde;
+    public static final String datePattern = "dd-MM-yyyy";
+    public static final SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
+
     private Membre president;
     // private ArrayList<Depense> depenses = new ArrayList<Depense>();
     private ArrayList<Membre> membres = new ArrayList<Membre>();
-    private ArrayList<Integer> anneesExercice = new ArrayList<Integer>();
-    private int anneeExercice; // année d'exercice en cours
+    private ArrayList<String> anneesExercice = new ArrayList<String>();
+    private Date debutAnneeExercice;
+    private Date finAnneeExercice;
     private int montantCotisation;
     private ArrayList<Notification> notifications = new ArrayList<Notification>();
     private ArrayList<Arbre> classification = new ArrayList<Arbre>();
@@ -94,14 +99,19 @@ public class Association extends Entite {
     // }
 
     // année d'exercice budgétaire en cours
-    public int anneeExercice() {
-        return this.anneeExercice;
+    public Date debutAnneeExercice() {
+        return this.debutAnneeExercice;
+    }
+
+    // année d'exercice budgétaire en cours
+    public Date finAnneeExercice() {
+        return this.finAnneeExercice;
     }
 
     // années d'exercice budgétaire
-    public ArrayList<Integer> anneesExercice() {
-        return this.anneesExercice;
-    }
+    // public ArrayList<Integer> anneesExercice() {
+        //return this.anneesExercice;
+    //}
 
     // recupérer le montant de la cotisation
     public int montantCotisation() {
@@ -152,24 +162,25 @@ public class Association extends Entite {
         // if (a < 2000) { // 
         //     throw new IllegalArgumentException("Nous somme au 21e siècle.");
         // }
-        if (this.anneesExercice.isEmpty()) {
-            this.anneeExercice = LocalDate.now().getYear();
-            this.anneesExercice.add(this.anneeExercice);
+        //if (this.anneesExercice.isEmpty()) {
+            this.debutAnneeExercice = new Date();
+            // #### créer le dossier associé
+            // this.anneesExercice.add(this.anneeExercice);
             for (Membre membre: this.membres) {
                 Recette r = new Recette(this.montantCotisation, Recette.TypeRecette.COTISATION, membre.getEmail());
                 this.cotisations.add(r);
             }
             return true;
-        }
-        this.anneeExercice += 1;
-        this.anneesExercice.add(this.anneeExercice);
+        //}
+//        this.anneeExercice += 1;
+//        this.anneesExercice.add(this.anneeExercice);
+//
+//        for (Membre membre: this.membres) {
+//            Recette r = new Recette(this.montantCotisation, Recette.TypeRecette.COTISATION, membre.getEmail());
+//            this.cotisations.add(r);
+//        }
 
-        for (Membre membre: this.membres) {
-            Recette r = new Recette(this.montantCotisation, Recette.TypeRecette.COTISATION, membre.getEmail());
-            this.cotisations.add(r);
-        }
-
-        return true;
+        // return true;
         // Persistance de données ...
     }
 
