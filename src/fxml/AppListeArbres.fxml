@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AppListeArbres">
+   <children>
+      <VBox prefHeight="600.0" prefWidth="900.0">
+         <children>
+            <MenuBar prefHeight="25.0" prefWidth="900.0">
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Close" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Delete" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <ScrollPane prefHeight="530.0" prefWidth="900.0">
+               <content>
+                  <TableView prefHeight="593.0" prefWidth="1236.0">
+                    <columns>
+                      <TableColumn prefWidth="100.0" resizable="false" text="IDBASE" />
+                      <TableColumn prefWidth="150.0" resizable="false" text="TYPE EMPLACEMENT" />
+                        <TableColumn prefWidth="150.0" resizable="false" text="DOMANIALITE" />
+                        <TableColumn prefWidth="150.0" resizable="false" text="ARRODISSEMENT" />
+                        <TableColumn prefWidth="150.0" resizable="false" text="COMPLEMENT ADRESSE" />
+                        <TableColumn prefWidth="150.0" resizable="false" text="NUMERO" />
+                        <TableColumn prefWidth="150.0" resizable="false" text="LIEU/ADRESSE" />
+                        <TableColumn prefWidth="150.0" resizable="false" text="IDEMPLACEMENT" />
+                        <TableColumn prefWidth="150.0" resizable="false" text="LIBELLE FR" />
+                        <TableColumn prefWidth="150.0" resizable="false" text="GENRE" />
+                        <TableColumn prefWidth="150.0" resizable="false" text="ESPECE" />
+                        <TableColumn prefWidth="150.0" resizable="false" text="VARIETE OUCULTIVAR" />
+                        <TableColumn prefWidth="150.0" resizable="false" text="CIRCONFERENCE" />
+                        <TableColumn prefWidth="150.0" resizable="false" text="HAUTEUR" />
+                        <TableColumn prefWidth="150.0" resizable="false" text="STADE DE DEVELOPPEMENT" />
+                        <TableColumn prefWidth="150.0" resizable="false" text="REMARQUABLE" />
+                        <TableColumn prefWidth="150.0" resizable="false" text="GEO_2D" />
+                    </columns>
+                  </TableView>
+               </content>
+            </ScrollPane>
+            <Button fx:id="btnRetour" alignment="CENTER" maxHeight="25.0" maxWidth="80.0" minHeight="25.0" minWidth="80.0" mnemonicParsing="false" onAction="#listeArbres" text="Retour" textFill="#06ba6b" translateX="800.0" translateY="10.0">
+               <font>
+                  <Font name="Arial Nova" size="12.0" />
+               </font>
+            </Button>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

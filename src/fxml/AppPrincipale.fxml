@@ -24,17 +24,17 @@
             </MenuBar>
             <HBox prefHeight="300.0" prefWidth="600.0">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Gestion des Arbres" textFill="#06ba6b" translateX="100.0" translateY="170.0">
+                  <Button fx:id="btnGestion" mnemonicParsing="false" onAction="#gestionArbre" prefHeight="40.0" prefWidth="150.0" text="Gestion des Arbres" textFill="#06ba6b" translateX="100.0" translateY="170.0">
                      <font>
                         <Font name="Arial Narrow" size="18.0" />
                      </font></Button>
-                  <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Liste des Arbres" textFill="#06ba6b" translateX="200.0" translateY="170.0">
+                  <Button fx:id="btnlisteArbre" mnemonicParsing="false" onAction="#listeArbres" prefHeight="40.0" prefWidth="150.0" text="Liste des Arbres" textFill="#06ba6b" translateX="200.0" translateY="170.0">
                      <font>
                         <Font name="Arial Narrow" size="18.0" />
                      </font></Button>
                </children>
             </HBox>
-            <Button alignment="CENTER" maxHeight="25.0" maxWidth="80.0" minHeight="25.0" minWidth="80.0" mnemonicParsing="false" text="Quitter" textFill="#06ba6b" translateX="500.0" translateY="25.0">
+            <Button fx:id="btnQuitter" alignment="CENTER" maxHeight="25.0" maxWidth="80.0" minHeight="25.0" minWidth="80.0" mnemonicParsing="false" onAction="#listeArbres" text="Quitter" textFill="#06ba6b" translateX="500.0" translateY="25.0">
                <font>
                   <Font name="Arial Nova" size="12.0" />
                </font></Button>
