@@ -1,4 +1,4 @@
-package view;
+/*package view;
 
 import controller.ArbreController;
 import javafx.application.Application;
@@ -69,3 +69,4 @@ public class ArbreView extends Application {
         launch(args);
     }
 }
+*/

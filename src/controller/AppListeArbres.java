@@ -2,87 +2,119 @@ package controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
+import javafx.stage.Stage;
+import model.Arbre;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReaderBuilder;
 
-import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class AppListeArbres {
 
     @FXML
-    private TableView<ObservableList<String>> tableView;
+    private TableView<Arbre> tableView;
+
+    private final ObservableList<Arbre> arbresList = FXCollections.observableArrayList();
 
     @FXML
-    public void initialize() {
+    public void initialize(javafx.event.ActionEvent event) {
         if (tableView == null) {
-            System.err.println("Erreur : TableView non initialisé !");
-            return;
+            tableView = new TableView<>();
+            System.out.println("TableView initialisé manuellement !");
         }
-
-        // Charger les données CSV
-        List<String[]> data = readCSV("liste_arbres.csv");
-
-        if (!data.isEmpty()) {
-            // Créer dynamiquement les colonnes à partir de l'en-tête
-            createColumns(data.get(0));
-
-            // Ajouter les lignes au TableView
-            populateTableView(data);
-        } else {
-            System.err.println("Erreur : Fichier CSV vide ou non valide.");
-        }
+        loadCSVData("C:\\Users\\yacin\\IdeaProjects\\espaces_verts2\\projet_arbre\\resources\\liste_arbres.csv");
+        afficheTableau(event);
     }
 
-    /**
-     * Lire le fichier CSV et stocker les valeurs dans une liste.
-     */
-    private List<String[]> readCSV(String filePath) {
-        List<String[]> rows = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                rows.add(line.split(";")); // Séparer les valeurs avec le délimiteur ';'
+    private void loadCSVData(String filePath) {
+        try {
+            // Configuration du parser pour utiliser ; comme délimiteur
+            CSVParser parser = new CSVParserBuilder()
+                    .withSeparator(';') // Définit le délimiteur à ;
+                    .build();
+
+            // Construction du lecteur CSV avec le parser
+            CSVReader csvReader = new CSVReaderBuilder(new FileReader(filePath))
+                    .withCSVParser(parser)
+                    .build();
+
+            String[] nextLine;
+            boolean isHeader = true;
+
+            while ((nextLine = csvReader.readNext()) != null) {
+                if (isHeader) {
+                    isHeader = false; // Ignore la première ligne (entête)
+                    continue;
+                }
+
+                // Vérification pour éviter les erreurs avec des données incorrectes
+                if (nextLine.length == 17) {
+                    Arbre arbre = new Arbre(
+                            nextLine[0], nextLine[1], nextLine[2], nextLine[3],
+                            nextLine[4], nextLine[5], nextLine[6], nextLine[7],
+                            nextLine[8], nextLine[9], nextLine[10], nextLine[11],
+                            nextLine[12], nextLine[13], nextLine[14], nextLine[15], nextLine[16]
+                    );
+                    arbresList.add(arbre);
+                    System.out.println("Nouv Arbre : " + String.join(";", nextLine));
+                } else {
+                    System.err.println("Ligne incorrecte dans le fichier CSV : " + String.join(";", nextLine));
+                }
             }
+
+            // Ajout des données au TableView
+            tableView.setItems(arbresList);
+
         } catch (IOException e) {
             System.err.println("Erreur lors de la lecture du fichier CSV : " + e.getMessage());
             e.printStackTrace();
-        }
-        return rows;
-    }
-
-    /**
-     * Créer dynamiquement les colonnes en fonction de l'en-tête (première ligne du CSV).
-     */
-    private void createColumns(String[] headers) {
-        for (int i = 0; i < headers.length; i++) {
-            final int colIndex = i;
-            TableColumn<ObservableList<String>, String> column = new TableColumn<>(headers[i]);
-            column.setCellValueFactory(param ->
-                    new javafx.beans.property.SimpleStringProperty(param.getValue().get(colIndex))
-            );
-            tableView.getColumns().add(column);
+        } catch (Exception e) {
+            System.err.println("Erreur inattendue : " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    /**
-     * Ajouter les lignes de données au TableView.
-     */
-    private void populateTableView(List<String[]> data) {
-        ObservableList<ObservableList<String>> rows = FXCollections.observableArrayList();
+    private void afficheTableau(javafx.event.ActionEvent event) {
+        try {
+            // Chargement du fichier FXML de la nouvelle vue
 
-        // Parcourir les données (sauter la première ligne qui est l'en-tête)
-        for (int i = 1; i < data.size(); i++) {
-            ObservableList<String> row = FXCollections.observableArrayList(data.get(i));
-            rows.add(row);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AppListeArbres.fxml"));
+            Parent root = loader.load();
+
+            // Création de la nouvelle fenêtre
+            Stage nouvelleFenetre = new Stage();
+            nouvelleFenetre.setTitle("Gestion Arbres");
+            nouvelleFenetre.setScene(new Scene(root));
+
+            // Fermeture de la fenêtre principale
+            Stage fenetrePrincipale = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            fenetrePrincipale.close();
+
+            // Affichage de la nouvelle fenêtre
+            nouvelleFenetre.setResizable(false);
+            nouvelleFenetre.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
 
-        tableView.setItems(rows);
+    @FXML
+    public void Retours(javafx.event.ActionEvent event){
+        AppPrincipale AP = new AppPrincipale();
+        AP.Principale(event);
     }
 }
-
