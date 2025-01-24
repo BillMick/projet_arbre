@@ -8,26 +8,30 @@
     <!-- Top section: Dashboard Title -->
     <top>
         <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 10; -fx-background-color: #4CAF50;">
-            <Label text="Member Dashboard" style="-fx-font-size: 20; -fx-text-fill: white;"/>
+            <Label text="Mon Dashboard" style="-fx-font-size: 20; -fx-text-fill: white;"/>
         </HBox>
     </top>
 
     <!-- Left section: Sidebar -->
     <left>
         <VBox spacing="10" style="-fx-padding: 10; -fx-background-color: #f0f0f0; -fx-border-color: lightgray; -fx-border-width: 1;">
-            <Label text="Navigation" style="-fx-font-weight: bold;"/>
-            <Button text="Home" prefWidth="150"/>
-            <Button text="Activities" prefWidth="150"/>
+            <Label text="Menu" style="-fx-font-weight: bold;"/>
+<!--            <Button text="Home" prefWidth="150"/>-->
+            <Button text="Activités" prefWidth="150"/>
             <Button text="Notifications" prefWidth="150"/>
-            <Button text="Account Settings" prefWidth="150"/>
-            <Button text="Logout" prefWidth="150" style="-fx-background-color: #FF6347; -fx-text-fill: white;"/>
+            <Button text="Trésorerie" fx:id="openTreasuryInterfaceButton" prefWidth="150" onAction="#onTreasuryButtonClick"/>
+            <Button text="Quitter"
+                    onAction="#onExitButtonClick"
+                    prefWidth="150" style="-fx-background-color: #FF6347; -fx-text-fill: white;"
+                    alignment="CENTER"
+            />
         </VBox>
     </left>
 
     <!-- Center section: Main Content -->
     <center>
         <VBox spacing="20" style="-fx-padding: 20;">
-            <Label text="Welcome, [Member Name]" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+            <Label text="Bienvenu·e, [Member Name]" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
 
             <GridPane hgap="10" vgap="10">
                 <Label text="Member ID:"/>

@@ -10,10 +10,14 @@ import javafx.scene.control.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
 public class TreasureManagementController {
+
+    @FXML
+    private Label soldeLabel;
 
     @FXML
     private TextField amountField;
@@ -81,6 +85,8 @@ public class TreasureManagementController {
             System.err.println("Failed to load financial operations: " + e.getMessage());
         }
 
+        updateSoldeLabel();
+
         financialTable.setItems(financialData);
     }
 
@@ -121,6 +127,64 @@ public class TreasureManagementController {
         }
     }
 
+    // Called when the "Ajouter" button is clicked
+    @FXML
+    private void onAddMoney() {
+        try {
+            // Get the amount entered by the user
+            String amountText = amountField.getText();
+            double amountToAdd = Double.parseDouble(amountText); // Make sure the input is numeric
+            String description = descriptionField.getText();
+
+            if (!amountText.isEmpty() && !description.isEmpty()) {
+                File jsonFile = Paths.get("Storage/infos.json").toFile(); // Replace with the actual JSON file path
+
+                // Load the current data from the JSON file
+                Map<String, Object> accountData = objectMapper.readValue(jsonFile, Map.class);
+
+                // Get the current "solde" from the file
+                double currentSolde = accountData.getOrDefault("solde", 0.0) instanceof Number
+                        ? ((Number) accountData.get("solde")).doubleValue()
+                        : 0.0;
+
+                // Update the "solde"
+                double newSolde = currentSolde + amountToAdd;
+                accountData.put("solde", newSolde);
+
+                // Write the updated data back to the JSON file
+                objectMapper.writeValue(jsonFile, accountData);
+
+                System.out.println("Successfully added money! New solde: " + newSolde);
+                updateSoldeLabel();
+
+                Map<String, Object> newOperation = Map.of(
+                        "date", java.time.LocalDate.now().toString(),
+                        "amount", amountText,
+                        "type", "Dépôt",
+                        "description", description
+                );
+
+                // Add to the TableView
+                financialData.add(newOperation);
+
+                // Update the JSON file
+                saveFinancialData();
+
+                // Clear fields
+                amountField.clear();
+                descriptionField.clear();
+            }
+
+            // Optionally, clear the input field
+            amountField.clear();
+
+        } catch (IOException e) {
+            System.err.println("Error reading or writing JSON file: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.err.println("Invalid amount entered: " + e.getMessage());
+        }
+    }
+
     @FXML
     private void handlePayCotisation() {
         Map<String, Object> cotisationOperation = Map.of(
@@ -146,4 +210,44 @@ public class TreasureManagementController {
             System.err.println("Failed to save financial operations: " + e.getMessage());
         }
     }
+
+    private void updateSoldeLabel() {
+        try {
+            File jsonFile = Paths.get("Storage/infos.json").toFile(); // Replace with the actual JSON file path
+            // Read the JSON file
+            Map<String, Object> accountData = objectMapper.readValue(jsonFile, Map.class);
+
+            // Get the current solde or default to 0
+            double currentSolde = accountData.getOrDefault("solde", 0.0) instanceof Number
+                    ? ((Number) accountData.get("solde")).doubleValue()
+                    : 0.0;
+
+            // Set the Label text
+            soldeLabel.setText("Current Solde: " + currentSolde + " €");
+
+        } catch (IOException e) {
+            showErrorDialog("Error", "Unable to read solde: " + e.getMessage());
+        }
+    }
+
+    private void showErrorDialog(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+    @FXML
+    private void onExitButtonClick() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText(null);
+        alert.setContentText("Vous êtes sur le point de quitter l'application.");
+
+        if (alert.showAndWait().get() == ButtonType.OK) {
+            System.exit(0);
+        }
+    }
+
 }
