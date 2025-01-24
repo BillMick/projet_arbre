@@ -31,7 +31,7 @@
                         </Button>
 
 
-                        <Button fx:id="btnSupprimer" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Supprimer Arbre" textFill="#06ba6b" translateX="70.0" translateY="170.0">
+                        <Button fx:id="btnSupprimer" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Supprimer Arbre" textFill="#06ba6b" translateX="70.0" translateY="170.0" >
                             <font>
                                 <Font name="Arial Narrow" size="18.0" />
                             </font></Button>
