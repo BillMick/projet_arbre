@@ -13,7 +13,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import model.Arbre;
+import model.*;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
@@ -21,6 +21,8 @@ import com.opencsv.CSVReaderBuilder;
 
 import java.io.FileReader;
 import java.io.IOException;
+
+import static model.LectureCSV.arbresList;
 
 public class AppListeArbres {
 
@@ -62,8 +64,6 @@ public class AppListeArbres {
     @FXML
     private TableColumn<Arbre, String> colGeo2D;
 
-    private ObservableList<Arbre> arbresList = FXCollections.observableArrayList();
-
     @FXML
     public void initialize() {
         if (tableView == null) {
@@ -71,7 +71,8 @@ public class AppListeArbres {
             System.out.println("TableView initialisé manuellement !");
         }
         initializeColumns();
-        loadCSVData("C:\\Users\\Utilisateur\\JAVA_PROJECT_ET4\\projet_arbre\\resources\\liste_arbres.csv");
+        tableView.setItems(arbresList);
+
     }
 
     @FXML
@@ -130,55 +131,12 @@ public class AppListeArbres {
 
         tableView.getColumns().addAll(colIDBase, colTypeEmp,colDOM, colArrd,colCompAdresse,colNum,colLieu, colGenre,colEspece,colVariete, colCirconference, colHauteur, colStadeDev, colRemarquable, colGeo2D);
 
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
         System.out.println("Initialisation des colonnes terminée.");
     }
 
-    @FXML
-    public void loadCSVData(String filePath) {
-        try {
-            // Configuration du parser pour utiliser ; comme délimiteur
-            CSVParser parser = new CSVParserBuilder()
-                    .withSeparator(';') // Définit le délimiteur à ;
-                    .build();
 
-            // Construction du lecteur CSV avec le parser
-            CSVReader csvReader = new CSVReaderBuilder(new FileReader(filePath))
-                    .withCSVParser(parser)
-                    .build();
 
-            String[] nextLine;
-            boolean isHeader = true;
-
-            while ((nextLine = csvReader.readNext()) != null) {
-                if (isHeader) {
-                    isHeader = false; // Ignore la première ligne (entête)
-                    continue;
-                }
-
-                // Vérification pour éviter les erreurs avec des données incorrectes
-                if (nextLine.length == 17) {
-                    Arbre arbre = new Arbre(
-                            nextLine[0], nextLine[1], nextLine[2], nextLine[3],
-                            nextLine[4], nextLine[5], nextLine[6], nextLine[7],
-                            nextLine[8], nextLine[9], nextLine[10], nextLine[11],
-                            nextLine[12], nextLine[13], nextLine[14], nextLine[15], nextLine[16]
-                    );
-                    arbresList.add(arbre);
-                } else {
-                    System.err.println("Ligne incorrecte dans le fichier CSV : " + String.join(";", nextLine));
-                }
-            }
-            tableView.setItems(arbresList);
-
-        } catch (IOException e) {
-            System.err.println("Erreur lors de la lecture du fichier CSV : " + e.getMessage());
-            e.printStackTrace();
-        } catch (Exception e) {
-            System.err.println("Erreur inattendue : " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
 
     @FXML
     public void afficheTableau(javafx.event.ActionEvent event) {
