@@ -1,9 +1,7 @@
 package org.example.Services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.Models.Association;
-import org.example.Models.Donateur;
-import org.example.Models.Membre;
+import org.example.Models.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -76,6 +74,17 @@ public class AssociationServices {
         }
     }
 
+    // Read Donors
+    public static Map<String, Donateur> readDonors(Association association) throws IOException {
+        File dir = new File(Paths.get(REPERTOIRE_DE_BASE, association.email(), "Donateurs", "donateurs.json").toString());
+        if (!dir.exists()) return Map.of();
+        String content = new String(Files.readAllBytes(Paths.get(dir.getPath())));
+        if (content.isBlank()) {
+            return Map.of();
+        }
+        return objectMapper.readValue(content, Map.class);
+    }
+
     // Method to delete a donor from the file
     public static void deleteDonor(Association association, Donateur donateur) throws IOException {
         File file = new File(Paths.get(REPERTOIRE_DE_BASE, association.email(), "Donateurs", "donateurs.json").toString());
@@ -111,6 +120,34 @@ public class AssociationServices {
         }
     }
 
+    // Read Members
+    public static Map<String, Membre> readMembers(Association association) throws IOException {
+        File directory = new File(Paths.get(REPERTOIRE_DE_BASE, association.email(), "Membres").toString());
+        if (!directory.exists()) {
+            System.out.println("The specified path is not a valid directory.");
+            return Map.of();
+        }
+
+        File[] jsonFiles = directory.listFiles((dir, name) -> name.toLowerCase().endsWith(".json"));
+        if (jsonFiles == null || jsonFiles.length == 0) {
+            System.out.println("No JSON files found in the directory.");
+            return Map.of();
+        }
+        Map<String, Membre> jsonData = Map.of();
+
+        for (File jsonFile : jsonFiles) {
+            System.out.println("Processing file: " + jsonFile.getName());
+            try {
+                jsonData = objectMapper.readValue(jsonFile, Map.class);
+                System.out.println("Contents of " + jsonFile.getName() + ":");
+                System.out.println(jsonData);
+            } catch (IOException e) {
+                System.err.println("Error reading file " + jsonFile.getName() + ": " + e.getMessage());
+            }
+        }
+        return jsonData;
+    }
+
     // Method to delete a member from the folder
     public static void deleteMember(Association association, Membre membre) throws IOException {
         File file = new File(Paths.get(REPERTOIRE_DE_BASE, association.email(), "Membres", membre.getEmail()).toString());
@@ -127,7 +164,7 @@ public class AssociationServices {
         }
     }
 
-    //
+    // update periodes
     public static void updateYear(Association association) throws IOException {
         // créer le répertoire de stockage
         File dir = new File(Paths.get(REPERTOIRE_DE_BASE, association.email(), "periodes.json").toString());
@@ -151,5 +188,53 @@ public class AssociationServices {
         periodes.put(periodes.size() + 1, periodeValues);
         // Write the updated data back to the file
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(dir, periodes);
+    }
+
+    // Read current periodes ?????????????
+    public static Map<String, Object> readPeriodes(Association association) throws IOException {
+        File dir = new File(Paths.get(REPERTOIRE_DE_BASE, association.email(), "periodes.json").toString());
+        if (!dir.exists()) dir.mkdir();
+        String content = new String(Files.readAllBytes(Paths.get(dir.getPath())));
+        Map<String, Object> currentPeriode = objectMapper.readValue(content, Map.class);
+        return currentPeriode;
+    }
+
+    // Read notifications
+    public static Map<String, Notification> readNotifications(Association association) throws IOException {
+        File dir = new File(Paths.get(REPERTOIRE_DE_BASE, association.email(), "Notifications", "notifications.json").toString());
+        if (!dir.exists()) return Map.of();
+        String content = new String(Files.readAllBytes(Paths.get(dir.getPath())));
+        if (content.isBlank()) {
+            return Map.of();
+        }
+        return objectMapper.readValue(content, Map.class);
+    }
+
+    // Read Trees
+    public static Map<String, Arbre> readTrees() throws IOException {
+        File directory = new File(Paths.get(REPERTOIRE_DE_BASE, "municipalite").toString());
+        if (!directory.exists()) {
+            System.out.println("The specified path is not a valid directory.");
+            return Map.of();
+        }
+
+        File[] jsonFiles = directory.listFiles((dir, name) -> name.toLowerCase().endsWith(".json"));
+        if (jsonFiles == null || jsonFiles.length == 0) {
+            System.out.println("No JSON files found in the directory.");
+            return Map.of();
+        }
+        Map<String, Arbre> jsonData = Map.of();
+
+        for (File jsonFile : jsonFiles) {
+            System.out.println("Processing file: " + jsonFile.getName());
+            try {
+                jsonData = objectMapper.readValue(jsonFile, Map.class);
+                System.out.println("Contents of " + jsonFile.getName() + ":");
+                System.out.println(jsonData);
+            } catch (IOException e) {
+                System.err.println("Error reading file " + jsonFile.getName() + ": " + e.getMessage());
+            }
+        }
+        return jsonData;
     }
 }
