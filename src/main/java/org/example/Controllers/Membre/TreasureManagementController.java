@@ -1,13 +1,19 @@
 package org.example.Controllers.Membre;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-import java.time.LocalDate;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
-public class TreasuryManagementController {
+public class TreasureManagementController {
 
     @FXML
     private TextField amountField;
@@ -25,35 +31,69 @@ public class TreasuryManagementController {
     private Label cotisationStatusLabel;
 
     @FXML
-    private TableView<FinancialOperation> financialTable;
+    private TableView<Map<String, Object>> financialTable;
 
     @FXML
-    private TableColumn<FinancialOperation, String> dateColumn;
+    private TableColumn<Map<String, Object>, String> dateColumn;
 
     @FXML
-    private TableColumn<FinancialOperation, Double> amountColumn;
+    private TableColumn<Map<String, Object>, String> amountColumn;
 
     @FXML
-    private TableColumn<FinancialOperation, String> typeColumn;
+    private TableColumn<Map<String, Object>, String> typeColumn;
 
     @FXML
-    private TableColumn<FinancialOperation, String> descriptionColumn;
+    private TableColumn<Map<String, Object>, String> descriptionColumn;
 
-    private ObservableList<FinancialOperation> financialData = FXCollections.observableArrayList();
+    private ObservableList<Map<String, Object>> financialData = FXCollections.observableArrayList();
+
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final String FILE_PATH = "Storage/treasure.json"; // Update with your actual JSON file path
 
     @FXML
     public void initialize() {
-        // Bind TableView columns to FinancialOperation properties
-        dateColumn.setCellValueFactory(cellData -> cellData.getValue().dateProperty());
-        amountColumn.setCellValueFactory(cellData -> cellData.getValue().amountProperty().asObject());
-        typeColumn.setCellValueFactory(cellData -> cellData.getValue().typeProperty());
-        descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
+        // Set up the TableView columns
+        dateColumn.setCellValueFactory(cellData -> {
+            Object value = cellData.getValue().get("date");
+            return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
+        });
 
-        // Set the TableView's items
+        amountColumn.setCellValueFactory(cellData -> {
+            Object value = cellData.getValue().get("amount");
+            return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
+        });
+
+        typeColumn.setCellValueFactory(cellData -> {
+            Object value = cellData.getValue().get("type");
+            return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
+        });
+
+        descriptionColumn.setCellValueFactory(cellData -> {
+            Object value = cellData.getValue().get("description");
+            return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
+        });
+
+        // Populate the TableView
+        try {
+            loadFinancialData();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Failed to load financial operations: " + e.getMessage());
+        }
+
         financialTable.setItems(financialData);
+    }
 
-        // Example: Adding an initial transaction
-        financialData.add(new FinancialOperation(LocalDate.now().toString(), 100.0, "Dépôt", "Initial deposit"));
+    private void loadFinancialData() throws IOException {
+        File file = new File(FILE_PATH);
+        if (!file.exists()) {
+            System.out.println("No financial operations found.");
+            return;
+        }
+
+        // Parse the JSON file into a list of maps
+        List<Map<String, Object>> data = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
+        financialData.setAll(data);
     }
 
     @FXML
@@ -62,10 +102,18 @@ public class TreasuryManagementController {
         String description = descriptionField.getText();
 
         if (!amountText.isEmpty() && !description.isEmpty()) {
-            double amount = Double.parseDouble(amountText);
+            Map<String, Object> newOperation = Map.of(
+                    "date", java.time.LocalDate.now().toString(),
+                    "amount", amountText,
+                    "type", "Dépôt",
+                    "description", description
+            );
 
             // Add to the TableView
-            financialData.add(new FinancialOperation(LocalDate.now().toString(), amount, "Dépôt", description));
+            financialData.add(newOperation);
+
+            // Update the JSON file
+            saveFinancialData();
 
             // Clear fields
             amountField.clear();
@@ -75,9 +123,27 @@ public class TreasuryManagementController {
 
     @FXML
     private void handlePayCotisation() {
-        // Example: Pay cotisation logic
-        financialData.add(new FinancialOperation(LocalDate.now().toString(), 50.0, "Cotisation", "Cotisation annuelle"));
+        Map<String, Object> cotisationOperation = Map.of(
+                "date", java.time.LocalDate.now().toString(),
+                "amount", "50.0",
+                "type", "Cotisation",
+                "description", "Cotisation annuelle"
+        );
+
+        financialData.add(cotisationOperation);
         cotisationStatusLabel.setText("Payée");
         cotisationStatusLabel.setStyle("-fx-text-fill: green;");
+
+        // Update the JSON file
+        saveFinancialData();
+    }
+
+    private void saveFinancialData() {
+        try {
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(FILE_PATH), financialData);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Failed to save financial operations: " + e.getMessage());
+        }
     }
 }

@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="your.package.TreasuryManagementController">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.Controllers.Membre.TreasureManagementController">
     <!-- Top section: Title -->
     <top>
         <HBox alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #4CAF50;">
