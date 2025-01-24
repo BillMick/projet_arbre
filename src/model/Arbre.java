@@ -24,23 +24,23 @@ public class Arbre {
                  String libelleFr, String genre, String espece, String varieteOuCultivar,
                  String circonference, String hauteur, String stadeDeveloppement,
                  String remarquable, String geo2D) {
-        this.idBase = idBase;
-        this.typeEmplacement = typeEmplacement;
-        this.domanialite = domanialite;
-        this.arrondissement = arrondissement;
-        this.complementAdresse = complementAdresse;
-        this.numero = numero;
-        this.lieuAdresse = lieuAdresse;
-        this.idEmplacement = idEmplacement;
-        this.libelleFr = libelleFr;
-        this.genre = genre;
-        this.espece = espece;
-        this.varieteOuCultivar = varieteOuCultivar;
-        this.circonference = circonference;
-        this.hauteur = hauteur;
-        this.stadeDeveloppement = stadeDeveloppement;
-        this.remarquable = remarquable;
-        this.geo2D = geo2D;
+        this.idBase = (idBase != null) ? idBase : "";
+        this.typeEmplacement = (typeEmplacement != null) ? typeEmplacement : "";
+        this.domanialite = (domanialite != null) ? domanialite : "";
+        this.arrondissement = (arrondissement != null) ? arrondissement : "";
+        this.complementAdresse = (complementAdresse != null) ? complementAdresse : "";
+        this.numero = (numero != null) ? numero : "";
+        this.lieuAdresse = (lieuAdresse != null) ? lieuAdresse : "";
+        this.idEmplacement = (idEmplacement != null) ? idEmplacement : "";
+        this.libelleFr = (libelleFr != null) ? libelleFr : "";
+        this.genre = (genre != null) ? genre : "";
+        this.espece = (espece != null) ? espece : "";
+        this.varieteOuCultivar = (varieteOuCultivar != null) ? varieteOuCultivar : "";
+        this.circonference = (circonference != null) ? circonference : "";
+        this.hauteur = (hauteur != null) ? hauteur : "";
+        this.stadeDeveloppement = (stadeDeveloppement != null) ? stadeDeveloppement : "";
+        this.remarquable = (remarquable != null) ? remarquable : "";
+        this.geo2D = (geo2D != null) ? geo2D : "";
     }
 
     // Getters et setters

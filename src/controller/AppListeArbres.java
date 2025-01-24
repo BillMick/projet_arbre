@@ -65,75 +65,77 @@ public class AppListeArbres {
     private ObservableList<Arbre> arbresList = FXCollections.observableArrayList();
 
     @FXML
-    public void initialize(javafx.event.ActionEvent event) {
+    public void initialize() {
         if (tableView == null) {
             tableView = new TableView<>();
             System.out.println("TableView initialisé manuellement !");
         }
         initializeColumns();
         loadCSVData("C:\\Users\\Utilisateur\\JAVA_PROJECT_ET4\\projet_arbre\\resources\\liste_arbres.csv");
-        afficheTableau(event);
     }
 
+    @FXML
     private void initializeColumns() {
         System.out.println("Début de l'initialisation des colonnes...");
-        colIDBase = new TableColumn<>("IDBASE");
-        colIDBase.setCellValueFactory(new PropertyValueFactory<>("idBase"));
+        colIDBase = new TableColumn<Arbre, String>("IDBASE");
+        colIDBase.setCellValueFactory(new PropertyValueFactory<Arbre, String>("idBase"));
 
-        colTypeEmp = new TableColumn<>("TYPE EMPLACEMENT");
-        colTypeEmp.setCellValueFactory(new PropertyValueFactory<>("typeEmp"));
+        colTypeEmp = new TableColumn<Arbre, String>("TYPE EMPLACEMENT");
+        colTypeEmp.setCellValueFactory(new PropertyValueFactory<Arbre, String>("typeEmplacement"));
 
-        colDOM = new TableColumn<>("DOMANIALITE");
-        colDOM.setCellValueFactory(new PropertyValueFactory<>("dom"));
+        colDOM = new TableColumn<Arbre, String>("DOMANIALITE");
+        colDOM.setCellValueFactory(new PropertyValueFactory<>("domanialite"));
 
-        colArrd = new TableColumn<>("ARRONDISSEMENT");
+        colArrd = new TableColumn<Arbre, String>("ARRONDISSEMENT");
         colArrd.setCellValueFactory(new PropertyValueFactory<>("arrondissement"));
 
-        colCompAdresse = new TableColumn<>("COMPLEMENT ADRESSE");
+        colCompAdresse = new TableColumn<Arbre, String>("COMPLEMENT ADRESSE");
         colCompAdresse.setCellValueFactory(new PropertyValueFactory<>("complementAdresse"));
 
-        colNum = new TableColumn<>("NUMERO");
-        colNum.setCellValueFactory(new PropertyValueFactory<>("numero"));
+        colNum = new TableColumn<Arbre, String>("NUMERO");
+        colNum.setCellValueFactory(new PropertyValueFactory<Arbre, String>("numero"));
 
-        colLieu = new TableColumn<>("LIEU/ADRESSE");
-        colLieu.setCellValueFactory(new PropertyValueFactory<>("lieu"));
+        colLieu = new TableColumn<Arbre, String>("LIEU/ADRESSE");
+        colLieu.setCellValueFactory(new PropertyValueFactory<>("lieuAdresse"));
 
-        colIDEmp = new TableColumn<>("IDEMPLACEMENT");
+        colIDEmp = new TableColumn<Arbre, String>("IDEMPLACEMENT");
         colIDEmp.setCellValueFactory(new PropertyValueFactory<>("idEmplacement"));
 
-        colLibelle = new TableColumn<>("LIBELLE FR");
-        colLibelle.setCellValueFactory(new PropertyValueFactory<>("libelle"));
+        colLibelle = new TableColumn<Arbre, String>("LIBELLE FR");
+        colLibelle.setCellValueFactory(new PropertyValueFactory<Arbre, String>("libelle"));
 
-        colGenre = new TableColumn<>("GENRE");
-        colGenre.setCellValueFactory(new PropertyValueFactory<>("genre"));
+        colGenre = new TableColumn<Arbre, String>("GENRE");
+        colGenre.setCellValueFactory(new PropertyValueFactory<Arbre, String>("genre"));
 
-        colEspece = new TableColumn<>("ESPECE");
-        colEspece.setCellValueFactory(new PropertyValueFactory<>("espece"));
+        colEspece = new TableColumn<Arbre, String>("ESPECE");
+        colEspece.setCellValueFactory(new PropertyValueFactory<Arbre, String>("espece"));
 
-        colVariete = new TableColumn<>("VARIETE OU CULTIVAR");
-        colVariete.setCellValueFactory(new PropertyValueFactory<>("variete"));
+        colVariete = new TableColumn<Arbre, String>("VARIETE OU CULTIVAR");
+        colVariete.setCellValueFactory(new PropertyValueFactory<Arbre, String>("varieteOuCultivar"));
 
-        colCirconference = new TableColumn<>("CIRCONFERENCE");
-        colCirconference.setCellValueFactory(new PropertyValueFactory<>("circonference"));
+        colCirconference = new TableColumn<Arbre, String>("CIRCONFERENCE");
+        colCirconference.setCellValueFactory(new PropertyValueFactory<Arbre, String>("circonference"));
 
-        colHauteur = new TableColumn<>("HAUTEUR");
-        colHauteur.setCellValueFactory(new PropertyValueFactory<>("hauteur"));
+        colHauteur = new TableColumn<Arbre, String>("HAUTEUR");
+        colHauteur.setCellValueFactory(new PropertyValueFactory<Arbre, String>("hauteur"));
 
-        colStadeDev = new TableColumn<>("STADE DE DEVELOPPEMENT");
-        colStadeDev.setCellValueFactory(new PropertyValueFactory<>("stadeDeveloppement"));
+        colStadeDev = new TableColumn<Arbre, String>("STADE DE DEVELOPPEMENT");
+        colStadeDev.setCellValueFactory(new PropertyValueFactory<Arbre, String>("stadeDeveloppement"));
 
-        colRemarquable = new TableColumn<>("REMARQUABLE");
-        colRemarquable.setCellValueFactory(new PropertyValueFactory<>("remarquable"));
+        colRemarquable = new TableColumn<Arbre, String>("REMARQUABLE");
+        colRemarquable.setCellValueFactory(new PropertyValueFactory<Arbre, String>("remarquable"));
 
-        colGeo2D = new TableColumn<>("GEO_2D");
-        colGeo2D.setCellValueFactory(new PropertyValueFactory<>("geo2D"));
+        colGeo2D = new TableColumn<Arbre, String>("GEO_2D");
+        colGeo2D.setCellValueFactory(new PropertyValueFactory<Arbre, String>("geo2D"));
 
         tableView.getColumns().addAll(colIDBase, colTypeEmp,colDOM, colArrd,colCompAdresse,colNum,colLieu, colGenre,colEspece,colVariete, colCirconference, colHauteur, colStadeDev, colRemarquable, colGeo2D);
 
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         System.out.println("Initialisation des colonnes terminée.");
     }
 
-    private void loadCSVData(String filePath) {
+    @FXML
+    public void loadCSVData(String filePath) {
         try {
             // Configuration du parser pour utiliser ; comme délimiteur
             CSVParser parser = new CSVParserBuilder()
@@ -163,13 +165,10 @@ public class AppListeArbres {
                             nextLine[12], nextLine[13], nextLine[14], nextLine[15], nextLine[16]
                     );
                     arbresList.add(arbre);
-                    System.out.println("Nouvel arbre ajouté : " + arbre.getIdBase());
-
                 } else {
                     System.err.println("Ligne incorrecte dans le fichier CSV : " + String.join(";", nextLine));
                 }
             }
-
             tableView.setItems(arbresList);
 
         } catch (IOException e) {
@@ -181,10 +180,10 @@ public class AppListeArbres {
         }
     }
 
-    private void afficheTableau(javafx.event.ActionEvent event) {
+    @FXML
+    public void afficheTableau(javafx.event.ActionEvent event) {
         try {
             // Chargement du fichier FXML de la nouvelle vue
-
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AppListeArbres.fxml"));
             Parent root = loader.load();
 
@@ -192,13 +191,13 @@ public class AppListeArbres {
             Stage nouvelleFenetre = new Stage();
             nouvelleFenetre.setTitle("Liste des Arbres");
             nouvelleFenetre.setScene(new Scene(root));
+            initialize();
 
             // Fermeture de la fenêtre principale
             Stage fenetrePrincipale = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
             fenetrePrincipale.close();
 
             // Affichage de la nouvelle fenêtre
-            nouvelleFenetre.setResizable(false);
             nouvelleFenetre.show();
 
         } catch (IOException e) {
