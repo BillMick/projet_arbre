@@ -26,7 +26,7 @@ public class Main extends Application {
             Parent root = loader.load();
 
             // Crée une image de fond
-            Image backgroundImage = new Image(getClass().getResource("/images/img.png").toExternalForm());
+            Image backgroundImage = new Image(getClass().getResource("/images/img1.png").toExternalForm());
             BackgroundImage bgImage = new BackgroundImage(
                     backgroundImage,
                     BackgroundRepeat.NO_REPEAT,

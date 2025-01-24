@@ -9,19 +9,17 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-
-public class AppPrincipale {
-
+public class AppGestion {
     @FXML
-    public void Principale(javafx.event.ActionEvent event){
+    public void Gestion(javafx.event.ActionEvent event){
         try {
             // Chargement du fichier FXML de la nouvelle vue
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AppPrincipale.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AppGestion.fxml"));
             Parent root = loader.load();
 
             // Crée une image de fond
-            Image backgroundImage = new Image(getClass().getResource("/images/img.png").toExternalForm());
+            Image backgroundImage = new Image(getClass().getResource("/images/img2.png").toExternalForm());
             BackgroundImage bgImage = new BackgroundImage(
                     backgroundImage,
                     BackgroundRepeat.NO_REPEAT,
@@ -38,7 +36,7 @@ public class AppPrincipale {
 
             // Création de la nouvelle fenêtre
             Stage nouvelleFenetre = new Stage();
-            nouvelleFenetre.setTitle("Espaces Verts");
+            nouvelleFenetre.setTitle("Gestion Arbres");
             nouvelleFenetre.setScene(new Scene(root));
 
             // Fermeture de la fenêtre principale
@@ -55,20 +53,30 @@ public class AppPrincipale {
     }
 
     @FXML
-    public void gestionArbre(javafx.event.ActionEvent event){
-        AppGestion AG = new AppGestion();
-        AG.Gestion(event);
-    }
-
-    @FXML
-    public void listeArbres(javafx.event.ActionEvent event){
-        AppListeArbres AL = new AppListeArbres();
-        AL.initialize(event);
+    public void Retours(javafx.event.ActionEvent event){
+        AppPrincipale AP = new AppPrincipale();
+        AP.Principale(event);
     }
     @FXML
-    public void Fermer(javafx.event.ActionEvent event){
+    public void ouvrirFenetreAjouterArbre(javafx.event.ActionEvent event) {
+        try {
+            // Charger le fichier FXML de la fenêtre de saisie d'arbre
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/FenetreAjouterArbre.fxml"));
+            Parent root = loader.load();
 
+            // Créer une nouvelle scène pour cette fenêtre
+            Stage nouvelleFenetre = new Stage();
+            nouvelleFenetre.setTitle("Ajouter un Arbre");
+            nouvelleFenetre.setScene(new Scene(root));
+
+            // Rendre la fenêtre non redimensionnable
+            nouvelleFenetre.setResizable(false);
+
+            // Afficher la fenêtre
+            nouvelleFenetre.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-
 
 }

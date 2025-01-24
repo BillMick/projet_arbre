@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ArbreController {
-    private List<Arbre> arbres;
+   /* private List<Arbre> arbres;
 
     // Charger les arbres depuis un fichier CSV
     public void chargerArbres(String cheminFichier) {
@@ -49,5 +49,5 @@ public class ArbreController {
     // Retourner la liste des arbres
     public List<Arbre> getArbres() {
         return arbres;
-    }
+    }*/
 }
