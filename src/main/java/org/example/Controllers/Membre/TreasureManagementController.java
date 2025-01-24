@@ -48,7 +48,7 @@ public class TreasureManagementController {
     private ObservableList<Map<String, Object>> financialData = FXCollections.observableArrayList();
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final String FILE_PATH = "Storage/treasure.json"; // Update with your actual JSON file path
+    private static final String FILE_PATH = "Storage/treasury.json"; // Update with your actual JSON file path
 
     @FXML
     public void initialize() {

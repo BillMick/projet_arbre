@@ -1,0 +1,14 @@
+[
+  {
+    "date": "2025-01-20",
+    "amount": "100.0",
+    "type": "Dépôt",
+    "description": "Initial deposit"
+  },
+  {
+    "date": "2025-01-21",
+    "amount": "50.0",
+    "type": "Cotisation",
+    "description": "Cotisation annuelle"
+  }
+]
