@@ -24,19 +24,22 @@
                 </MenuBar>
                 <HBox prefHeight="300.0" prefWidth="600.0">
                     <children>
-                        <Button fx:id="btnAjouter" mnemonicParsing="false"  prefHeight="40.0" prefWidth="150.0" text="Ajouter Arbre" textFill="#06ba6b" translateX="20.0" translateY="170.0">
+                        <Button fx:id="btnAjouter" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Ajouter Arbre" textFill="#06ba6b" translateX="20.0" translateY="170.0" onAction="#ouvrirFenetreAjouterArbre">
                             <font>
                                 <Font name="Arial Narrow" size="18.0" />
-                            </font></Button>
+                            </font>
+                        </Button>
+
+
                         <Button fx:id="btnSupprimer" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Supprimer Arbre" textFill="#06ba6b" translateX="70.0" translateY="170.0">
                             <font>
                                 <Font name="Arial Narrow" size="18.0" />
                             </font></Button>
-                  <Button fx:id="btnModifier" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Modifier Arbre" textFill="#06ba6b" translateX="120.0" translateY="170.0">
-                     <font>
-                        <Font name="Arial Narrow" size="18.0" />
-                     </font>
-                  </Button>
+                        <Button fx:id="btnModifier" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Modifier Arbre" textFill="#06ba6b" translateX="120.0" translateY="170.0">
+                            <font>
+                                <Font name="Arial Narrow" size="18.0" />
+                            </font>
+                        </Button>
                     </children>
                 </HBox>
                 <Button fx:id="btnRetour" alignment="CENTER" maxHeight="25.0" maxWidth="80.0" minHeight="25.0" minWidth="80.0" mnemonicParsing="false" onAction="#Retours" text="Retour" textFill="#06ba6b" translateX="500.0" translateY="25.0">

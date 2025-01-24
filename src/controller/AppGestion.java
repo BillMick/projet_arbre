@@ -57,4 +57,26 @@ public class AppGestion {
         AppPrincipale AP = new AppPrincipale();
         AP.Principale(event);
     }
+    @FXML
+    public void ouvrirFenetreAjouterArbre(javafx.event.ActionEvent event) {
+        try {
+            // Charger le fichier FXML de la fenêtre de saisie d'arbre
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/FenetreAjouterArbre.fxml"));
+            Parent root = loader.load();
+
+            // Créer une nouvelle scène pour cette fenêtre
+            Stage nouvelleFenetre = new Stage();
+            nouvelleFenetre.setTitle("Ajouter un Arbre");
+            nouvelleFenetre.setScene(new Scene(root));
+
+            // Rendre la fenêtre non redimensionnable
+            nouvelleFenetre.setResizable(false);
+
+            // Afficher la fenêtre
+            nouvelleFenetre.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

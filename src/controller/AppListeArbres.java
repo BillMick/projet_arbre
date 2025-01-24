@@ -71,7 +71,7 @@ public class AppListeArbres {
             System.out.println("TableView initialisé manuellement !");
         }
         initializeColumns();
-        loadCSVData("C:\\Users\\yacin\\IdeaProjects\\espaces_verts2\\projet_arbre\\resources\\liste_arbres.csv");
+        loadCSVData("C:\\Users\\Utilisateur\\JAVA_PROJECT_ET4\\projet_arbre\\resources\\liste_arbres.csv");
     }
 
     @FXML
@@ -130,7 +130,7 @@ public class AppListeArbres {
 
         tableView.getColumns().addAll(colIDBase, colTypeEmp,colDOM, colArrd,colCompAdresse,colNum,colLieu, colGenre,colEspece,colVariete, colCirconference, colHauteur, colStadeDev, colRemarquable, colGeo2D);
 
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         System.out.println("Initialisation des colonnes terminée.");
     }
 
