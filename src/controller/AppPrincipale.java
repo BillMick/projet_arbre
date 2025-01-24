@@ -63,7 +63,7 @@ public class AppPrincipale {
     @FXML
     public void listeArbres(javafx.event.ActionEvent event){
         AppListeArbres AL = new AppListeArbres();
-        AL.initialize(event);
+        AL.afficheTableau(event);
     }
     @FXML
     public void Fermer(javafx.event.ActionEvent event){
