@@ -27,7 +27,7 @@
                 </ScrollPane>
             <HBox prefHeight="59.0" prefWidth="1000.0">
                <children>
-                  <Button fx:id="btnModif" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Modifier" textFill="#06ba6b" translateX="300.0" translateY="5.0" onAction="#Rechercher">
+                  <Button fx:id="btnModif" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Modifier" textFill="#06ba6b" translateX="300.0" translateY="5.0" onAction="#Modifier">
                      <font>
                         <Font name="Arial Nova" size="18.0" />
                      </font>

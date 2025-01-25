@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,18 +11,20 @@ import javafx.stage.Stage;
 import model.Arbre;
 import model.LectureCSV;
 import model.Notification;
-import model.NotificationType;
 
 import java.io.IOException;
 
-public class FenetreAjouterArbre {
+import static model.LectureCSV.arbresList;
+
+public class FenetreModifierArbre {
 
     @FXML
-    private TextField txtIDBase;
+    private TextField txtIDBase ;
     @FXML
     private TextField txtType;
     @FXML
     private TextField txtDomanialite;
+
     @FXML
     private TextField txtArrondissement;
     @FXML
@@ -53,16 +56,49 @@ public class FenetreAjouterArbre {
 
     private Notification notificationModel = new Notification();
 
+    private Arbre arbreAModifier;
     @FXML
-    public void ajouterArbre() {
+    public void FenetreModif(ActionEvent event, Arbre arbreAModifier) {
         try {
+            // Charger le fichier FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/FenetreModifierArbre.fxml"));
+            Parent root = loader.load();
+
+            // Récupérer le contrôleur associé au fichier FXML
+            FenetreModifierArbre controller = loader.getController();
+
+            // Transmettre l'arbre à modifier au contrôleur
+            controller.setArbreAModifier(arbreAModifier);
+
+            // Configurer et afficher la fenêtre
+            Stage nouvelleFenetre = new Stage();
+            nouvelleFenetre.setTitle("Modifier l'Arbre");
+            nouvelleFenetre.setScene(new Scene(root));
+            nouvelleFenetre.setResizable(false);
+            nouvelleFenetre.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @FXML
+    public void modifierArbre(javafx.event.ActionEvent event) {
+        try {
+
             String idBaseSaisi = txtIDBase.getText().trim();
             if (idBaseSaisi.isEmpty()) {
                 throw new IllegalArgumentException("L'ID Base est obligatoire !");
             }
 
+            // Vérifier si l'ID existe déjà
             boolean existeDeja = LectureCSV.arbresList.stream()
                     .anyMatch(arbre -> arbre.getIdBase().equals(idBaseSaisi));
+
+            if (idBaseSaisi.equals(arbreAModifier.getIdBase())) {
+                existeDeja = false;
+            }
 
             if (existeDeja) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -70,6 +106,7 @@ public class FenetreAjouterArbre {
                 alert.setHeaderText("L'arbre existe déjà");
                 alert.setContentText("Un arbre avec cet ID Base existe déjà dans la liste.");
                 alert.showAndWait();
+
             } else {
                 Arbre nouvelArbre = new Arbre(
                         txtIDBase.getText(),
@@ -90,26 +127,52 @@ public class FenetreAjouterArbre {
                         txtRemarquable.getText(),
                         txtGeo.getText()
                 );
+
+                arbresList.remove(arbreAModifier);
                 LectureCSV.arbresList.add(0, nouvelArbre);
 
-                // Ajouter une notification pour l'arbre ajouté
-                String message = "Plantation de l'arbre avec l'ID " + txtIDBase.getText();
-                notificationModel.addSentNotification(NotificationType.ABATTAGE, message);
-
+                // Afficher une alerte de confirmation
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Succès");
-                alert.setHeaderText("Arbre ajouté");
-                alert.setContentText("L'arbre a été ajouté avec succès !");
+                alert.setHeaderText("Arbre modifié");
+                alert.setContentText("L'arbre a été modifié avec succès !");
                 alert.showAndWait();
+
                 resetFormFields();
             }
+
         } catch (IllegalArgumentException e) {
+
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Erreur");
             alert.setHeaderText("Données invalides");
             alert.setContentText(e.getMessage());
             alert.showAndWait();
         }
+    }
+
+
+    public void setArbreAModifier(Arbre arbreAModifier) {
+        this.arbreAModifier = arbreAModifier;
+
+        // Remplir les champs avec les données de l'arbre
+        txtIDBase.setText(arbreAModifier.getIdBase());
+        txtType.setText(arbreAModifier.getTypeEmplacement());
+        txtDomanialite.setText(arbreAModifier.getDomanialite());
+        txtArrondissement.setText(arbreAModifier.getArrondissement());
+        txtComplementAdresse.setText(arbreAModifier.getComplementAdresse());
+        txtNumero.setText(arbreAModifier.getNumero());
+        txtLieuAdresse.setText(arbreAModifier.getLieuAdresse());
+        txtIdEmplacement.setText(arbreAModifier.getIdEmplacement());
+        txtLibelleFrancais.setText(arbreAModifier.getLibelleFr());
+        txtGenre.setText(arbreAModifier.getGenre());
+        txtEspece.setText(arbreAModifier.getEspece());
+        txtVarieteCultivar.setText(arbreAModifier.getVarieteOuCultivar());
+        txtCirconference.setText(arbreAModifier.getCirconference());
+        txtHauteur.setText(arbreAModifier.getHauteur());
+        txtStadeDeveloppement.setText(arbreAModifier.getStadeDeveloppement());
+        txtRemarquable.setText(arbreAModifier.getRemarquable());
+        txtGeo.setText(arbreAModifier.getGeo2D());
     }
 
 

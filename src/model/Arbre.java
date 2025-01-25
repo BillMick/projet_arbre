@@ -43,6 +43,26 @@ public class Arbre {
         this.geo2D = geo2D != null ? geo2D : "";
     }
 
+    public Arbre(Arbre autreArbre) {
+        this.idBase = autreArbre.idBase;
+        this.typeEmplacement = autreArbre.typeEmplacement;
+        this.domanialite = autreArbre.domanialite;
+        this.arrondissement = autreArbre.arrondissement;
+        this.complementAdresse = autreArbre.complementAdresse;
+        this.numero = autreArbre.numero;
+        this.lieuAdresse = autreArbre.lieuAdresse;
+        this.idEmplacement = autreArbre.idEmplacement;
+        this.libelleFr = autreArbre.libelleFr;
+        this.genre = autreArbre.genre;
+        this.espece = autreArbre.espece;
+        this.varieteOuCultivar = autreArbre.varieteOuCultivar;
+        this.circonference = autreArbre.circonference;
+        this.hauteur = autreArbre.hauteur;
+        this.stadeDeveloppement = autreArbre.stadeDeveloppement;
+        this.remarquable = autreArbre.remarquable;
+        this.geo2D = autreArbre.geo2D;
+    }
+
     // Getters et setters
     public String getIdBase() { return idBase; }
     public void setIdBase(String idBase) { this.idBase = idBase; }

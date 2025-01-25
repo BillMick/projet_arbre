@@ -218,30 +218,16 @@ public class FenetreModifSuppArbre {
             return;
         }
 
-        try {
-            // Load the modification dialog
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/FenetreModificationArbre.fxml"));
-            Parent root = loader.load();
+        // Confirmation dialog
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmAlert.setTitle("Confirmation de Modification");
+        confirmAlert.setHeaderText(null);
+        confirmAlert.setContentText("Êtes-vous sûr de vouloir modifier cet arbre ?");
 
-            // Get the controller of the modification window
-            FenetreModificationArbre modificationController = loader.getController();
-
-            // Pass the selected tree to the modification controller
-            modificationController.setArbre(selectedArbre);
-
-            // Create and show the modification stage
-            Stage modificationStage = new Stage();
-            modificationStage.setTitle("Modification de l'Arbre");
-            modificationStage.setScene(new Scene(root));
-            modificationStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Show error alert
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erreur");
-            alert.setHeaderText(null);
-            alert.setContentText("Impossible d'ouvrir la fenêtre de modification.");
-            alert.showAndWait();
+        Optional<ButtonType> result = confirmAlert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            FenetreModifierArbre Mod = new FenetreModifierArbre();
+            Mod.FenetreModif(event, selectedArbre);
         }
     }
 

@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.FenetreAjouterArbre" prefHeight="550.0" prefWidth="600.0">
+<AnchorPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.FenetreModifierArbre" prefHeight="550.0" prefWidth="600.0">
     <children>
         <VBox spacing="15.0" layoutX="25.0" layoutY="20.0" prefWidth="550.0">
             <!-- Section de chaque champ avec son label, organisés en lignes avec deux éléments par ligne -->
@@ -24,8 +24,6 @@
                 <Label text="Arrondissement:" />
                 <TextField fx:id="txtArrondissement" prefWidth="150.0"/>
             </HBox>
-
-
 
             <HBox spacing="10.0">
                 <Label text="Complément adresse:" />
@@ -77,7 +75,7 @@
         </VBox>
 
         <!-- Bouton "Ajouter l'Arbre" positionné en bas à droite, légèrement plus haut -->
-        <Button fx:id="btnAjouterArbre" text="Ajouter l'Arbre" onAction="#ajouterArbre" prefWidth="120.0" style="-fx-font-size: 14px; -fx-background-color: #4CAF50; -fx-text-fill: white;" AnchorPane.bottomAnchor="30" AnchorPane.rightAnchor="10">
+        <Button fx:id="btnModifierArbre" text="Modifier l'Arbre" onAction="#modifierArbre" prefWidth="120.0" style="-fx-font-size: 14px; -fx-background-color: #4CAF50; -fx-text-fill: white;" AnchorPane.bottomAnchor="30" AnchorPane.rightAnchor="10">
             <font>
                 <Font name="Arial Narrow" size="14.0" />
             </font>
