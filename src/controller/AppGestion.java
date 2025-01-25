@@ -79,5 +79,10 @@ public class AppGestion {
         }
     }
 
+    public void modifSuppArbre(javafx.event.ActionEvent event){
+        FenetreModifSuppArbre MSA = new FenetreModifSuppArbre();
+        MSA.afficheTableau(event);
+    }
+
 
 }

@@ -31,7 +31,7 @@
                         </font>
                     </Button>
 
-                    <Button fx:id="btnSuppModif" mnemonicParsing="false" prefHeight="50.0" prefWidth="220.0" text="Supprimer/Modifier Arbre" textFill="#06ba6b">
+                    <Button fx:id="btnSuppModif" mnemonicParsing="false" prefHeight="50.0" prefWidth="220.0" text="Supprimer/Modifier Arbre" textFill="#06ba6b" onAction = "#modifSuppArbre">
                         <font>
                             <Font name="Arial Narrow" size="18.0" />
                         </font>

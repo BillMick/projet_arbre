@@ -144,7 +144,7 @@ public class FenetreModifSuppArbre {
     public void afficheTableau(javafx.event.ActionEvent event) {
         try {
             // Chargement du fichier FXML de la nouvelle vue
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AppListeArbres.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/FenetreModifSuppArbre.fxml"));
             Parent root = loader.load();
 
             // Création de la nouvelle fenêtre
