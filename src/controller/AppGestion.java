@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -38,10 +39,15 @@ public class AppGestion {
             Stage nouvelleFenetre = new Stage();
             nouvelleFenetre.setTitle("Gestion Arbres");
             nouvelleFenetre.setScene(new Scene(root));
+
             // Désactiver la croix de fermeture
             nouvelleFenetre.setOnCloseRequest(eventClose -> {
-                eventClose.consume(); // Empêche la fermeture
-                System.out.println("Fermeture désactivée.");
+                eventClose.consume();
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Ne pas utiliser ce bouton");
+                alert.setHeaderText("Opération Impossible");
+                alert.setContentText("Veuillez utiliser le bouton Quitter a la page d'Acceuil");
+                alert.showAndWait();;
             });
             // Fermeture de la fenêtre principale
             Stage fenetrePrincipale = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();

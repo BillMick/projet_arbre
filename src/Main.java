@@ -7,6 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -37,7 +38,13 @@ public class Main extends Application {
             Parent root = loader.load();
 // Désactiver la croix de fermeture
             primaryStage.setOnCloseRequest(event -> {
-                event.consume(); // Empêche la fermeture
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Ne pas utiliser ce bouton");
+                alert.setHeaderText("Opération Impossible");
+                alert.setContentText("Veuillez utiliser le bouton Quitter");
+                alert.showAndWait();
+                event.consume();
+
             });
             loadCSVData("projet_arbre/resources/liste_arbres.csv");
 
