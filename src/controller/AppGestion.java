@@ -65,7 +65,7 @@ public class AppGestion {
             Parent root = loader.load();
 
             // Crée une image de fond
-            Image backgroundImage = new Image(getClass().getResource("/images/img2.png").toExternalForm());
+            Image backgroundImage = new Image(getClass().getResource("/images/img3.png").toExternalForm());
             BackgroundImage bgImage = new BackgroundImage(
                     backgroundImage,
                     BackgroundRepeat.NO_REPEAT,

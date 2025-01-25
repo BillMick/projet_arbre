@@ -3,6 +3,7 @@ package controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -67,7 +68,7 @@ public class FenetreModifierArbre {
             Parent root = loader.load();
 
             // Crée une image de fond
-            Image backgroundImage = new Image(getClass().getResource("/images/img2.png").toExternalForm());
+            Image backgroundImage = new Image(getClass().getResource("/images/img3.png").toExternalForm());
             BackgroundImage bgImage = new BackgroundImage(
                     backgroundImage,
                     BackgroundRepeat.NO_REPEAT,
@@ -212,5 +213,11 @@ public class FenetreModifierArbre {
         txtStadeDeveloppement.clear();
         txtRemarquable.clear();
         txtGeo.clear();
+    }
+
+    @FXML
+    public void Retours(javafx.event.ActionEvent event){
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.close();
     }
 }

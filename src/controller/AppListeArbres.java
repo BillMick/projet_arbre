@@ -78,6 +78,7 @@ public class AppListeArbres {
         initializeColumns();
         tableView.setItems(arbresList);
 
+
     }
 
     @FXML
@@ -175,9 +176,10 @@ public class AppListeArbres {
     }
 
     @FXML
-    public void Rechercher(javafx.event.ActionEvent event){
+    public void activerRecherche(javafx.event.ActionEvent event){
 
         // Création de la FilteredList à partir de la liste observable existante
+
         FilteredList<Arbre> filteredList = new FilteredList<>(arbresList, p -> true);
 
         // Lier le champ de recherche à la FilteredList

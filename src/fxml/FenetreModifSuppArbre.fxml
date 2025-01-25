@@ -15,8 +15,8 @@
             <children>
                 <HBox prefHeight="53.0" prefWidth="1000.0">
                     <children>
-                        <TextField fx:id="searchField" prefHeight="25.0" prefWidth="667.0" translateX="25.0" translateY="15.0" />
-                        <Button fx:id="btnRechercher" mnemonicParsing="false" onAction="#Rechercher" prefHeight="25.0" prefWidth="150.0" text="Rechercher" translateX="150.0" translateY="15.0" />
+                        <TextField fx:id="searchField" prefHeight="25.0" prefWidth="650.0" translateX="25.0" translateY="15.0" />
+                        <Button fx:id="btnRechercher" mnemonicParsing="false" onAction="#activerRecherche" prefHeight="25.0" prefWidth="150.0" text="Activer la Recherche" translateX="150.0" translateY="15.0" />
                     </children>
                 </HBox>
                 <ScrollPane fitToHeight="true" prefHeight="550.0" prefWidth="1000.0">
@@ -27,12 +27,12 @@
                 </ScrollPane>
             <HBox prefHeight="59.0" prefWidth="1000.0">
                <children>
-                  <Button fx:id="btnModif" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Modifier" textFill="#06ba6b" translateX="300.0" translateY="5.0" onAction="#Modifier">
+                  <Button fx:id="btnModif" mnemonicParsing="false" onAction="#Modifier" prefHeight="40.0" prefWidth="150.0" text="Modifier" textFill="#06ba6b" translateX="300.0" translateY="5.0">
                      <font>
                         <Font name="Arial Nova" size="18.0" />
                      </font>
                   </Button>
-                  <Button fx:id="btnSupprimer" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Supprimer" textFill="#06ba6b" translateX="450.0" translateY="5.0" onAction="#Supprimer">
+                  <Button fx:id="btnSupprimer" mnemonicParsing="false" onAction="#Supprimer" prefHeight="40.0" prefWidth="150.0" text="Supprimer" textFill="#06ba6b" translateX="450.0" translateY="5.0">
                      <font>
                         <Font name="Arial Nova" size="18.0" />
                      </font>

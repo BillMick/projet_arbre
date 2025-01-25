@@ -169,7 +169,7 @@ public class FenetreModifSuppArbre {
     }
 
     @FXML
-    public void Rechercher(javafx.event.ActionEvent event) {
+    public void activerRecherche(javafx.event.ActionEvent event) {
 
         // Création de la FilteredList à partir de la liste observable existante
         FilteredList<Arbre> filteredList = new FilteredList<>(arbresList, p -> true);
