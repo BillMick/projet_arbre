@@ -22,4 +22,16 @@
   "debiteur" : "Tom",
   "montant" : 500.0,
   "type" : "DON"
+}, {
+  "date" : "25-01-2025",
+  "statut" : "PERCUE",
+  "debiteur" : "Jerry",
+  "montant" : 10.0,
+  "type" : "DON"
+}, {
+  "date" : "25-01-2025",
+  "statut" : "PERCUE",
+  "debiteur" : "KANOUO",
+  "montant" : 250.0,
+  "type" : "DON"
 } ]

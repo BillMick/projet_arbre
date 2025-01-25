@@ -7,7 +7,7 @@
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.Controllers.Association.NotificationsController">
     <!-- Top section: Title -->
     <top>
-        <HBox alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #4CAF50;">
+        <HBox style="-fx-padding: 10; -fx-background-color: #4CAF50;">
             <Label text="Notifications" style="-fx-font-size: 20; -fx-text-fill: white;"/>
         </HBox>
     </top>

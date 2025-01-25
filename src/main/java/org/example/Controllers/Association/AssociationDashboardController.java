@@ -253,7 +253,7 @@ public class AssociationDashboardController {
             // Create a new stage for the new interface
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
-            stage.setTitle("Treasury Interface");
+            stage.setTitle("Interface de Gestion de Trésorerie");
 
             // Show the new stage
             stage.show();

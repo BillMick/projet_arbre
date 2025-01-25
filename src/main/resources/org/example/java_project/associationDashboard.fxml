@@ -81,7 +81,7 @@
     <!-- Bottom section: Footer -->
     <bottom>
         <HBox alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #e0e0e0;">
-            <Label text="© 2025 Association Application. All Rights Reserved."/>
+            <Label text="© 2025 Association Application. Tous droits réservés."/>
         </HBox>
     </bottom>
 </BorderPane>

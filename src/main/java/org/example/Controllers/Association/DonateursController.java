@@ -355,7 +355,7 @@ public class DonateursController {
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Interface de Gestion des Donateurs");
-            //currentStage.close();
+            // currentStage.close();
             // Show the new stage
             stage.show();
         } catch (Exception e) {

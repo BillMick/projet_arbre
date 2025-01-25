@@ -6,7 +6,7 @@ enum TypeDette {
     DEFRAIEMENT
 }
 
-enum StatutDepense {
+enum StatutDette {
     PAYEE,
     IMPAYEE
 }
@@ -15,6 +15,7 @@ public class Dette {
     
     private int montant;
     private TypeDette type;
+    private StatutDette statut;
 
     public int montant() {
         return this.montant;
@@ -22,5 +23,9 @@ public class Dette {
 
     public TypeDette type() {
         return this.type;
+    }
+
+    public StatutDette statut() {
+        return this.statut;
     }
 }

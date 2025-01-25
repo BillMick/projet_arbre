@@ -25,19 +25,10 @@ public class TreasureManagementController {
     private Label soldeLabel;
 
     @FXML
-    private TextField amountField;
+    private Button seeDebtsButton;
 
     @FXML
-    private TextField descriptionField;
-
-    @FXML
-    private Button addMoneyButton;
-
-    @FXML
-    private Button payCotisationButton;
-
-    @FXML
-    private Label cotisationStatusLabel;
+    private Label debtsLabel;
 
     @FXML
     private TableView<Map<String, Object>> financialTable;
@@ -52,12 +43,12 @@ public class TreasureManagementController {
     private TableColumn<Map<String, Object>, String> typeColumn;
 
     @FXML
-    private TableColumn<Map<String, Object>, String> descriptionColumn;
+    private TableColumn<Map<String, Object>, String> debtorColumn;
 
     private ObservableList<Map<String, Object>> financialData = FXCollections.observableArrayList();
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final String FILE_PATH = "Storage/treasury.json"; // Update with your actual JSON file path
+    private static final String FILE_PATH = "Storage/cotisations.json"; // il y a deux fichiers à parcourir ici: cotisations, dons...
 
     @FXML
     public void initialize() {
@@ -68,7 +59,7 @@ public class TreasureManagementController {
         });
 
         amountColumn.setCellValueFactory(cellData -> {
-            Object value = cellData.getValue().get("amount");
+            Object value = cellData.getValue().get("montant");
             return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
         });
 
@@ -77,8 +68,8 @@ public class TreasureManagementController {
             return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
         });
 
-        descriptionColumn.setCellValueFactory(cellData -> {
-            Object value = cellData.getValue().get("description");
+        debtorColumn.setCellValueFactory(cellData -> {
+            Object value = cellData.getValue().get("debiteur");
             return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
         });
 
@@ -87,11 +78,11 @@ public class TreasureManagementController {
             loadFinancialData();
         } catch (IOException e) {
             e.printStackTrace();
-            System.err.println("Failed to load financial operations: " + e.getMessage());
+            System.err.println("Failed to load financial data: " + e.getMessage());
         }
 
         updateSoldeLabel();
-
+        updateDebtsLabel();
         financialTable.setItems(financialData);
     }
 
@@ -105,106 +96,6 @@ public class TreasureManagementController {
         // Parse the JSON file into a list of maps
         List<Map<String, Object>> data = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
         financialData.setAll(data);
-    }
-
-    @FXML
-    private void handleAddMoney() {
-        String amountText = amountField.getText();
-        String description = descriptionField.getText();
-
-        if (!amountText.isEmpty() && !description.isEmpty()) {
-            Map<String, Object> newOperation = Map.of(
-                    "date", java.time.LocalDate.now().toString(),
-                    "amount", amountText,
-                    "type", "Dépôt",
-                    "description", description
-            );
-
-            // Add to the TableView
-            financialData.add(newOperation);
-
-            // Update the JSON file
-            saveFinancialData();
-
-            // Clear fields
-            amountField.clear();
-            descriptionField.clear();
-        }
-    }
-
-    // Called when the "Ajouter" button is clicked
-    @FXML
-    private void onAddMoney() {
-        try {
-            // Get the amount entered by the user
-            String amountText = amountField.getText();
-            double amountToAdd = Double.parseDouble(amountText); // Make sure the input is numeric
-            String description = descriptionField.getText();
-
-            if (!amountText.isEmpty() && !description.isEmpty()) {
-                File jsonFile = Paths.get("Storage/infos.json").toFile(); // Replace with the actual JSON file path
-
-                // Load the current data from the JSON file
-                Map<String, Object> accountData = objectMapper.readValue(jsonFile, Map.class);
-
-                // Get the current "solde" from the file
-                double currentSolde = accountData.getOrDefault("solde", 0.0) instanceof Number
-                        ? ((Number) accountData.get("solde")).doubleValue()
-                        : 0.0;
-
-                // Update the "solde"
-                double newSolde = currentSolde + amountToAdd;
-                accountData.put("solde", newSolde);
-
-                // Write the updated data back to the JSON file
-                objectMapper.writeValue(jsonFile, accountData);
-
-                System.out.println("Successfully added money! New solde: " + newSolde);
-                updateSoldeLabel();
-
-                Map<String, Object> newOperation = Map.of(
-                        "date", java.time.LocalDate.now().toString(),
-                        "amount", amountText,
-                        "type", "Dépôt",
-                        "description", description
-                );
-
-                // Add to the TableView
-                financialData.add(newOperation);
-
-                // Update the JSON file
-                saveFinancialData();
-
-                // Clear fields
-                amountField.clear();
-                descriptionField.clear();
-            }
-
-            // Optionally, clear the input field
-            amountField.clear();
-
-        } catch (IOException e) {
-            System.err.println("Error reading or writing JSON file: " + e.getMessage());
-        } catch (NumberFormatException e) {
-            System.err.println("Invalid amount entered: " + e.getMessage());
-        }
-    }
-
-    @FXML
-    private void handlePayCotisation() {
-        Map<String, Object> cotisationOperation = Map.of(
-                "date", java.time.LocalDate.now().toString(),
-                "amount", "50.0",
-                "type", "Cotisation",
-                "description", "Cotisation annuelle"
-        );
-
-        financialData.add(cotisationOperation);
-        cotisationStatusLabel.setText("Payée");
-        cotisationStatusLabel.setStyle("-fx-text-fill: green;");
-
-        // Update the JSON file
-        saveFinancialData();
     }
 
     private void saveFinancialData() {
@@ -229,6 +120,34 @@ public class TreasureManagementController {
 
             // Set the Label text
             soldeLabel.setText("Solde actuel: " + currentSolde + " €");
+            System.out.println("Solde actuel: " + currentSolde);
+
+        } catch (IOException e) {
+            showErrorDialog("Error", "Unable to read solde: " + e.getMessage());
+        }
+    }
+
+    private void updateDebtsLabel() {
+        try {
+            File jsonFile = Paths.get("Storage/infos.json").toFile(); // Replace with the actual JSON file path
+            Map<String, Object> accountData = objectMapper.readValue(jsonFile, Map.class);
+            double currentSolde = accountData.getOrDefault("solde", 0.0) instanceof Number
+                    ? ((Number) accountData.get("solde")).doubleValue()
+                    : 0.0;
+
+            jsonFile = Paths.get("Storage/debts.json").toFile();
+            if (!jsonFile.exists()) {
+                objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, List.of());
+            }
+            List<Map<String, Object>> debtsList = objectMapper.readValue(jsonFile, List.class);
+            double totalDette = 0.0;
+            for (Map<String, Object> dette : debtsList) {
+                if (dette.get("montant") instanceof Number) {
+                    totalDette += ((Number) dette.get("montant")).doubleValue();
+                }
+            }
+            debtsLabel.setText("Total des Dettes: " + totalDette + " €");
+            System.out.println("Total des Dettes: " + totalDette);
 
         } catch (IOException e) {
             showErrorDialog("Error", "Unable to read solde: " + e.getMessage());

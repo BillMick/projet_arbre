@@ -1,1 +1,37 @@
-[ ]
+[ {
+  "date" : "25-01-2025",
+  "type" : "COTISATION",
+  "montant" : 14.0,
+  "debiteur" : "member1",
+  "statut" : "PERCUE"
+}, {
+  "date" : "25-01-2025",
+  "statut" : "PERCUE",
+  "debiteur" : "ml",
+  "montant" : 84.0,
+  "type" : "COTISATION"
+}, {
+  "date" : "25-01-2025",
+  "statut" : "PERCUE",
+  "debiteur" : "POPS",
+  "montant" : 500.0,
+  "type" : "COTISATION"
+}, {
+  "date" : "25-01-2025",
+  "statut" : "PERCUE",
+  "debiteur" : "Tom",
+  "montant" : 500.0,
+  "type" : "COTISATION"
+}, {
+  "date" : "25-01-2025",
+  "statut" : "PERCUE",
+  "debiteur" : "Jerry",
+  "montant" : 10.0,
+  "type" : "COTISATION"
+}, {
+  "date" : "25-01-2025",
+  "statut" : "PERCUE",
+  "debiteur" : "KANOUO",
+  "montant" : 250.0,
+  "type" : "COTISATION"
+} ]

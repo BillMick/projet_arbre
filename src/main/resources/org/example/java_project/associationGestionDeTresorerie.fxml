@@ -7,7 +7,7 @@
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.Controllers.Association.TreasureManagementController">
     <!-- Top section: Title -->
     <top>
-        <HBox alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #4CAF50;">
+        <HBox style="-fx-padding: 10; -fx-background-color: #4CAF50;">
             <Label text="Gestion de Trésorerie" style="-fx-font-size: 20; -fx-text-fill: white;"/>
         </HBox>
     </top>
@@ -44,7 +44,7 @@
                     <TableColumn text="Date" fx:id="dateColumn" prefWidth="100"/>
                     <TableColumn text="Montant (€)" fx:id="amountColumn" prefWidth="100"/>
                     <TableColumn text="Type" fx:id="typeColumn" prefWidth="150"/>
-                    <TableColumn text="Description" fx:id="descriptionColumn" prefWidth="200"/>
+                    <TableColumn text="Débiteur" fx:id="debtorColumn" prefWidth="150"/>
                 </columns>
             </TableView>
         </VBox>
@@ -53,12 +53,8 @@
     <!-- Right section: Cotisation button -->
     <right>
         <VBox spacing="20" alignment="CENTER" style="-fx-padding: 20; -fx-background-color: #f1f1f1; -fx-border-color: lightgray; -fx-border-width: 1;">
-            <Label text="Cotisation Annuelle" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
-
-            <Button text="Payer la cotisation" fx:id="payCotisationButton" style="-fx-background-color: #FF6347; -fx-text-fill: white;"/>
-
-            <Label text="Statut cotisation :" style="-fx-font-weight: bold;"/>
-            <Label fx:id="cotisationStatusLabel" text="Non Payée" style="-fx-text-fill: red;"/>
+            <Label text="Total des dettes" fx:id="debtsLabel" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+            <Button text="Voir les détails" fx:id="seeDebtsButton" style="-fx-background-color: #8f9c32; -fx-text-fill: white;"/>
         </VBox>
     </right>
 

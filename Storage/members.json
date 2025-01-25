@@ -6,4 +6,8 @@
   "nom" : "Cat",
   "email" : "tom.cat@gmail.com",
   "prenom" : "Tom"
+}, {
+  "nom" : "MAKOLE",
+  "prenom" : "Céléna",
+  "email" : "celena.makole@etu-upsaclay.fr"
 } ]
