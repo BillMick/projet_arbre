@@ -349,13 +349,13 @@ public class DonateursController {
     @FXML
     public void onDonorsButtonClick() {
         try {
-            Stage currentStage = (Stage) openDonorsInterfaceButton.getScene().getWindow();
+            // Stage currentStage = (Stage) openDonorsInterfaceButton.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(Application.class.getResource("associationGestionDesDonateurs.fxml"));
             Parent root = loader.load();
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Interface de Gestion des Donateurs");
-            currentStage.close();
+            //currentStage.close();
             // Show the new stage
             stage.show();
         } catch (Exception e) {

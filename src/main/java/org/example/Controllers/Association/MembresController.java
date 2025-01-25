@@ -38,16 +38,10 @@ public class MembresController {
     private TextField emailField;
 
     @FXML
-    private Button addMoneyButton;
+    private TextField firstnameField;
 
     @FXML
-    private Button payCotisationButton;
-
-    @FXML
-    private Label cotisationStatusLabel;
-
-    @FXML
-    private TableView<Map<String, Object>> donorsTable;
+    private TableView<Map<String, Object>> membersTable;
 
     @FXML
     private TableColumn<Map<String, Object>, String> nameColumn;
@@ -56,21 +50,15 @@ public class MembresController {
     private TableColumn<Map<String, Object>, String> emailColumn;
 
     @FXML
-    private TableColumn<Map<String, Object>, String> typeColumn;
-
-    @FXML
-    private TableColumn<Map<String, Object>, String> actionColumn;
+    private TableColumn<Map<String, Object>, String> firstnameColumn;
 
     @FXML
     private ComboBox<String> comboBox;
 
-    @FXML
-    private Button openDonorsInterfaceButton;
-
-    private ObservableList<Map<String, Object>> donorsData = FXCollections.observableArrayList();
+    private ObservableList<Map<String, Object>> membersData = FXCollections.observableArrayList();
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final String FILE_PATH = "Storage/donors.json"; // Update with your actual JSON file path
+    private static final String FILE_PATH = "Storage/members.json"; // Update with your actual JSON file path
 
     @FXML
     public void initialize() {
@@ -79,73 +67,51 @@ public class MembresController {
             Object value = cellData.getValue().get("nom");
             return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
         });
+        
+        firstnameColumn.setCellValueFactory(cellData -> {
+            Object value = cellData.getValue().get("prenom");
+            return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
+        });
 
         emailColumn.setCellValueFactory(cellData -> {
             Object value = cellData.getValue().get("email");
             return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
         });
 
-        comboBox.getItems().addAll("MUNICIPALITE", "ENTREPRISE", "ASSOCIATION", "INDIVIDU", "AUTRE");
-
-        typeColumn.setCellValueFactory(cellData -> {
-            Object value = cellData.getValue().get("type");
-            return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
-        });
-
-        // Add the delete button to each row
-        actionColumn.setCellFactory(param -> {
-            TableCell<Map<String, Object>, String> cell = new TableCell<Map<String, Object>, String>() {
-                @Override
-                protected void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty) {
-                        setGraphic(null);
-                    } else {
-                        Button deleteButton = new Button("Supprimer");
-                        deleteButton.setTextFill(Color.web("#f44336"));
-                        deleteButton.setOnAction(event -> deleteDonor(getTableRow().getIndex()));
-                        HBox hBox = new HBox(deleteButton);
-                        setGraphic(hBox);
-                    }
-                }
-            };
-            return cell;
-        });
-
         // Populate the TableView
         try {
-            loadDonorsData();
+            loadmembersData();
         } catch (IOException e) {
             e.printStackTrace();
-            System.err.println("Echec du chargement des donateurs: " + e.getMessage());
+            System.err.println("Echec du chargement des membres: " + e.getMessage());
         }
 
         updateSoldeLabel();
-        donorsTable.setItems(donorsData);
+        membersTable.setItems(membersData);
     }
 
-    private void deleteDonor(int rowIndex) {
-        Map<String, Object> donorToDelete = donorsTable.getItems().get(rowIndex);
+    private void deleteMember(int rowIndex) {
+        Map<String, Object> donorToDelete = membersTable.getItems().get(rowIndex);
         System.out.println(donorToDelete);
-        donorsTable.getItems().remove(rowIndex);
+        membersTable.getItems().remove(rowIndex);
 
         // Remove from the data source (your JSON file)
         try {
             File file = new File(FILE_PATH);
-            List<Map<String, Object>> donorsData = objectMapper.readValue(file, List.class);
+            List<Map<String, Object>> membersData = objectMapper.readValue(file, List.class);
 
             // Find and remove the donor from the data
-            donorsData.removeIf(donor -> donor.get("email").equals(donorToDelete.get("email")));
+            membersData.removeIf(donor -> donor.get("email").equals(donorToDelete.get("email")));
 
             // Write the updated list back to the JSON file
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, donorsData);
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, membersData);
             System.out.println("Donor " + donorToDelete.get("name") + " deleted");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void loadDonorsData() throws IOException {
+    private void loadmembersData() throws IOException {
         File file = new File(FILE_PATH);
         if (!file.exists()) {
             System.out.println("Aucun donateur enregistré.");
@@ -153,84 +119,84 @@ public class MembresController {
         }
         // Parse the JSON file into a list of maps
         List<Map<String, Object>> data = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
-        donorsData.setAll(data);
+        membersData.setAll(data);
     }
 
     @FXML
-    private void handleAddDonor() {
+    private void handleAddMember() {
         String name = nameField.getText();
         String email = emailField.getText();
-        String type = comboBox.getValue();
+        String firstname = firstnameField.getText();
 
-        if (!name.isEmpty() && !email.isEmpty() && !type.isEmpty()) {
-            Map<String, Object> newDonor = Map.of(
+        if (!name.isEmpty() && !email.isEmpty() && !firstname.isEmpty()) {
+            Map<String, Object> newMember = Map.of(
                     "nom", name,
-                    "email", email,
-                    "type", type
-//                    "description", description
+                    "prenom", firstname,
+                    "email", email
             );
 
             // Add to the TableView
-            donorsData.add(newDonor);
+            membersData.add(newMember);
 
             // Update the JSON file
             saveDonorData();
 
             // Clear fields
             nameField.clear();
+            firstnameField.clear();
             emailField.clear();
         }
     }
 
+//    @FXML
+//    private void onAskButtonClick() throws IOException {
+//
+//        Dialog<ButtonType> dialog = new Dialog<>();
+//        dialog.setTitle("Faire une demande");
+//
+//        VBox dialogVBox = new VBox();
+//        dialogVBox.setSpacing(10);
+//
+//        TextField amountField = new TextField();
+//        amountField.setPromptText("Entrer le montant");
+//
+//        ComboBox<String> donorComboBox = new ComboBox<>();
+//        donorComboBox.setPromptText("Choisir un donateur");
+//
+//        File file = new File(FILE_PATH);
+//        if (!file.exists()) {
+//            System.out.println("Aucun donateur enregistré.");
+//            return ;
+//        }
+//        List<Map<String, Object>> donors = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
+//        for (Map<String, Object> donor : donors) {
+//            donorComboBox.getItems().add((String) donor.get("nom"));
+//        }
+//
+//        dialogVBox.getChildren().addAll(amountField, donorComboBox);
+//
+//        dialog.getDialogPane().setContent(dialogVBox);
+//
+//        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+//        dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+//
+//        dialog.setResultConverter(dialogButton -> {
+//            if (dialogButton == ButtonType.OK) {
+//                String selectedDonor = donorComboBox.getValue();
+//                double montant = Double.parseDouble(amountField.getText());
+//                onAddMoney(montant, selectedDonor);
+//                System.out.println("Donateur " + selectedDonor + " with " + montant);
+//                //processRequest(montant, selectedDonor);  // Handle the request logic
+//            }
+//            return null;
+//        });
+//
+//        dialog.showAndWait();
+//    }
+
+
     @FXML
-    private void onAskButtonClick() throws IOException {
-
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Faire une demande");
-
-        VBox dialogVBox = new VBox();
-        dialogVBox.setSpacing(10);
-
-        TextField amountField = new TextField();
-        amountField.setPromptText("Entrer le montant");
-
-        ComboBox<String> donorComboBox = new ComboBox<>();
-        donorComboBox.setPromptText("Choisir un donateur");
-
-        File file = new File(FILE_PATH);
-        if (!file.exists()) {
-            System.out.println("Aucun donateur enregistré.");
-            return ;
-        }
-        List<Map<String, Object>> donors = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
-        for (Map<String, Object> donor : donors) {
-            donorComboBox.getItems().add((String) donor.get("nom"));
-        }
-
-        dialogVBox.getChildren().addAll(amountField, donorComboBox);
-
-        dialog.getDialogPane().setContent(dialogVBox);
-
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
-
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == ButtonType.OK) {
-                String selectedDonor = donorComboBox.getValue();
-                double montant = Double.parseDouble(amountField.getText());
-                onAddMoney(montant, selectedDonor);
-                System.out.println("Donateur " + selectedDonor + " with " + montant);
-                //processRequest(montant, selectedDonor);  // Handle the request logic
-            }
-            return null;
-        });
-
-        dialog.showAndWait();
-    }
-
-
-    @FXML
-    private void onAddMoney(double montant, String donor) {
+    private void onAddMoney(double montant, String member) {
         try {
             File jsonFile = Paths.get("Storage/infos.json").toFile(); // Replace with the actual JSON file path
             Map<String, Object> accountData = objectMapper.readValue(jsonFile, Map.class);
@@ -242,8 +208,8 @@ public class MembresController {
             objectMapper.writeValue(jsonFile, accountData);
             System.out.println("Solde mis à jour avec succès! Nouveau solde: " + newSolde);
 
-            Recette r = new Recette(montant, Recette.TypeRecette.DON, donor);
-            r.modifierStatut(Recette.StatutRecette.PERCUE);
+            Recette r = new Recette(montant, Recette.TypeRecette.COTISATION, member);
+            r.modifierStatut(Recette.StatutRecette.NONPERCUE);
 
             Map<String, Object> newRecipe = Map.of(
                     "date", Association.dateFormat.format(r.date()),
@@ -265,7 +231,7 @@ public class MembresController {
     }
 
     private void saveRecipe(Map<String, Object> recipe) throws IOException {
-        File file = Paths.get("Storage/dons.json").toFile();
+        File file = Paths.get("Storage/cotisations.json").toFile();
         if (!file.exists()) {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, List.of(recipe));
             return;
@@ -276,25 +242,23 @@ public class MembresController {
     }
 
     @FXML
-    private void handlePayCotisation() {
-        Map<String, Object> cotisationOperation = Map.of(
-                "date", java.time.LocalDate.now().toString(),
-                "amount", "50.0",
-                "type", "Cotisation",
-                "description", "Cotisation annuelle"
-        );
-
-        donorsData.add(cotisationOperation);
-        cotisationStatusLabel.setText("Payée");
-        cotisationStatusLabel.setStyle("-fx-text-fill: green;");
-
-        // Update the JSON file
-//        saveFinancialData();
-    }
+//    private void handlePayCotisation() {
+//        Map<String, Object> cotisationOperation = Map.of(
+//                "date", java.time.LocalDate.now().toString(),
+//                "amount", "50.0",
+//                "type", "Cotisation",
+//                "description", "Cotisation annuelle"
+//        );
+//
+//        membersData.add(cotisationOperation);
+//
+//        // Update the JSON file
+////        saveFinancialData();
+//    }
 
     private void saveDonorData() {
         try {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(FILE_PATH), donorsData);
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(FILE_PATH), membersData);
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Echec de l'enregistrement: " + e.getMessage());
@@ -309,7 +273,7 @@ public class MembresController {
                     ? ((Number) accountData.get("solde")).doubleValue()
                     : 0.0;
 
-            jsonFile = Paths.get("Storage/dons.json").toFile();
+            jsonFile = Paths.get("Storage/cotisations.json").toFile();
             if (!jsonFile.exists()) {
                 objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, List.of());
             }
@@ -320,7 +284,7 @@ public class MembresController {
                     totalDon += ((Number) don.get("montant")).doubleValue();
                 }
             }
-            soldeLabel.setText("Total des Dons: " + totalDon + " €");
+            soldeLabel.setText("Total des Cotisations: " + totalDon + " €");
 
         } catch (IOException e) {
             showErrorDialog("Error", "Unable to read solde: " + e.getMessage());
@@ -328,34 +292,17 @@ public class MembresController {
     }
 
     @FXML
-    public void onMembersButtonClick() {
+    public void onDonorsButtonClick() {
         try {
             // Load the new interface from the FXML file
-            FXMLLoader loader = new FXMLLoader(Application.class.getResource("associationGestionDesMembres.fxml"));
+            FXMLLoader loader = new FXMLLoader(Application.class.getResource("associationGestionDesDonateurs.fxml"));
             Parent root = loader.load();
 
             // Create a new stage for the new interface
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
-            stage.setTitle("Interface de Gestion des Membres");
+            stage.setTitle("Interface de Gestion de Trésorerie");
 
-            // Show the new stage
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    public void onDonorsButtonClick() {
-        try {
-            Stage currentStage = (Stage) openDonorsInterfaceButton.getScene().getWindow();
-            FXMLLoader loader = new FXMLLoader(Application.class.getResource("associationGestionDesDonateurs.fxml"));
-            Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Interface de Gestion des Donateurs");
-            currentStage.close();
             // Show the new stage
             stage.show();
         } catch (Exception e) {
@@ -411,7 +358,7 @@ public class MembresController {
             // Create a new stage for the new interface
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
-            stage.setTitle("Treasury Interface");
+            stage.setTitle("Interface de Gestion de la Trésorerie");
 
             // Show the new stage
             stage.show();

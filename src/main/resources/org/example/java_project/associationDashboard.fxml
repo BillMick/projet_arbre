@@ -22,8 +22,14 @@
             <Button text="Membres" fx:id="openMembersInterfaceButton" prefWidth="150" onAction="#onMembersButtonClick"/>
             <Button text="Donateurs" fx:id="openDonorsInterfaceButton" prefWidth="150" onAction="#onDonorsButtonClick"/>
             <Button text="Trésorerie" fx:id="openTreasuryInterfaceButton" prefWidth="150" onAction="#onTreasuryButtonClick"/>
+            <Button text="Votes" prefWidth="150" onAction="#onTreasuryButtonClick"/>
 
             <Separator fx:id="separator3" style="-fx-padding: 5; -fx-border-width: 1px;"/>
+
+            <Button text="Début d'exercice" prefWidth="150"/>
+            <Button text="Fin d'exercice" prefWidth="150"/>
+
+            <Separator fx:id="separator4" style="-fx-padding: 5; -fx-border-width: 1px;"/>
 
             <Button text="Quitter"
                     onAction="#onExitButtonClick"
