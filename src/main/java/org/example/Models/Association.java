@@ -25,7 +25,7 @@ public class Association extends Entite {
     private ArrayList<String> anneesExercice = new ArrayList<String>();
     private Date debutAnneeExercice;
     private Date finAnneeExercice;
-    private int montantCotisation;
+    private double montantCotisation;
     private ArrayList<Notification> notifications = new ArrayList<Notification>();
     private ArrayList<Arbre> classification = new ArrayList<Arbre>();
     private ArrayList<Activite> activites = new ArrayList<Activite>();
@@ -43,7 +43,7 @@ public class Association extends Entite {
     // ### setters ###
 
     // solde
-    public int ajoutSolde(int montant) {
+    public double ajoutSolde(double montant) {
         this.solde += montant;
         return this.solde;
         // Persistance de données
@@ -114,7 +114,7 @@ public class Association extends Entite {
     //}
 
     // recupérer le montant de la cotisation
-    public int montantCotisation() {
+    public double montantCotisation() {
         return this.montantCotisation;
     }
 
@@ -225,10 +225,10 @@ public class Association extends Entite {
     // payer ses dettes
     public boolean payerDette (Dette dette) {
         ajoutSolde(-dette.montant()); // retirer le montant, de la dette, du solde
-        if (dette.type() == TypeDette.DEFRAIEMENT) {
+        if (dette.type() == Dette.TypeDette.DEFRAIEMENT) {
             // rembourser aussi le membre
         }
-        else if (dette.type() == TypeDette.FACTURE) {
+        else if (dette.type() == Dette.TypeDette.FACTURE) {
             // payer facture
             // penser à une façon de créer des factures à régler ...
         }

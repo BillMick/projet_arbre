@@ -1,5 +1,5 @@
 [ {
-  "date" : "25-01-2025",
+  "crediteur" : "membre",
   "statut" : "IMPAYEE",
   "montant" : 250.0,
   "type" : "DEFRAIEMENT"

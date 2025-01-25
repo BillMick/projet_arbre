@@ -54,7 +54,7 @@
     <right>
         <VBox spacing="20" alignment="CENTER" style="-fx-padding: 20; -fx-background-color: #f1f1f1; -fx-border-color: lightgray; -fx-border-width: 1;">
             <Label text="Total des dettes" fx:id="debtsLabel" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
-            <Button text="Voir les détails" fx:id="seeDebtsButton" style="-fx-background-color: #8f9c32; -fx-text-fill: white;"/>
+            <Button text="Voir les détails" fx:id="seeDebtsButton" style="-fx-background-color: #8f9c32; -fx-text-fill: white;" onAction="#openDebtsDialog"/>
         </VBox>
     </right>
 

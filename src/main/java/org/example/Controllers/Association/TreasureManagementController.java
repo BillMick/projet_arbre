@@ -10,7 +10,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.example.Models.Association;
+import org.example.Models.Dette;
+import org.example.Models.Recette;
 import org.example.java_project.Application;
 
 import java.io.File;
@@ -18,6 +24,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class TreasureManagementController {
 
@@ -107,6 +114,136 @@ public class TreasureManagementController {
         }
     }
 
+    @FXML
+    private void openDebtsDialog() {
+        // Load the debts from the JSON file
+        List<Map<String, Object>> allDebts = loadDebtsFromJson();
+        List<Map<String, Object>> debts = allDebts.stream()
+                .filter(debt -> !"PAYEE".equals(debt.get("statut")))  // Filter condition
+                .collect(Collectors.toList());
+
+        // Create a new Stage for the dialog
+        Stage dialogStage = new Stage();
+        dialogStage.setTitle("Détails des Impayés (dettes)");
+
+        // Set up a TableView for displaying debts
+        TableView<Map<String, Object>> debtTable = new TableView<>();
+        TableColumn<Map<String, Object>, String> nameColumn = new TableColumn<>("Type");
+        TableColumn<Map<String, Object>, Double> amountColumn = new TableColumn<>("Montant");
+
+        // Setting up the columns
+        nameColumn.setCellValueFactory(cellData -> {
+            Object value = cellData.getValue().get("type");
+            return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
+        });
+        amountColumn.setCellValueFactory(cellData -> {
+            Object value = cellData.getValue().get("montant");
+            if (value instanceof Double) {
+                return new ReadOnlyObjectWrapper<>((Double) value);
+            } else {
+                return null;
+            }
+        });
+
+        TableColumn<Map<String, Object>, Void> payColumn = new TableColumn<>("Payer");
+        payColumn.setCellFactory(col -> {
+            TableCell<Map<String, Object>, Void> cell = new TableCell<Map<String, Object>, Void>() {
+                private final Button payButton = new Button("Payer");
+                {
+                    // payButton.setOnAction(event -> payDebt(debt, getTableRow().getIndex()));
+                    payButton.setOnAction(event -> {
+                        Map<String, Object> debt = getTableView().getItems().get(getIndex());
+                        try {
+                            payDebt(debtTable, getTableRow().getIndex());
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                }
+
+                @Override
+                public void updateItem(Void item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        setGraphic(payButton);
+                    }
+                }
+            };
+            return cell;
+        });
+
+        debtTable.getColumns().add(nameColumn);
+        debtTable.getColumns().add(amountColumn);
+        debtTable.getColumns().add(payColumn);
+
+        // Add the data to the table
+        debtTable.getItems().setAll(debts);
+
+        // Layout for the dialog
+        VBox vbox = new VBox(debtTable);
+        Scene dialogScene = new Scene(vbox);
+
+        // Set up the stage (dialog window)
+        dialogStage.setScene(dialogScene);
+        dialogStage.show();
+    }
+
+    private List<Map<String, Object>> loadDebtsFromJson() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(new File("Storage/debts.json"), objectMapper.getTypeFactory().constructCollectionType(List.class, Map.class));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private void payDebt(TableView<Map<String, Object>> debtTable, int rowIndex) throws IOException {
+        // Logic for handling the payment
+        File jsonFile = Paths.get("Storage/infos.json").toFile(); // Replace with the actual JSON file path
+        Map<String, Object> accountData = objectMapper.readValue(jsonFile, Map.class);
+        double currentSolde = accountData.getOrDefault("solde", 0.0) instanceof Number
+                ? ((Number) accountData.get("solde")).doubleValue()
+                : 0.0;
+        Map<String, Object> debtToDelete = debtTable.getItems().get(rowIndex);
+        System.out.println(debtToDelete);
+        debtTable.getItems().remove(rowIndex);
+        double newSolde = currentSolde - ((Number) debtToDelete.get("montant")).doubleValue();
+        accountData.put("solde", newSolde);
+        objectMapper.writeValue(jsonFile, accountData);
+        System.out.println("Solde mis à jour avec succès! Nouveau solde: " + newSolde);
+        // Mise à jour du statut et réinsertion
+
+        Dette d = new Dette(((Number) debtToDelete.get("montant")).doubleValue(), (Dette.TypeDette) debtToDelete.get("type"), Dette.StatutDette.PAYEE, (String) debtToDelete.get("crediteur"));
+        Map<String, Object> newRecipe = Map.of(
+                "statut", d.statut(),
+                "montant", d.montant(),
+                "type", d.type(),
+                "crediteur", d.crediteur()
+        );
+
+
+
+        try {
+            jsonFile = Paths.get("Storage/debts.json").toFile();
+            List<Map<String, Object>> data = objectMapper.readValue(jsonFile, new TypeReference<List<Map<String, Object>>>() {});
+
+            // Find and remove the donor from the data
+            data.removeIf(dt -> dt.get("crediteur").equals(debtToDelete.get("crediteur")));
+
+            // Write the updated list back to the JSON file
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, data);
+            System.out.println("Debt " + debtToDelete.get("name") + " deleted");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Paying debt: " + debtToDelete.get("type") + " amount: " + debtToDelete.get("montant"));
+        // You can add additional logic here to update your list, remove the debt, etc.
+    }
+
     private void updateSoldeLabel() {
         try {
             File jsonFile = Paths.get("Storage/infos.json").toFile(); // Replace with the actual JSON file path
@@ -146,8 +283,8 @@ public class TreasureManagementController {
                     totalDette += ((Number) dette.get("montant")).doubleValue();
                 }
             }
-            debtsLabel.setText("Total des Dettes: " + totalDette + " €");
-            System.out.println("Total des Dettes: " + totalDette);
+            debtsLabel.setText("Total des Impayés: " + totalDette + " €");
+            System.out.println("Total des Impayés: " + totalDette);
 
         } catch (IOException e) {
             showErrorDialog("Error", "Unable to read solde: " + e.getMessage());
