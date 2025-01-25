@@ -64,6 +64,21 @@ public class AppGestion {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/FenetreAjouterArbre.fxml"));
             Parent root = loader.load();
 
+            // Crée une image de fond
+            Image backgroundImage = new Image(getClass().getResource("/images/img2.png").toExternalForm());
+            BackgroundImage bgImage = new BackgroundImage(
+                    backgroundImage,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.CENTER,
+                    new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, false, true)
+            );
+
+            // Applique l'image de fond à la racine
+            if (root instanceof Pane) {
+                ((Pane) root).setBackground(new Background(bgImage));
+            }
+
             // Créer une nouvelle scène pour cette fenêtre
             Stage nouvelleFenetre = new Stage();
             nouvelleFenetre.setTitle("Ajouter un Arbre");

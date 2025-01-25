@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -7,17 +8,17 @@
 
 <AnchorPane maxHeight="400.0" maxWidth="600.0" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AppGestion">
     <children>
-        <VBox prefHeight="400.0" prefWidth="600.0" spacing="20.0" alignment="CENTER" >
+        <VBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" spacing="20.0">
             <!-- Section des boutons centraux -->
-            <HBox alignment="CENTER" spacing="30.0" prefHeight="150.0" prefWidth="600.0">
+            <HBox alignment="CENTER" prefHeight="272.0" prefWidth="600.0" spacing="30.0">
                 <children>
-                    <Button fx:id="btnAjouter" mnemonicParsing="false" prefHeight="50.0" prefWidth="180.0" text="Ajouter Arbre" textFill="#06ba6b" onAction="#ouvrirFenetreAjouterArbre">
+                    <Button fx:id="btnAjouter" mnemonicParsing="false" onAction="#ouvrirFenetreAjouterArbre" prefHeight="50.0" prefWidth="200.0" text="Ajouter Arbre" textFill="#06ba6b" translateY="20.0">
                         <font>
                             <Font name="Arial Narrow" size="18.0" />
                         </font>
                     </Button>
 
-                    <Button fx:id="btnSuppModif" mnemonicParsing="false" prefHeight="50.0" prefWidth="220.0" text="Supprimer/Modifier Arbre" textFill="#06ba6b" onAction = "#modifSuppArbre">
+                    <Button fx:id="btnSuppModif" mnemonicParsing="false" onAction="#modifSuppArbre" prefHeight="50.0" prefWidth="200.0" text="Supprimer / Modifier Arbre" textFill="#06ba6b" translateY="20.0">
                         <font>
                             <Font name="Arial Narrow" size="18.0" />
                         </font>
@@ -26,11 +27,11 @@
             </HBox>
 
             <!-- Bouton Retour en bas -->
-            <HBox alignment="CENTER" spacing="10.0" prefWidth="600.0" >
+            <HBox alignment="CENTER" prefWidth="600.0" spacing="10.0">
                 <children>
-                    <Button fx:id="btnRetour" alignment="CENTER" maxHeight="30.0" maxWidth="100.0" mnemonicParsing="false" onAction="#Retours" text="Retour" textFill="#06ba6b">
+                    <Button fx:id="btnRetour" alignment="CENTER" maxHeight="30.0" maxWidth="130.0" minHeight="30.0" minWidth="130.0" mnemonicParsing="false" onAction="#Retours" text="Retour" textFill="#06ba6b">
                         <font>
-                            <Font name="Arial Nova" size="12.0" />
+                            <Font name="Arial Nova" size="14.0" />
                         </font>
                     </Button>
                 </children>

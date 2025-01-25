@@ -7,6 +7,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import model.Arbre;
 import model.LectureCSV;
@@ -63,6 +65,21 @@ public class FenetreModifierArbre {
             // Charger le fichier FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/FenetreModifierArbre.fxml"));
             Parent root = loader.load();
+
+            // Crée une image de fond
+            Image backgroundImage = new Image(getClass().getResource("/images/img2.png").toExternalForm());
+            BackgroundImage bgImage = new BackgroundImage(
+                    backgroundImage,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.CENTER,
+                    new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, false, true)
+            );
+
+            // Applique l'image de fond à la racine
+            if (root instanceof Pane) {
+                ((Pane) root).setBackground(new Background(bgImage));
+            }
 
             // Récupérer le contrôleur associé au fichier FXML
             FenetreModifierArbre controller = loader.getController();
