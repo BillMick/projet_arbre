@@ -8,9 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
@@ -20,6 +18,7 @@ import model.*;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Optional;
 
 import static model.LectureCSV.arbresList;
 
@@ -131,13 +130,11 @@ public class FenetreModifSuppArbre {
         colGeo2D = new TableColumn<Arbre, String>("GEO_2D");
         colGeo2D.setCellValueFactory(new PropertyValueFactory<Arbre, String>("geo2D"));
 
-        tableView.getColumns().addAll(colIDBase, colTypeEmp,colDOM, colArrd,colCompAdresse,colNum,colLieu, colGenre,colEspece,colVariete, colCirconference, colHauteur, colStadeDev, colRemarquable, colGeo2D);
+        tableView.getColumns().addAll(colIDBase, colTypeEmp, colDOM, colArrd, colCompAdresse, colNum, colLieu, colGenre, colEspece, colVariete, colCirconference, colHauteur, colStadeDev, colRemarquable, colGeo2D);
 
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         System.out.println("Initialisation des colonnes terminée.");
     }
-
-
 
 
     @FXML
@@ -166,13 +163,13 @@ public class FenetreModifSuppArbre {
     }
 
     @FXML
-    public void Retours(javafx.event.ActionEvent event){
+    public void Retours(javafx.event.ActionEvent event) {
         AppPrincipale AP = new AppPrincipale();
         AP.Principale(event);
     }
 
     @FXML
-    public void Rechercher(javafx.event.ActionEvent event){
+    public void Rechercher(javafx.event.ActionEvent event) {
 
         // Création de la FilteredList à partir de la liste observable existante
         FilteredList<Arbre> filteredList = new FilteredList<>(arbresList, p -> true);
@@ -206,12 +203,49 @@ public class FenetreModifSuppArbre {
     }
 
     @FXML
-    public void Modifier(javafx.event.ActionEvent event){
+    public void Modifier(javafx.event.ActionEvent event) {
 
     }
 
     @FXML
-    public void Supprimer(javafx.event.ActionEvent event){
+    public void Supprimer(javafx.event.ActionEvent event) {
+        // Get the selected tree from the table
+        Arbre selectedArbre = tableView.getSelectionModel().getSelectedItem();
 
+        // Check if a tree is selected
+        if (selectedArbre == null) {
+            // Show an alert if no tree is selected
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Suppression");
+            alert.setHeaderText(null);
+            alert.setContentText("Veuillez sélectionner un arbre à supprimer.");
+            alert.showAndWait();
+            return;
+        }
+
+        // Confirmation dialog
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmAlert.setTitle("Confirmation de suppression");
+        confirmAlert.setHeaderText(null);
+        confirmAlert.setContentText("Êtes-vous sûr de vouloir supprimer cet arbre ?");
+
+        Optional<ButtonType> result = confirmAlert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // Remove the selected tree from the list
+            arbresList.remove(selectedArbre);
+
+            // Ajouter une notification d'abattage
+            Notification notificationModel = new Notification();
+            String notificationMessage = "Abattage de l'arbre de l'ID : " + selectedArbre.getIdBase();
+            notificationModel.addSentNotification(NotificationType.ABATTAGE, notificationMessage);
+
+            // Show success message
+            Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+            successAlert.setTitle("Suppression");
+            successAlert.setHeaderText(null);
+            successAlert.setContentText("L'arbre a été supprimé avec succès. Une notification d'abattage a été ajoutée.");
+            successAlert.showAndWait();
+        }
     }
+
 }

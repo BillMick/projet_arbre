@@ -17,14 +17,14 @@
               <menus>
                 <Menu mnemonicParsing="false" text="Notifications">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Close" />
+                      <MenuItem mnemonicParsing="false" text="Afficher Notifications" onAction="#ouvrirNotifications"/>
                   </items>
                 </Menu>
               </menus>
             </MenuBar>
             <HBox prefHeight="300.0" prefWidth="600.0">
                <children>
-                  <Button fx:id="btnGestion" mnemonicParsing="false" onAction="#gestionArbre" prefHeight="40.0" prefWidth="150.0" text="Gestion des Arbres" textFill="#06ba6b" translateX="100.0" translateY="170.0">
+                  <Button fx:id="btnGestion" mnemonicParsing="false" onAction="#gestionArbre" prefHeight="40.0" prefWidth="160.0" text="Gestion des Arbres" textFill="#06ba6b" translateX="100.0" translateY="170.0">
                      <font>
                         <Font name="Arial Narrow" size="18.0" />
                      </font></Button>

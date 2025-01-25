@@ -2,10 +2,11 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import model.Arbre;
 import model.LectureCSV;
+import model.Notification;
+import model.NotificationType;
 
 public class FenetreAjouterArbre {
 
@@ -48,31 +49,26 @@ public class FenetreAjouterArbre {
     @FXML
     private TextField txtGeo;
 
-    @FXML
-    private Button btnAjouter;
+    private Notification notificationModel = new Notification();
 
     @FXML
     public void ajouterArbre() {
         try {
-            // Vérification de l'ID de base
             String idBaseSaisi = txtIDBase.getText().trim();
             if (idBaseSaisi.isEmpty()) {
                 throw new IllegalArgumentException("L'ID Base est obligatoire !");
             }
 
-            // Vérifier si l'ID existe déjà
             boolean existeDeja = LectureCSV.arbresList.stream()
                     .anyMatch(arbre -> arbre.getIdBase().equals(idBaseSaisi));
 
             if (existeDeja) {
-                // Afficher une alerte indiquant que l'arbre existe déjà
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Erreur d'ajout");
                 alert.setHeaderText("L'arbre existe déjà");
                 alert.setContentText("Un arbre avec cet ID Base existe déjà dans la liste.");
                 alert.showAndWait();
             } else {
-                // Créer un nouvel arbre
                 Arbre nouvelArbre = new Arbre(
                         txtIDBase.getText(),
                         txtType.getText(),
@@ -92,41 +88,28 @@ public class FenetreAjouterArbre {
                         txtRemarquable.getText(),
                         txtGeo.getText()
                 );
-
-                // Ajouter l'arbre à la liste
-                // Ajouter l'arbre à la liste (au début)
                 LectureCSV.arbresList.add(0, nouvelArbre);
 
+                // Ajouter une notification pour l'arbre ajouté
+                String message = "Plantation de l'arbre avec l'ID " + txtIDBase.getText();
+                notificationModel.addSentNotification(NotificationType.ABATTAGE, message);
 
-                // Afficher une alerte de confirmation
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Succès");
                 alert.setHeaderText("Arbre ajouté");
                 alert.setContentText("L'arbre a été ajouté avec succès !");
                 alert.showAndWait();
-
-                // Réinitialiser les champs
                 resetFormFields();
             }
         } catch (IllegalArgumentException e) {
-            // Gérer les erreurs liées aux champs obligatoires
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Erreur");
             alert.setHeaderText("Données invalides");
             alert.setContentText(e.getMessage());
             alert.showAndWait();
-        } catch (Exception e) {
-            // Gérer les erreurs inattendues
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erreur");
-            alert.setHeaderText("Une erreur inattendue est survenue");
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
         }
     }
 
-
-    // Méthode pour réinitialiser les champs du formulaire
     private void resetFormFields() {
         txtIDBase.clear();
         txtType.clear();
