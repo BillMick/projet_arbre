@@ -133,4 +133,24 @@ public class FenetreAjouterArbre {
         txtRemarquable.clear();
         txtGeo.clear();
     }
+    @FXML
+    public void retourGestionArbre(javafx.event.ActionEvent event) {
+        // Fermer la fenêtre actuelle (FenetreAjouterArbre)
+        Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+        stage.close();  // Ferme la fenêtre FenetreAjouterArbre
+
+        // Réouvrir la fenêtre de gestion des arbres (AppGestion) déjà ouverte
+        try {
+            // Récupérer la fenêtre de gestion des arbres qui était ouverte avant
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AppGestion.fxml"));
+            Parent root = loader.load();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
 }
