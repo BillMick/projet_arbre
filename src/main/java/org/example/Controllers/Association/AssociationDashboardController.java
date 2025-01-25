@@ -70,6 +70,37 @@ public class AssociationDashboardController {
             return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
         });
 
+        // Set color based on the status
+        statusColumn.setCellFactory(param -> {
+            return new TableCell<Map<String, Object>, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                        setStyle("");
+                    } else {
+                        setText(item);
+                        switch (item) { //.toLowerCase()
+                            case "REMARQUABLE":
+                                setStyle("-fx-text-fill: #074994;"); // Blue
+                                break;
+                            case "ABATTU":
+                                setStyle("-fx-text-fill: #8B0000;"); // Red
+                                break;
+                            case "en croissance":
+                                setStyle("-fx-text-fill: #32CD32;"); // Green
+                                break;
+                            case "NON REMARQUABLE":
+                            default:
+                                setStyle("-fx-text-fill: black;"); // Default to black if no match
+                                break;
+                        }
+                    }
+                }
+            };
+        });
+
         // Load data into the TableView
         try {
             updateTableData();

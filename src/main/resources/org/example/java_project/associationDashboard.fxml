@@ -52,9 +52,9 @@
             <Label text="Liste des Arbres" style="-fx-font-weight: bold;"/>
             <TableView fx:id="treesTable" prefHeight="200">
                 <columns>
-                    <TableColumn text="Nom commun" fx:id="nameColumn" prefWidth="150"/>
-                    <TableColumn text="Localisation" fx:id="locationColumn" prefWidth="200"/>
-                    <TableColumn text="Statut" fx:id="statusColumn" prefWidth="150"/>
+                    <TableColumn text="Nom commun" fx:id="nameColumn" prefWidth="150" style="-fx-font-weight: bold;"/>
+                    <TableColumn text="Localisation" fx:id="locationColumn" prefWidth="200" style="-fx-font-weight: bold;"/>
+                    <TableColumn text="Statut" fx:id="statusColumn" prefWidth="150" style="-fx-font-weight: bold;"/>
                 </columns>
             </TableView>
 

@@ -350,12 +350,12 @@ public class DonateursController {
     public void onDonorsButtonClick() {
         try {
             Stage currentStage = (Stage) openDonorsInterfaceButton.getScene().getWindow();
-            currentStage.close();
             FXMLLoader loader = new FXMLLoader(Application.class.getResource("associationGestionDesDonateurs.fxml"));
             Parent root = loader.load();
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
-            stage.setTitle("Interface de Gestion de Trésorerie");
+            stage.setTitle("Interface de Gestion des Donateurs");
+            currentStage.close();
             // Show the new stage
             stage.show();
         } catch (Exception e) {

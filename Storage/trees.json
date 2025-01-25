@@ -2,31 +2,31 @@
   {
     "name": "Manguier",
     "location": "Ile-De-France",
-    "status": "remarquable"
+    "status": "REMARQUABLE"
   },
   {
     "name": "Cocotier",
     "location": "Lille",
-    "status": "non remarquable"
+    "status": "NON REMARQUABLE"
   },
   {
     "name": "Goyavier",
     "location": "Orsay",
-    "status": "abattu"
+    "status": "ABATTU"
   },
   {
     "name": "Citronnier",
     "location": "Haut-De-France",
-    "status": "remarquable"
+    "status": "REMARQUABLE"
   },
   {
     "name": "Papayer",
     "location": "Pyrennés",
-    "status": "remarquable"
+    "status": "REMARQUABLE"
   },
   {
     "name": "Avocatier",
     "location": "Lausanne",
-    "status": "remarquable"
+    "status": "REMARQUABLE"
   }
 ]
