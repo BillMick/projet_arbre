@@ -2,6 +2,7 @@ package controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
@@ -29,6 +31,9 @@ public class AppListeArbres {
     @FXML
     private TableView<Arbre> tableView;
 
+
+    @FXML
+    private TextField searchField;
     @FXML
     private TableColumn<Arbre, String> colIDBase;
     @FXML
@@ -63,6 +68,7 @@ public class AppListeArbres {
     private TableColumn<Arbre, String> colRemarquable;
     @FXML
     private TableColumn<Arbre, String> colGeo2D;
+
 
     @FXML
     public void initialize() {
@@ -167,5 +173,39 @@ public class AppListeArbres {
     public void Retours(javafx.event.ActionEvent event){
         AppPrincipale AP = new AppPrincipale();
         AP.Principale(event);
+    }
+
+    @FXML
+    public void Rechercher(javafx.event.ActionEvent event){
+
+        // Création de la FilteredList à partir de la liste observable existante
+        FilteredList<Arbre> filteredList = new FilteredList<>(arbresList, p -> true);
+
+        // Lier le champ de recherche à la FilteredList
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredList.setPredicate(arbre -> {
+                // Si le champ de recherche est vide, afficher tous les éléments
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+
+                // Convertir le texte de recherche en minuscules pour comparaison
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                // Comparer chaque propriété pertinente de l'objet Arbre
+                return arbre.getIdBase().toLowerCase().contains(lowerCaseFilter) ||
+                        arbre.getDomanialite().toLowerCase().contains(lowerCaseFilter) ||
+                        arbre.getArrondissement().toLowerCase().contains(lowerCaseFilter) ||
+                        arbre.getComplementAdresse().toLowerCase().contains(lowerCaseFilter) ||
+                        arbre.getLibelleFr().toLowerCase().contains(lowerCaseFilter) ||
+                        arbre.getGenre().toLowerCase().contains(lowerCaseFilter) ||
+                        arbre.getEspece().toLowerCase().contains(lowerCaseFilter) ||
+                        arbre.getVarieteOuCultivar().toLowerCase().contains(lowerCaseFilter);
+            });
+        });
+
+        // Appliquer les données filtrées au TableView
+        tableView.setItems(filteredList);
+
     }
 }
