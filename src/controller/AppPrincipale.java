@@ -65,10 +65,12 @@ public class AppPrincipale {
         AppListeArbres AL = new AppListeArbres();
         AL.afficheTableau(event);
     }
-    @FXML
-    public void Fermer(javafx.event.ActionEvent event){
-
+    public void Fermer(javafx.event.ActionEvent event) {
+        // Ferme la fenêtre de l'application
+        Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+        stage.close();  // Ferme la fenêtre
     }
+
 
     @FXML
     public void ouvrirNotifications() {
