@@ -30,7 +30,7 @@ public class Notification {
     }
 
     // Sauvegarder la notification dans un fichier JSON
-    private void saveToJson(NotificationType type, String message) {
+  private void saveToJson(NotificationType type, String message) {
         try {
             File file = new File("notifications.json");
             JsonArray notificationsArray;
