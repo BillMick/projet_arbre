@@ -273,15 +273,18 @@ public class FenetreModifSuppArbre {
             // Remove the selected tree from the list
             arbresList.remove(selectedArbre);
 
-            // Optional: Save changes to CSV or database
-            // LectureCSV.sauvegarderDonnees();
+            // Ajouter une notification d'abattage
+            Notification notificationModel = new Notification();
+            String notificationMessage = "Abattage de l'arbre de l'ID : " + selectedArbre.getIdBase();
+            notificationModel.addSentNotification(NotificationType.ABATTAGE, notificationMessage);
 
             // Show success message
             Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
             successAlert.setTitle("Suppression");
             successAlert.setHeaderText(null);
-            successAlert.setContentText("L'arbre a été supprimé avec succès.");
+            successAlert.setContentText("L'arbre a été supprimé avec succès. Une notification d'abattage a été ajoutée.");
             successAlert.showAndWait();
         }
     }
+
 }

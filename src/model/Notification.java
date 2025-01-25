@@ -30,9 +30,9 @@ public class Notification {
     }
 
     // Sauvegarder la notification dans un fichier JSON
-    private void saveToJson(NotificationType type, String message) {
+  private void saveToJson(NotificationType type, String message) {
         try {
-            File file = new File("notifications.json");
+            File file = new File("projet_arbre/notifications.json");
             JsonArray notificationsArray;
 
             // Si le fichier existe, on charge les notifications existantes

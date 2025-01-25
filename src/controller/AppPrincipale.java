@@ -70,5 +70,21 @@ public class AppPrincipale {
 
     }
 
+    @FXML
+    public void ouvrirNotifications() {
+        try {
+            // Charger le fichier FXML pour la fenêtre des notifications
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Notification.fxml"));
+            Parent root = loader.load();
+
+            // Créer une nouvelle fenêtre pour afficher les notifications
+            Stage stage = new Stage();
+            stage.setTitle("Notifications");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

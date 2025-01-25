@@ -13,46 +13,46 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="650.0" maxWidth="1000.0" minHeight="650.0" minWidth="1000.0" prefHeight="650.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AppListeArbres">
-   <children>
-      <VBox prefHeight="750.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <MenuBar prefHeight="26.0" prefWidth="960.0">
-              <menus>
-                <Menu mnemonicParsing="false" text="File">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Close" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Delete" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="About" />
-                  </items>
-                </Menu>
-              </menus>
-            </MenuBar>
-            <HBox prefHeight="37.0" prefWidth="1000.0">
-               <children>
-                  <TextField fx:id="searchField" prefHeight="25.0" prefWidth="667.0" translateX="25.0" translateY="5.0" />
-                  <Button fx:id="btnRechercher" mnemonicParsing="false" onAction="#Rechercher" prefHeight="25.0" prefWidth="150.0" text="Rechercher" translateX="150.0" translateY="5.0" />
-               </children>
-            </HBox>
-            <ScrollPane fitToHeight="true" prefHeight="550.0" prefWidth="1000.0">
-               <content>
-                  <TableView fx:id="tableView" prefHeight="43000.0" prefWidth="2500.0">
-                  </TableView>
-               </content>
-            </ScrollPane>
-            <Button fx:id="btnRetour" alignment="CENTER" maxHeight="25.0" maxWidth="80.0" minHeight="25.0" minWidth="80.0" mnemonicParsing="false" onAction="#Retours" text="Retour" textFill="#06ba6b" translateX="900.0" translateY="5.0">
-               <font>
-                  <Font name="Arial Nova" size="12.0" />
-               </font>
-            </Button>
-         </children>
-      </VBox>
-   </children>
+    <children>
+        <VBox prefHeight="750.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <MenuBar prefHeight="26.0" prefWidth="960.0">
+                    <menus>
+                        <Menu mnemonicParsing="false" text="File">
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="Close" />
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Edit">
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="Delete" />
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Help">
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="About" />
+                            </items>
+                        </Menu>
+                    </menus>
+                </MenuBar>
+                <HBox prefHeight="37.0" prefWidth="1000.0">
+                    <children>
+                        <TextField fx:id="searchField" prefHeight="25.0" prefWidth="667.0" translateX="25.0" translateY="5.0" />
+                        <Button fx:id="btnRechercher" mnemonicParsing="false" onAction="#Rechercher" prefHeight="25.0" prefWidth="150.0" text="Rechercher" translateX="150.0" translateY="5.0" />
+                    </children>
+                </HBox>
+                <ScrollPane fitToHeight="true" prefHeight="550.0" prefWidth="1000.0">
+                    <content>
+                        <TableView fx:id="tableView" prefHeight="43000.0" prefWidth="2500.0">
+                        </TableView>
+                    </content>
+                </ScrollPane>
+                <Button fx:id="btnRetour" alignment="CENTER" maxHeight="25.0" maxWidth="80.0" minHeight="25.0" minWidth="80.0" mnemonicParsing="false" onAction="#Retours" text="Retour" textFill="#06ba6b" translateX="900.0" translateY="5.0">
+                    <font>
+                        <Font name="Arial Nova" size="12.0" />
+                    </font>
+                </Button>
+            </children>
+        </VBox>
+    </children>
 </AnchorPane>
