@@ -156,7 +156,11 @@ public class AppListeArbres {
             nouvelleFenetre.setTitle("Liste des Arbres");
             nouvelleFenetre.setScene(new Scene(root));
             initialize();
-
+            // Désactiver la croix de fermeture
+            nouvelleFenetre.setOnCloseRequest(closeEvent -> {
+                closeEvent.consume(); // Empêche la fermeture
+                System.out.println("Fermeture désactivée.");
+            });
             // Fermeture de la fenêtre principale
             Stage fenetrePrincipale = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
             fenetrePrincipale.close();

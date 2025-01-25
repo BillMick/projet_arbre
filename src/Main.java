@@ -35,7 +35,10 @@ public class Main extends Application {
             // Charge le fichier FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AppPrincipale.fxml"));
             Parent root = loader.load();
-
+// Désactiver la croix de fermeture
+            primaryStage.setOnCloseRequest(event -> {
+                event.consume(); // Empêche la fermeture
+            });
             loadCSVData("projet_arbre/resources/liste_arbres.csv");
 
             // Crée une image de fond

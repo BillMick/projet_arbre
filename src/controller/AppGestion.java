@@ -38,7 +38,11 @@ public class AppGestion {
             Stage nouvelleFenetre = new Stage();
             nouvelleFenetre.setTitle("Gestion Arbres");
             nouvelleFenetre.setScene(new Scene(root));
-
+            // Désactiver la croix de fermeture
+            nouvelleFenetre.setOnCloseRequest(eventClose -> {
+                eventClose.consume(); // Empêche la fermeture
+                System.out.println("Fermeture désactivée.");
+            });
             // Fermeture de la fenêtre principale
             Stage fenetrePrincipale = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
             fenetrePrincipale.close();
