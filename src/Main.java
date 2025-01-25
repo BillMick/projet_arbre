@@ -35,7 +35,7 @@ public class Main extends Application {
             // Charge le fichier FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AppPrincipale.fxml"));
             Parent root = loader.load();
-// Désactiver la croix de fermeture
+            // Désactiver la croix de fermeture
             primaryStage.setOnCloseRequest(event -> {
                 event.consume(); // Empêche la fermeture
             });

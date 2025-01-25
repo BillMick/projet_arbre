@@ -41,6 +41,11 @@ public class AppPrincipale {
             nouvelleFenetre.setTitle("Espaces Verts");
             nouvelleFenetre.setScene(new Scene(root));
 
+            // Désactiver le comportement par défaut du bouton de fermeture (croix)
+            nouvelleFenetre.setOnCloseRequest(eventClose -> {
+                eventClose.consume();
+                System.out.println("La fermeture via la croix est désactivée.");
+            });
             // Fermeture de la fenêtre principale
             Stage fenetrePrincipale = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
             fenetrePrincipale.close();
