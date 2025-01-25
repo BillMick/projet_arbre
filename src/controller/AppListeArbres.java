@@ -69,7 +69,6 @@ public class AppListeArbres {
     @FXML
     private TableColumn<Arbre, String> colGeo2D;
 
-
     @FXML
     public void initialize() {
         if (tableView == null) {
@@ -137,7 +136,7 @@ public class AppListeArbres {
 
         tableView.getColumns().addAll(colIDBase, colTypeEmp,colDOM, colArrd,colCompAdresse,colNum,colLieu, colGenre,colEspece,colVariete, colCirconference, colHauteur, colStadeDev, colRemarquable, colGeo2D);
 
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         System.out.println("Initialisation des colonnes terminée.");
     }
 

@@ -9,7 +9,6 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-
 public class AppGestion {
     @FXML
     public void Gestion(javafx.event.ActionEvent event){
@@ -79,5 +78,6 @@ public class AppGestion {
             e.printStackTrace();
         }
     }
+
 
 }
