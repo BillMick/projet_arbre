@@ -36,7 +36,7 @@ public class Main extends Application {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AppPrincipale.fxml"));
             Parent root = loader.load();
 
-            loadCSVData("C:\\Users\\yacin\\IdeaProjects\\espaces_verts2\\projet_arbre\\resources\\liste_arbres.csv");
+            loadCSVData("C:\\Users\\Utilisateur\\JAVA_PROJECT_ET4\\projet_arbre\\resources\\liste_arbres.csv");
 
             // Crée une image de fond
             Image backgroundImage = new Image(getClass().getResource("/images/img.png").toExternalForm());
