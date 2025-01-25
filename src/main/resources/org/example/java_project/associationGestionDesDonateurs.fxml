@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.Controllers.Association.DonateursController">
+    <!-- Top section: Title -->
+    <top>
+        <HBox alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #4CAF50;">
+            <Label text="Gestion des Donateurs" style="-fx-font-size: 20; -fx-text-fill: white;"/>
+        </HBox>
+    </top>
+
+    <!-- Left section: Form for adding money -->
+    <left>
+        <VBox spacing="10" style="-fx-padding: 20; -fx-background-color: #f9f9f9; -fx-border-color: lightgray; -fx-border-width: 1;" alignment="CENTER">
+            <Label fx:id="soldeLabel" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+            <Button text="Faire une demande"
+                    onAction="#onAskButtonClick"
+                    style="-fx-background-color: #4CAF50; -fx-text-fill: white;"
+                    alignment="CENTER"
+            />
+            <Separator fx:id="separator" style="-fx-padding: 5; -fx-border-width: 1px;"/>
+
+            <Button text="Activités" fx:id="openActivitiesInterfaceButton" prefWidth="150" onAction="#onActivitiesButtonClick"/>
+            <Button text="Notifications" fx:id="openNotificationsInterfaceButton" prefWidth="150" onAction="#onNotificationsButtonClick"/>
+            <Button text="Membres" fx:id="openMembersInterfaceButton" prefWidth="150" onAction="#onMembersButtonClick"/>
+            <Button text="Trésorerie" fx:id="openTreasuryInterfaceButton" prefWidth="150" onAction="#onTreasuryButtonClick"/>
+
+            <Separator fx:id="separator2" style="-fx-padding: 5; -fx-border-width: 1px;"/>
+
+            <Button text="Quitter"
+                    onAction="#onExitButtonClick"
+                    style="-fx-background-color: #f44336; -fx-text-fill: white;"
+                    alignment="CENTER"
+            />
+        </VBox>
+    </left>
+
+    <!-- Center section: Financial operations table -->
+    <center>
+        <VBox spacing="10" style="-fx-padding: 20;">
+            <Label text="Donateurs" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+            <TableView fx:id="donorsTable" prefHeight="300">
+                <columns>
+                    <TableColumn text="Nom" fx:id="nameColumn" prefWidth="150" style="-fx-font-weight: bold;"/>
+                    <TableColumn text="Email" fx:id="emailColumn" prefWidth="150" style="-fx-text-fill: #074994; -fx-font-weight: bold;"/>
+                    <TableColumn text="Type" fx:id="typeColumn" prefWidth="150" style="-fx-font-weight: bold;"/>
+                    <TableColumn text="Action" fx:id="actionColumn" prefWidth="100" style="-fx-font-weight: bold;"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+
+    <!-- Right section: Cotisation button -->
+    <right>
+        <VBox spacing="5" alignment="CENTER" style="-fx-padding: 20; -fx-background-color: #f1f1f1; -fx-border-color: lightgray; -fx-border-width: 1;">
+            <Label text="Ajouter un donateur" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+
+            <Label text="Nom :" style="-fx-font-weight: bold;"/>
+            <TextField fx:id="nameField" promptText="Nom du donateur"/>
+            <Label text="Email :" style="-fx-font-size: 12; -fx-font-weight: bold;"/>
+            <TextField fx:id="emailField" promptText="Ex: donateur@gmail.com"/>
+            <Label text="Type :" style="-fx-font-size: 12; -fx-font-weight: bold;"/>
+            <ComboBox fx:id="comboBox" promptText="Choisir un type" />
+            <Separator fx:id="separator3" style="-fx-padding: 5; -fx-border-width: 1px;"/>
+            <Button text="Ajouter" fx:id="addDonorButton" onAction="#handleAddDonor" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+        </VBox>
+    </right>
+
+    <!-- Bottom section: Footer -->
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #e0e0e0;">
+            <Label text="© 2025 Association Application. Tous droits réservés."/>
+        </HBox>
+    </bottom>
+</BorderPane>

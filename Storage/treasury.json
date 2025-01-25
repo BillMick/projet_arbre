@@ -28,4 +28,9 @@
   "description" : "n",
   "type" : "Dépôt",
   "amount" : "5"
+}, {
+  "amount" : "100",
+  "type" : "Dépôt",
+  "description" : "Crédit",
+  "date" : "2025-01-24"
 } ]

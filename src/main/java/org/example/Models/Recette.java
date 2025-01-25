@@ -3,7 +3,7 @@ import java.util.Date;
 
 
 public class Recette {
-    private final int montant;
+    private final double montant;
     private final TypeRecette type;
     // private final Object debiteur; // nom ou email
     private final String debiteur;
@@ -30,7 +30,7 @@ public class Recette {
         NONPERCUE
     }
 
-    public Recette(int montant, TypeRecette type, String debiteur) {
+    public Recette(double montant, TypeRecette type, String debiteur) {
         this.montant = montant;
         this.type = type;
         this.debiteur = debiteur;
@@ -57,7 +57,7 @@ public class Recette {
         return this.statut;
     }
 
-    public int montant() {
+    public double montant() {
         return this.montant;
     }
 

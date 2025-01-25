@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.Controllers.Association.AssociationDashboardController">
+    <!-- Top section: Dashboard Title -->
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 10; -fx-background-color: #4CAF50;">
+            <Label text="Dashboard" style="-fx-font-size: 20; -fx-text-fill: white;"/>
+        </HBox>
+    </top>
+
+    <!-- Left section: Sidebar -->
+    <left>
+        <VBox spacing="10" style="-fx-padding: 10; -fx-background-color: #f0f0f0; -fx-border-color: lightgray; -fx-border-width: 1;">
+            <Label text="Menu" style="-fx-font-weight: bold;"/>
+            <!--            <Button text="Home" prefWidth="150"/>-->
+            <Button text="Activités" fx:id="openActivitiesInterfaceButton" prefWidth="150" onAction="#onActivitiesButtonClick"/>
+            <Button text="Notifications" fx:id="openNotificationsInterfaceButton" prefWidth="150" onAction="#onNotificationsButtonClick"/>
+            <Button text="Membres" fx:id="openMembersInterfaceButton" prefWidth="150" onAction="#onMembersButtonClick"/>
+            <Button text="Donateurs" fx:id="openDonorsInterfaceButton" prefWidth="150" onAction="#onDonorsButtonClick"/>
+            <Button text="Trésorerie" fx:id="openTreasuryInterfaceButton" prefWidth="150" onAction="#onTreasuryButtonClick"/>
+
+            <Separator fx:id="separator3" style="-fx-padding: 5; -fx-border-width: 1px;"/>
+
+            <Button text="Quitter"
+                    onAction="#onExitButtonClick"
+                    prefWidth="150" style="-fx-background-color: #FF6347; -fx-text-fill: white;"
+                    alignment="CENTER"
+            />
+        </VBox>
+    </left>
+
+    <!-- Center section: Main Content -->
+    <center>
+        <VBox spacing="20" style="-fx-padding: 20;">
+            <Label text="Bienvenu·e, [President Name]" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+
+<!--            <GridPane hgap="10" vgap="10">-->
+<!--                <Label text="Member ID:"/>-->
+<!--                <TextField fx:id="memberIdField" editable="false" text="[ID]" style="-fx-background-color: lightgray;"/>-->
+
+<!--                <Label text="Email:"/>-->
+<!--                <TextField fx:id="emailField" editable="false" text="[email]" style="-fx-background-color: lightgray;"/>-->
+
+<!--                <Label text="Membership Status:"/>-->
+<!--                <TextField fx:id="statusField" editable="false" text="[Active]" style="-fx-background-color: lightgray;"/>-->
+<!--            </GridPane>-->
+
+            <Label text="Liste des Arbres" style="-fx-font-weight: bold;"/>
+            <TableView fx:id="treesTable" prefHeight="200">
+                <columns>
+                    <TableColumn text="Nom commun" fx:id="nameColumn" prefWidth="150"/>
+                    <TableColumn text="Localisation" fx:id="locationColumn" prefWidth="200"/>
+                    <TableColumn text="Statut" fx:id="statusColumn" prefWidth="150"/>
+                </columns>
+            </TableView>
+
+        </VBox>
+    </center>
+
+    <!-- Right section: Quick Stats or Info -->
+    <right>
+        <VBox spacing="10" style="-fx-padding: 20; -fx-background-color: #f8f8f8;">
+            <Label text="Quick Stats" style="-fx-font-weight: bold;"/>
+            <Label fx:id="nbActivitesLabel" style="-fx-font-size: 13;"/>
+            <Separator fx:id="separator" style="-fx-padding: 5; -fx-border-width: 1px;"/>
+            <Label fx:id="nbNotificationsLabel" style="-fx-font-size: 13;"/>
+            <Separator fx:id="separator2" style="-fx-padding: 5; -fx-border-width: 1px;"/>
+        </VBox>
+    </right>
+
+    <!-- Bottom section: Footer -->
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #e0e0e0;">
+            <Label text="© 2025 Association Application. All Rights Reserved."/>
+        </HBox>
+    </bottom>
+</BorderPane>

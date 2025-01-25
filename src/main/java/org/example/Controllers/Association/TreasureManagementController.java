@@ -1,4 +1,4 @@
-package org.example.Controllers.Membre;
+package org.example.Controllers.Association;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,7 +6,12 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
+import org.example.java_project.Application;
 
 import java.io.File;
 import java.io.IOException;
@@ -227,6 +232,82 @@ public class TreasureManagementController {
 
         } catch (IOException e) {
             showErrorDialog("Error", "Unable to read solde: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    public void onDonorsButtonClick() {
+        try {
+            // Load the new interface from the FXML file
+            FXMLLoader loader = new FXMLLoader(Application.class.getResource("associationGestionDesDonateurs.fxml"));
+            Parent root = loader.load();
+
+            // Create a new stage for the new interface
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Interface de Gestion de Trésorerie");
+
+            // Show the new stage
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void onMembersButtonClick() {
+        try {
+            // Load the new interface from the FXML file
+            FXMLLoader loader = new FXMLLoader(Application.class.getResource("associationGestionDesMembres.fxml"));
+            Parent root = loader.load();
+
+            // Create a new stage for the new interface
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Interface de Gestion des Membres");
+
+            // Show the new stage
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void onNotificationsButtonClick() {
+        try {
+            // Load the new interface from the FXML file
+            FXMLLoader loader = new FXMLLoader(Application.class.getResource("associationNotifications.fxml"));
+            Parent root = loader.load();
+
+            // Create a new stage for the new interface
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Interface des Notifications");
+
+            // Show the new stage
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void onActivitiesButtonClick() {
+        try {
+            // Load the new interface from the FXML file
+            FXMLLoader loader = new FXMLLoader(Application.class.getResource("associationGestionDesActivites.fxml"));
+            Parent root = loader.load();
+
+            // Create a new stage for the new interface
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Interface de Gestion des Activités");
+
+            // Show the new stage
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
