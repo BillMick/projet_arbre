@@ -125,6 +125,80 @@ public class FenetreAjouterArbre {
         }
     }
 
+    public void modifierArbre(Arbre arbre1){
+        try {
+            // Vérification de l'ID de base
+            String idBaseSaisi = txtIDBase.getText().trim();
+            if (idBaseSaisi.isEmpty()) {
+                throw new IllegalArgumentException("L'ID Base est obligatoire !");
+            }
+
+            // Vérifier si l'ID existe déjà
+            boolean existeDeja = LectureCSV.arbresList.stream()
+                    .anyMatch(arbre -> arbre.getIdBase().equals(idBaseSaisi));
+
+            if (existeDeja) {
+                // Afficher une alerte indiquant que l'arbre existe déjà
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Erreur d'ajout");
+                alert.setHeaderText("L'arbre existe déjà");
+                alert.setContentText("Un arbre avec cet ID Base existe déjà dans la liste.");
+                alert.showAndWait();
+            } else {
+                // Créer un nouvel arbre
+                Arbre nouvelArbre = new Arbre(
+                        txtIDBase.getText(),
+                        txtType.getText(),
+                        txtDomanialite.getText(),
+                        txtArrondissement.getText(),
+                        txtComplementAdresse.getText(),
+                        txtNumero.getText(),
+                        txtLieuAdresse.getText(),
+                        txtIdEmplacement.getText(),
+                        txtLibelleFrancais.getText(),
+                        txtGenre.getText(),
+                        txtEspece.getText(),
+                        txtVarieteCultivar.getText(),
+                        txtCirconference.getText(),
+                        txtHauteur.getText(),
+                        txtStadeDeveloppement.getText(),
+                        txtRemarquable.getText(),
+                        txtGeo.getText()
+                );
+
+                // Ajouter l'arbre à la liste
+                // Ajouter l'arbre à la liste (au début)
+                LectureCSV.arbresList.add(0, nouvelArbre);
+
+
+                // Afficher une alerte de confirmation
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Succès");
+                alert.setHeaderText("Arbre ajouté");
+                alert.setContentText("L'arbre a été ajouté avec succès !");
+                alert.showAndWait();
+
+                // Réinitialiser les champs
+                resetFormFields();
+            }
+        } catch (IllegalArgumentException e) {
+            // Gérer les erreurs liées aux champs obligatoires
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText("Données invalides");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        } catch (Exception e) {
+            // Gérer les erreurs inattendues
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText("Une erreur inattendue est survenue");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
+
+    }
+
 
     // Méthode pour réinitialiser les champs du formulaire
     private void resetFormFields() {

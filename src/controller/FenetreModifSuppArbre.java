@@ -204,8 +204,47 @@ public class FenetreModifSuppArbre {
 
     @FXML
     public void Modifier(javafx.event.ActionEvent event) {
+        // Get the selected tree from the table
+        Arbre selectedArbre = tableView.getSelectionModel().getSelectedItem();
 
+        // Check if a tree is selected
+        if (selectedArbre == null) {
+            // Show an alert if no tree is selected
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Modification");
+            alert.setHeaderText(null);
+            alert.setContentText("Veuillez sélectionner un arbre à modifier.");
+            alert.showAndWait();
+            return;
+        }
+
+        try {
+            // Load the modification dialog
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/FenetreModificationArbre.fxml"));
+            Parent root = loader.load();
+
+            // Get the controller of the modification window
+            FenetreModificationArbre modificationController = loader.getController();
+
+            // Pass the selected tree to the modification controller
+            modificationController.setArbre(selectedArbre);
+
+            // Create and show the modification stage
+            Stage modificationStage = new Stage();
+            modificationStage.setTitle("Modification de l'Arbre");
+            modificationStage.setScene(new Scene(root));
+            modificationStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Show error alert
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Impossible d'ouvrir la fenêtre de modification.");
+            alert.showAndWait();
+        }
     }
+
 
     @FXML
     public void Supprimer(javafx.event.ActionEvent event) {
