@@ -19,19 +19,13 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
-public class AssociationDashboardController {
-
-    @FXML
-    private Label nbNotificationsLabel;
+public class VotesController {
 
     @FXML
-    private Label nbActivitesLabel;
-
-    @FXML
-    private TableView<Map<String, Object>> treesTable;
+    private TableView<Map<String, Object>> votesTable;
 
     @FXML
     private TableColumn<Map<String, Object>, String> nameColumn;
@@ -41,36 +35,32 @@ public class AssociationDashboardController {
 
     @FXML
     private TableColumn<Map<String, Object>, String> statusColumn;
+    @FXML
+    private TableColumn<Map<String, Object>, String> countColumn;
 
-    private ObservableList<Map<String, Object>> treesData = FXCollections.observableArrayList();
+    private ObservableList<Map<String, Object>> votesData = FXCollections.observableArrayList();
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final String FILE_PATH = "Storage/trees.json"; // Update with your actual JSON file path
 
 
     @FXML
     public void initialize() {
-        // Bind columns to Arbre properties
-//        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-//        locationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
-//        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
-
-        // Set up the TableView columns
         nameColumn.setCellValueFactory(cellData -> {
             Object value = cellData.getValue().get("name");
             return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
         });
-
         locationColumn.setCellValueFactory(cellData -> {
             Object value = cellData.getValue().get("location");
             return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
         });
-
         statusColumn.setCellValueFactory(cellData -> {
             Object value = cellData.getValue().get("status");
             return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
         });
-
-        // Set color based on the status
+        countColumn.setCellValueFactory(cellData -> {
+            Object value = cellData.getValue().get("count");
+            return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
+        });
         statusColumn.setCellFactory(param -> {
             return new TableCell<Map<String, Object>, String>() {
                 @Override
@@ -100,31 +90,12 @@ public class AssociationDashboardController {
                 }
             };
         });
-
-        // Load data into the TableView
         try {
             updateTableData();
         } catch (IOException e) {
             System.err.println("Error updating table data: " + e.getMessage());
         }
-
-        updateNbLabels();
-    }
-
-    private void updateNbLabels() {
-        try {
-            File jsonFile = Paths.get("Storage/notifications.json").toFile(); // Replace with the actual JSON file path
-            List<Map<String, Object>> notificationsData = objectMapper.readValue(jsonFile, new TypeReference<List<Map<String, Object>>>() {});
-            int nb = notificationsData.size();
-            nbNotificationsLabel.setText("Notification·s: " + nb);
-
-            File jsonFile1 = Paths.get("Storage/activites.json").toFile(); // Replace with the actual JSON file path
-            List<Map<String, Object>> activitiesData = objectMapper.readValue(jsonFile1, new TypeReference<List<Map<String, Object>>>() {});
-            nb = activitiesData.size();
-            nbActivitesLabel.setText("Activité·s: " + nb);
-        } catch (IOException e) {
-            showErrorDialog("Error", "Unable to read data: " + e.getMessage());
-        }
+        votesTable.setItems(votesData);
     }
 
     private void showErrorDialog(String title, String content) {
@@ -136,33 +107,79 @@ public class AssociationDashboardController {
     }
 
     private void updateTableData() throws IOException {
-//        // Clear existing data
-//        treesData.clear();
-//
-//        // Load new data from the `readTrees` function
-//        Map<String, Object> treesMap = readTrees();
-//
-//        // Add all Arbre objects to the ObservableList
-//        treesData.addAll(treesMap.values());
-
-        // Set the TableView's items
-        treesTable.setItems(treesData);
-
-        File file = new File(FILE_PATH);
-        if (!file.exists()) {
-            System.out.println("No trees data found.");
-            return;
+        File folder = new File("Storage/votes/");
+        List<Map<String, Object>> votes = new ArrayList<>();
+        File[] files = folder.listFiles((dir, name) -> name.endsWith(".json"));
+        if (files != null) {
+            for (File file : files) {
+                if (file.exists()) {
+                    try {
+                        List<Map<String, Object>> fileVotes = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {
+                        });
+                        votes.addAll(fileVotes);
+                    } catch (IOException e) {
+                        System.err.println("Error reading " + file.getName() + ": " + e.getMessage());
+                    }
+                }
+            }
+        } else {
+            System.out.println("No JSON files found in the folder.");
         }
 
-        // Parse the JSON file into a list of maps
-        List<Map<String, Object>> data = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
-        treesData.setAll(data);
-    }
+        // Step 1: Group by "name", "location", and "status", and count occurrences
+        Map<String, Map<String, Map<String, Long>>> groupedOccurrences = votes.stream()
+                .filter(vote -> vote.containsKey("name") && vote.containsKey("location") && vote.containsKey("status"))  // Ensure all keys exist
+                .map(vote -> {
+                    String name = (String) vote.get("name");
+                    String location = (String) vote.get("location");
+                    String status = (String) vote.get("status");
+                    return new AbstractMap.SimpleEntry<>(name, new AbstractMap.SimpleEntry<>(location, status));  // Group by name, location, status
+                })
+                .collect(Collectors.groupingBy(
+                        Map.Entry::getKey,  // First level of grouping by name
+                        Collectors.groupingBy(entry -> entry.getValue().getKey(),  // Second level by location
+                                Collectors.groupingBy(entry -> entry.getValue().getValue(), Collectors.counting()))  // Third level by status
+                ));
 
-    // Existing readTrees() method
-    public static Map<String, Object> readTrees() throws IOException {
-        // Your implementation of readTrees() function here
-        return Map.of(); // Replace with actual logic
+        // Step 2: Flatten the grouped results
+        // Now we flatten the map structure correctly
+        List<Map<String, Object>> flattenedResults = new ArrayList<>();
+        for (Map.Entry<String, Map<String, Map<String, Long>>> nameEntry : groupedOccurrences.entrySet()) {
+            String name = nameEntry.getKey();
+
+            // Process each location for this name
+            for (Map.Entry<String, Map<String, Long>> locationEntry : nameEntry.getValue().entrySet()) {
+                String location = locationEntry.getKey();
+
+                // Process each status for this location
+                for (Map.Entry<String, Long> statusEntry : locationEntry.getValue().entrySet()) {
+                    String status = statusEntry.getKey();
+                    Long count = statusEntry.getValue();
+
+                    // Add the result to the list
+                    Map<String, Object> result = new HashMap<>();
+                    result.put("name", name);
+                    result.put("location", location);
+                    result.put("status", status);
+                    result.put("count", count);
+                    flattenedResults.add(result);
+                }
+            }
+        }
+
+        // Step 3: Sort and select top 5 results based on count
+        List<Map<String, Object>> top5Results = flattenedResults.stream()
+                .sorted((entry1, entry2) -> Long.compare((Long) entry2.get("count"), (Long) entry1.get("count")))  // Sort by count descending
+                .limit(5)  // Get the top 5
+                .collect(Collectors.toList());
+
+        System.out.println("top5Results...........");
+        System.out.println(top5Results);
+
+        // Step 4: Update the TableView with the top 5 results
+        votesData.setAll(top5Results);
+
+        //votesData.setAll(votes);
     }
 
 
@@ -254,25 +271,6 @@ public class AssociationDashboardController {
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Interface de Gestion de Trésorerie");
-
-            // Show the new stage
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    public void onVotesButtonClick() {
-        try {
-            // Load the new interface from the FXML file
-            FXMLLoader loader = new FXMLLoader(Application.class.getResource("associationVotes.fxml"));
-            Parent root = loader.load();
-
-            // Create a new stage for the new interface
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Interface de Visualisation des Votes");
 
             // Show the new stage
             stage.show();

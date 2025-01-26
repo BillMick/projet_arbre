@@ -22,7 +22,7 @@
             <Button text="Membres" fx:id="openMembersInterfaceButton" prefWidth="150" onAction="#onMembersButtonClick"/>
             <Button text="Donateurs" fx:id="openDonorsInterfaceButton" prefWidth="150" onAction="#onDonorsButtonClick"/>
             <Button text="Trésorerie" fx:id="openTreasuryInterfaceButton" prefWidth="150" onAction="#onTreasuryButtonClick"/>
-            <Button text="Votes" prefWidth="150" onAction="#onTreasuryButtonClick"/>
+            <Button text="Votes" fx:id="openVotesInterfaceButton" prefWidth="150" onAction="#onVotesButtonClick"/>
 
             <Separator fx:id="separator3" style="-fx-padding: 5; -fx-border-width: 1px;"/>
 
@@ -42,7 +42,10 @@
     <!-- Center section: Main Content -->
     <center>
         <VBox spacing="20" style="-fx-padding: 20;">
-            <Label text="Bienvenu·e, [President Name]" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+            <Label text="Bienvenu·e !" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+            <Label text="[Nom du président]" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+            <Label text="Année d'exercice en cours" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+            <Label text="Bienvenu·e !" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
 
 <!--            <GridPane hgap="10" vgap="10">-->
 <!--                <Label text="Member ID:"/>-->
@@ -63,7 +66,6 @@
                     <TableColumn text="Statut" fx:id="statusColumn" prefWidth="150" style="-fx-font-weight: bold;"/>
                 </columns>
             </TableView>
-
         </VBox>
     </center>
 

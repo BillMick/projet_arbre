@@ -44,7 +44,7 @@
                     <TableColumn text="Date" fx:id="dateColumn" prefWidth="100"/>
                     <TableColumn text="Montant (€)" fx:id="amountColumn" prefWidth="100"/>
                     <TableColumn text="Type" fx:id="typeColumn" prefWidth="150"/>
-                    <TableColumn text="Débiteur" fx:id="debtorColumn" prefWidth="150"/>
+                    <TableColumn text="Débiteur / Créditeur" fx:id="debtorColumn" prefWidth="150"/>
                 </columns>
             </TableView>
         </VBox>

@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Manguier",
+    "location": "Ile-De-France",
+    "status": "REMARQUABLE"
+  },
+  {
+    "name": "Cocotier",
+    "location": "Lille",
+    "status": "NON REMARQUABLE"
+  },
+  {
+    "name": "Goyavier",
+    "location": "Orsay",
+    "status": "ABATTU"
+  }
+]

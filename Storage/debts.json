@@ -1,6 +1,6 @@
 [ {
-  "crediteur" : "membre",
-  "statut" : "IMPAYEE",
-  "montant" : 250.0,
-  "type" : "DEFRAIEMENT"
+  "statut" : "PAYEE",
+  "type" : "DEFRAIEMENT",
+  "crediteur" : "Harry@h.com",
+  "montant" : 15.0
 } ]

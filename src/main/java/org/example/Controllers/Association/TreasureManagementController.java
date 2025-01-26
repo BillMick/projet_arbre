@@ -22,8 +22,7 @@ import org.example.java_project.Application;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TreasureManagementController {
@@ -66,8 +65,20 @@ public class TreasureManagementController {
         });
 
         amountColumn.setCellValueFactory(cellData -> {
-            Object value = cellData.getValue().get("montant");
-            return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
+//            Object value = cellData.getValue().get("montant");
+//            return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
+            Object montant = cellData.getValue().get("montant");
+            Object type = cellData.getValue().get("type");
+            if (montant != null && ("DEFRAIEMENT".equals(type) || "FACTURE".equals(type))) {
+                try {
+                    double m = Double.parseDouble(montant.toString());
+                    return new ReadOnlyObjectWrapper<>(String.valueOf(m * -1));
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+            return montant == null ? null : new ReadOnlyObjectWrapper<>(montant.toString());
         });
 
         typeColumn.setCellValueFactory(cellData -> {
@@ -75,10 +86,18 @@ public class TreasureManagementController {
             return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
         });
 
+//        debtorColumn.setCellValueFactory(cellData -> {
+//            Object value = cellData.getValue().get("debiteur");
+//            return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
+//        });
         debtorColumn.setCellValueFactory(cellData -> {
             Object value = cellData.getValue().get("debiteur");
+            if (value == null) {
+                value = cellData.getValue().get("crediteur");
+            }
             return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
         });
+
 
         // Populate the TableView
         try {
@@ -99,10 +118,25 @@ public class TreasureManagementController {
             System.out.println("No financial operations found.");
             return;
         }
-
-        // Parse the JSON file into a list of maps
         List<Map<String, Object>> data = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
-        financialData.setAll(data);
+        file = Paths.get("Storage/dons.json").toFile();
+        List<Map<String, Object>> dons = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
+        file = Paths.get("Storage/debts.json").toFile();
+        List<Map<String, Object>> dettes = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
+        List<Map<String, Object>> dettesPayees = dettes.stream()
+                .filter(debt -> "PAYEE".equals(debt.get("statut")))  // Filter condition
+                .collect(Collectors.toList());
+
+        List<Map<String, Object>> allFinancialData = new ArrayList<>();
+        allFinancialData.addAll(data);
+        allFinancialData.addAll(dons);
+        allFinancialData.addAll(dettesPayees);
+        Set<Map<String, Object>> uniqueFinancialData = new HashSet<>(allFinancialData);
+
+        financialData.setAll(new ArrayList<>(uniqueFinancialData));
+
+        System.out.println("Merged financial data successfully.");
+        // financialData.setAll(data);
     }
 
     private void saveFinancialData() {
@@ -130,10 +164,15 @@ public class TreasureManagementController {
         TableView<Map<String, Object>> debtTable = new TableView<>();
         TableColumn<Map<String, Object>, String> nameColumn = new TableColumn<>("Type");
         TableColumn<Map<String, Object>, Double> amountColumn = new TableColumn<>("Montant");
+        TableColumn<Map<String, Object>, String> crediteurColumn = new TableColumn<>("Créditeur");
 
         // Setting up the columns
         nameColumn.setCellValueFactory(cellData -> {
             Object value = cellData.getValue().get("type");
+            return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
+        });
+        crediteurColumn.setCellValueFactory(cellData -> {
+            Object value = cellData.getValue().get("crediteur");
             return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
         });
         amountColumn.setCellValueFactory(cellData -> {
@@ -176,6 +215,7 @@ public class TreasureManagementController {
 
         debtTable.getColumns().add(nameColumn);
         debtTable.getColumns().add(amountColumn);
+        debtTable.getColumns().add(crediteurColumn);
         debtTable.getColumns().add(payColumn);
 
         // Add the data to the table
@@ -215,33 +255,48 @@ public class TreasureManagementController {
         objectMapper.writeValue(jsonFile, accountData);
         System.out.println("Solde mis à jour avec succès! Nouveau solde: " + newSolde);
         // Mise à jour du statut et réinsertion
-
-        Dette d = new Dette(((Number) debtToDelete.get("montant")).doubleValue(), (Dette.TypeDette) debtToDelete.get("type"), Dette.StatutDette.PAYEE, (String) debtToDelete.get("crediteur"));
-        Map<String, Object> newRecipe = Map.of(
-                "statut", d.statut(),
-                "montant", d.montant(),
-                "type", d.type(),
-                "crediteur", d.crediteur()
-        );
-
-
-
+        Dette.TypeDette type = Dette.TypeDette.DEFRAIEMENT;
+        if (debtToDelete.get("type") == "FACTURE") {
+            type = Dette.TypeDette.FACTURE;
+        }
+        Dette d = new Dette(((Number) debtToDelete.get("montant")).doubleValue(), type, Dette.StatutDette.PAYEE, (String) debtToDelete.get("crediteur"));
+        System.out.println("TEEEEEEEEEEEEEST: ");
+        System.out.println(debtToDelete);
         try {
             jsonFile = Paths.get("Storage/debts.json").toFile();
             List<Map<String, Object>> data = objectMapper.readValue(jsonFile, new TypeReference<List<Map<String, Object>>>() {});
 
-            // Find and remove the donor from the data
-            data.removeIf(dt -> dt.get("crediteur").equals(debtToDelete.get("crediteur")));
-
-            // Write the updated list back to the JSON file
+            // Find and update the debt status from the data
+            data.removeIf(dt -> {
+                boolean a1 = dt.get("crediteur").equals(debtToDelete.get("crediteur"));
+                boolean a2 = dt.get("type").equals(debtToDelete.get("type"));
+                boolean a3 = dt.get("statut").equals(debtToDelete.get("statut"));
+                boolean a4 = dt.get("montant").equals(debtToDelete.get("montant"));
+                boolean a = a1 && a2 && a3 && a4;
+                System.out.println("BLEUUEEEEEEE");
+                System.out.println(a1);
+                System.out.println(a2);
+                System.out.println(a3);
+                System.out.println(a4);
+                System.out.println(a);
+                return a;
+            });
+            Map<String, Object> updatesDebt = Map.of(
+                    "statut", d.statut(),
+                    "montant", d.montant(),
+                    "type", d.type(),
+                    "crediteur", d.crediteur()
+            );
+            data.add(updatesDebt);
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, data);
+            updateDebtsLabel(); updateSoldeLabel();
             System.out.println("Debt " + debtToDelete.get("name") + " deleted");
+            // Il faudra créditer le compte du bénéficiaire....
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         System.out.println("Paying debt: " + debtToDelete.get("type") + " amount: " + debtToDelete.get("montant"));
-        // You can add additional logic here to update your list, remove the debt, etc.
     }
 
     private void updateSoldeLabel() {
@@ -279,7 +334,7 @@ public class TreasureManagementController {
             List<Map<String, Object>> debtsList = objectMapper.readValue(jsonFile, List.class);
             double totalDette = 0.0;
             for (Map<String, Object> dette : debtsList) {
-                if (dette.get("montant") instanceof Number) {
+                if (dette.get("montant") instanceof Number && dette.get("statut").equals("IMPAYEE")) {
                     totalDette += ((Number) dette.get("montant")).doubleValue();
                 }
             }

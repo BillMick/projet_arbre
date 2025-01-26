@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="org.example.Controllers.Association.TreeVotingController">
+
+    <top>
+        <HBox style="-fx-padding: 10; -fx-background-color: #4CAF50;">
+            <children>
+                <Label style="-fx-font-size: 20; -fx-text-fill: white;" text="Votez pour les arbres remarquables" />
+            </children>
+        </HBox>
+    </top>
+
+
+    <center>
+        <VBox spacing="10" style="-fx-padding: 20;">
+            <children>
+                <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="Liste des arbres" />
+                <TableView fx:id="treeTable" prefHeight="300">
+                    <columns>
+
+                        <TableColumn fx:id="nameColumn" prefWidth="150.0" text="Nom" />
+
+                        <TableColumn fx:id="locationColumn" prefWidth="200.0" text="Localisation" />
+
+                        <TableColumn fx:id="statusColumn" prefWidth="150.0" text="Statut" />
+
+                        <TableColumn fx:id="actionColumn" prefWidth="150.0" text="Action" />
+                    </columns>
+                </TableView>
+            </children>
+        </VBox>
+    </center>
+
+
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #e0e0e0;">
+            <children>
+                <Label text="© 2025 Association Application. Tous droits réservés." />
+            </children>
+        </HBox>
+    </bottom>
+</BorderPane>
