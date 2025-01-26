@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -14,11 +15,8 @@ public class AppGestion {
     public void Gestion(javafx.event.ActionEvent event){
         try {
             // Chargement du fichier FXML de la nouvelle vue
-
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AppGestion.fxml"));
             Parent root = loader.load();
-
-            // Crée une image de fond
             Image backgroundImage = new Image(getClass().getResource("/images/img2.png").toExternalForm());
             BackgroundImage bgImage = new BackgroundImage(
                     backgroundImage,
@@ -27,23 +25,24 @@ public class AppGestion {
                     BackgroundPosition.CENTER,
                     new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, false, true)
             );
-
-            // Applique l'image de fond à la racine
             if (root instanceof Pane) {
                 ((Pane) root).setBackground(new Background(bgImage));
             }
-
-
-            // Création de la nouvelle fenêtre
             Stage nouvelleFenetre = new Stage();
             nouvelleFenetre.setTitle("Gestion Arbres");
             nouvelleFenetre.setScene(new Scene(root));
+
             // Désactiver la croix de fermeture
+
             nouvelleFenetre.setOnCloseRequest(eventClose -> {
-                eventClose.consume(); // Empêche la fermeture
-                System.out.println("Fermeture désactivée.");
+                eventClose.consume();
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Ne pas utiliser ce bouton");
+                alert.setHeaderText("Opération Impossible");
+                alert.setContentText("Veuillez utiliser le bouton Quitter à la page d'Accueil ");
+                alert.showAndWait();;
             });
-            // Fermeture de la fenêtre principale
+
             Stage fenetrePrincipale = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
             fenetrePrincipale.close();
 
@@ -97,6 +96,7 @@ public class AppGestion {
             e.printStackTrace();
         }
     }
+            //Ouvre la fenêtre permettant de modifier ou supprimer des arbres.
 
     public void modifSuppArbre(javafx.event.ActionEvent event){
         FenetreModifSuppArbre MSA = new FenetreModifSuppArbre();

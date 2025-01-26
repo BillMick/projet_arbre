@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -19,6 +20,7 @@ public class AppPrincipale {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AppPrincipale.fxml"));
             Parent root = loader.load();
+
 
             // Crée une image de fond
             Image backgroundImage = new Image(getClass().getResource("/images/img.png").toExternalForm());
@@ -41,15 +43,19 @@ public class AppPrincipale {
             nouvelleFenetre.setTitle("Espaces Verts");
             nouvelleFenetre.setScene(new Scene(root));
 
-            // Désactiver le comportement par défaut du bouton de fermeture (croix)
-            nouvelleFenetre.setOnCloseRequest(eventClose -> {
-                eventClose.consume();
-                System.out.println("La fermeture via la croix est désactivée.");
-            });
             // Fermeture de la fenêtre principale
             Stage fenetrePrincipale = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
             fenetrePrincipale.close();
 
+            // Désactiver le comportement par défaut du bouton de fermeture (croix)
+            nouvelleFenetre.setOnCloseRequest(eventClose -> {
+                eventClose.consume();
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Ne pas utiliser ce bouton");
+                alert.setHeaderText("Opération Impossible");
+                alert.setContentText("Veuillez utiliser le bouton Quitter  ");
+                alert.showAndWait();;
+            });
             // Affichage de la nouvelle fenêtre
             nouvelleFenetre.setResizable(false);
             nouvelleFenetre.show();

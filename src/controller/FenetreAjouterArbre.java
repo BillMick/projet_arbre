@@ -94,7 +94,7 @@ public class FenetreAjouterArbre {
 
                 // Ajouter une notification pour l'arbre ajouté
                 String message = "Plantation de l'arbre avec l'ID " + txtIDBase.getText();
-                notificationModel.addSentNotification(NotificationType.ABATTAGE, message);
+                notificationModel.addSentNotification(NotificationType.PLANTATION, message);
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Succès");

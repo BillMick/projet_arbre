@@ -1,16 +1,15 @@
 package model;
 
 
-import com.opencsv.CSVParser;
-import com.opencsv.CSVParserBuilder;
-import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
+import com.opencsv.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 
 
 public class LectureCSV {
@@ -61,4 +60,5 @@ public class LectureCSV {
             e.printStackTrace();
         }
     }
+
 }

@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import model.Arbre;
 import model.LectureCSV;
 import model.Notification;
+import model.NotificationType;
 
 import java.io.IOException;
 
@@ -148,7 +149,9 @@ public class FenetreModifierArbre {
 
                 arbresList.remove(arbreAModifier);
                 LectureCSV.arbresList.add(0, nouvelArbre);
-
+                // Ajouter une notification pour l'arbre ajouté
+                String message = "Classification de l'arbre avec l'ID " + txtIDBase.getText();
+                notificationModel.addSentNotification(NotificationType.CLASSIFICATION, message);
                 // Afficher une alerte de confirmation
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Succès");

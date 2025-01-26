@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -156,14 +157,19 @@ public class AppListeArbres {
             nouvelleFenetre.setTitle("Liste des Arbres");
             nouvelleFenetre.setScene(new Scene(root));
             initialize();
-            // Désactiver la croix de fermeture
-            nouvelleFenetre.setOnCloseRequest(closeEvent -> {
-                closeEvent.consume(); // Empêche la fermeture
-                System.out.println("Fermeture désactivée.");
-            });
+
             // Fermeture de la fenêtre principale
             Stage fenetrePrincipale = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
             fenetrePrincipale.close();
+
+            nouvelleFenetre.setOnCloseRequest(eventClose -> {
+                eventClose.consume();
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Ne pas utiliser ce bouton");
+                alert.setHeaderText("Opération Impossible");
+                alert.setContentText("Veuillez utiliser le bouton Quitter à la page d'Accueil ");
+                alert.showAndWait();;
+            });
 
             // Affichage de la nouvelle fenêtre
             nouvelleFenetre.show();

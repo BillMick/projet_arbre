@@ -16,7 +16,7 @@
 
     <!-- Section pour afficher les notifications envoyées -->
     <VBox layoutX="10.0" layoutY="200.0" spacing="10.0">
-        <Label text="Notifications à Envoyer"/>
+        <Label text="Notifications Envoyées"/>
         <ListView fx:id="sentNotificationsList" prefHeight="150.0" prefWidth="560.0"/>
     </VBox>
 
