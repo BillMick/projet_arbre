@@ -1,26 +1,9 @@
-[
-  {
-    "type": "PLANTATION",
-    "emetteur": "Service des espaces verts",
-    "recepteur": "Association",
-    "message": "Avocatier classé remarquable à Lausanne.",
-    "date": "17 Juin 2016",
-    "status": 0
-  },
-  {
-    "type": "CLASSIFICATION",
-    "emetteur": "Service des espaces verts",
-    "recepteur": "Association",
-    "message": "Cool",
-    "date": "27 Avril 2020",
-    "status": 0
-  },
-  {
-    "type": "ABBATAGE",
-    "emetteur": "Service des espaces verts",
-    "recepteur": "Association",
-    "message": "Goyavier abattu à Orsay",
-    "date": "16 Mars 2022",
-    "status": 0
-  }
-]
+[ {
+  "cout" : 47.0,
+  "dateDePlanification" : "2025-01-31",
+  "arbre" : "Goyavier",
+  "type" : "VISITE",
+  "statut" : "ATTENTE",
+  "rapport" : "",
+  "executeur" : ""
+} ]

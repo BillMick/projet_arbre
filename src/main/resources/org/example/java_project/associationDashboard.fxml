@@ -17,8 +17,8 @@
         <VBox spacing="10" style="-fx-padding: 10; -fx-background-color: #f0f0f0; -fx-border-color: lightgray; -fx-border-width: 1;">
             <Label text="Menu" style="-fx-font-weight: bold;"/>
             <!--            <Button text="Home" prefWidth="150"/>-->
-            <Button text="Activités" fx:id="openActivitiesInterfaceButton" prefWidth="150" onAction="#onActivitiesButtonClick"/>
             <Button text="Notifications" fx:id="openNotificationsInterfaceButton" prefWidth="150" onAction="#onNotificationsButtonClick"/>
+            <Button text="Activités" fx:id="openActivitiesInterfaceButton" prefWidth="150" onAction="#onActivitiesButtonClick"/>
             <Button text="Membres" fx:id="openMembersInterfaceButton" prefWidth="150" onAction="#onMembersButtonClick"/>
             <Button text="Donateurs" fx:id="openDonorsInterfaceButton" prefWidth="150" onAction="#onDonorsButtonClick"/>
             <Button text="Trésorerie" fx:id="openTreasuryInterfaceButton" prefWidth="150" onAction="#onTreasuryButtonClick"/>

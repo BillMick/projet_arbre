@@ -20,8 +20,8 @@
 
             <Separator fx:id="separator" style="-fx-padding: 5; -fx-border-width: 1px;"/>
 
-            <Button text="Activités" fx:id="openActivitiesInterfaceButton" prefWidth="150" onAction="#onActivitiesButtonClick"/>
             <Button text="Notifications" fx:id="openNotificationsInterfaceButton" prefWidth="150" onAction="#onNotificationsButtonClick"/>
+            <Button text="Activités" fx:id="openActivitiesInterfaceButton" prefWidth="150" onAction="#onActivitiesButtonClick"/>
             <Button text="Membres" fx:id="openMembersInterfaceButton" prefWidth="150" onAction="#onMembersButtonClick"/>
             <Button text="Donateurs" fx:id="openDonorsInterfaceButton" prefWidth="150" onAction="#onDonorsButtonClick"/>
             <Button text="Trésorerie" fx:id="openTreasuryInterfaceButton" prefWidth="150" onAction="#onTreasuryButtonClick"/>

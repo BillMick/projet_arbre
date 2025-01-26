@@ -13,10 +13,10 @@ public class Visite extends Activite {
         this.localisationArbre = arbre.localisation();
     }
 
-    public enum StatutVisite {
-        PLANIFIEE,
-        EXECUTEE
-    }
+//    public enum StatutVisite {
+//        PLANIFIEE,
+//        EXECUTEE
+//    }
 
     public Visite(Activite.TypeActivite type, Date dateDePlanification, Arbre arbre, int cout) {
         super(type, dateDePlanification, cout);

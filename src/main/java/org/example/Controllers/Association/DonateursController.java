@@ -228,7 +228,6 @@ public class DonateursController {
         dialog.showAndWait();
     }
 
-
     @FXML
     private void onAddMoney(double montant, String donor) {
         try {
@@ -273,23 +272,6 @@ public class DonateursController {
         List<Map<String, Object>> data = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
         data.add(recipe);
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, data);
-    }
-
-    @FXML
-    private void handlePayCotisation() {
-        Map<String, Object> cotisationOperation = Map.of(
-                "date", java.time.LocalDate.now().toString(),
-                "amount", "50.0",
-                "type", "Cotisation",
-                "description", "Cotisation annuelle"
-        );
-
-        donorsData.add(cotisationOperation);
-        cotisationStatusLabel.setText("Payée");
-        cotisationStatusLabel.setStyle("-fx-text-fill: green;");
-
-        // Update the JSON file
-//        saveFinancialData();
     }
 
     private void saveDonorData() {

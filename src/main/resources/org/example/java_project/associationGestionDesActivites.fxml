@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.Controllers.Association.DonateursController">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.Controllers.Association.ActivitesController">
     <!-- Top section: Title -->
     <top>
         <HBox style="-fx-padding: 10; -fx-background-color: #4CAF50;">
@@ -22,6 +22,7 @@
             <Button text="Membres" fx:id="openMembersInterfaceButton" prefWidth="150" onAction="#onMembersButtonClick"/>
             <Button text="Donateurs" fx:id="openDonorsInterfaceButton" prefWidth="150" onAction="#onDonorsButtonClick"/>
             <Button text="Trésorerie" fx:id="openTreasuryInterfaceButton" prefWidth="150" onAction="#onTreasuryButtonClick"/>
+            <Button text="Votes" fx:id="openVotesInterfaceButton" prefWidth="150" onAction="#onVotesButtonClick"/>
 
             <Button text="Quitter"
                     onAction="#onExitButtonClick"
@@ -35,12 +36,15 @@
     <center>
         <VBox spacing="10" style="-fx-padding: 20;">
             <Label text="Opérations financières" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
-            <TableView fx:id="financialTable" prefHeight="300">
+            <TableView fx:id="activitiesTable" prefHeight="300">
                 <columns>
-                    <TableColumn text="Date" fx:id="dateColumn" prefWidth="100"/>
-                    <TableColumn text="Montant (€)" fx:id="amountColumn" prefWidth="100"/>
-                    <TableColumn text="Type" fx:id="typeColumn" prefWidth="150"/>
-                    <TableColumn text="Description" fx:id="descriptionColumn" prefWidth="200"/>
+                    <TableColumn text="Prévue pour le" fx:id="dateColumn" prefWidth="150" style="-fx-font-weight: bold;"/>
+                    <TableColumn text="Type" fx:id="typeColumn" prefWidth="150" style="-fx-font-weight: bold;"/>
+                    <TableColumn text="Statut" fx:id="statusColumn" prefWidth="150" style="-fx-font-weight: bold;"/>
+                    <TableColumn text="Cost" fx:id="costColumn" prefWidth="150" style="-fx-font-weight: bold;"/>
+                    <TableColumn text="Nom de l'arbre" fx:id="nameColumn" prefWidth="150" style="-fx-text-fill: #074994; -fx-font-weight: bold;"/>
+                    <TableColumn text="Exécuteur" fx:id="executorColumn" prefWidth="150" style="-fx-font-weight: bold;"/>
+                    <TableColumn text="Action" fx:id="actionColumn" prefWidth="100" style="-fx-font-weight: bold;"/>
                 </columns>
             </TableView>
         </VBox>
@@ -49,12 +53,16 @@
     <!-- Right section: Cotisation button -->
     <right>
         <VBox spacing="20" alignment="CENTER" style="-fx-padding: 20; -fx-background-color: #f1f1f1; -fx-border-color: lightgray; -fx-border-width: 1;">
-            <Label text="Cotisation Annuelle" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
-
-            <Button text="Payer la cotisation" fx:id="payCotisationButton" style="-fx-background-color: #FF6347; -fx-text-fill: white;"/>
-
-            <Label text="Statut cotisation :" style="-fx-font-weight: bold;"/>
-            <Label fx:id="cotisationStatusLabel" text="Non Payée" style="-fx-text-fill: red;"/>
+            <Label text="Quick Stats" style="-fx-font-weight: bold;"/>
+            <Label fx:id="nbActivitesLabel" style="-fx-font-size: 13;"/>
+            <Separator fx:id="separator1" style="-fx-padding: 5; -fx-border-width: 1px;"/>
+            <Label fx:id="nbNotificationsLabel" style="-fx-font-size: 13;"/>
+            <Separator fx:id="separator2" style="-fx-padding: 5; -fx-border-width: 1px;"/>
+            <Button text="Ajouter une activité"
+                    onAction="#onAddActivityButtonClick"
+                    style="-fx-background-color: #4CAF50; -fx-text-fill: white;"
+                    alignment="CENTER"
+            />
         </VBox>
     </right>
 
