@@ -1,1 +1,7 @@
-{"nom":"Mouse","prenom":"Jerry","solde":243.0}
+{
+  "nom" : "Mouse",
+  "prenom" : "Jerry",
+  "solde" : 243.0,
+  "isPresident" : "bill.ahouandjinou@etu-upsaclay.fr",
+  "presidentName" : "AHOUANDJINOU Bill"
+}

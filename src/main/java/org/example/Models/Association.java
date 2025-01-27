@@ -36,7 +36,7 @@ public class Association extends Entite {
     private ArrayList<Donateur> donateurs = new ArrayList<>();
     // private ArrayList<String> donateurs = new ArrayList<>(Arrays.asList("services municipaux", "entreprises", "associations", "individus"));
 
-    public Association(String nom, String email, int solde) {
+    public Association(String nom, String email, double solde) {
         super(nom, email, solde);
     }
 
@@ -89,7 +89,7 @@ public class Association extends Entite {
     }
 
     // solde
-    public int solde() {
+    public double solde() {
         return this.solde;
     }
 

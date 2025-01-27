@@ -14,6 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.example.Controllers.Node.AppChosenController;
 import org.example.Models.Association;
 import org.example.Models.Dette;
 import org.example.Models.Recette;
@@ -26,6 +27,17 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class TreasureManagementController {
+    private Map<String, Object> infos = AppChosenController.infosAssociation;
+    public void setInfos(Map<String, Object> infos) {
+        this.infos = infos;
+        System.out.println(infos);
+    }
+
+    public static final String REPERTOIRE_DE_BASE = "Storage";
+    public static final String REPERTOIRE_ASSOC = "Associations";
+    public static final String REPERTOIRE_MEMBRES = "Members";
+    public static final String REPERTOIRE_SERVICE = "Municipalite";
+    private String REPERTOIRE_PROPRIETAIRE = (String) infos.get("email");
 
     @FXML
     private Label soldeLabel;
@@ -54,7 +66,7 @@ public class TreasureManagementController {
     private ObservableList<Map<String, Object>> financialData = FXCollections.observableArrayList();
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final String FILE_PATH = "Storage/cotisations.json"; // il y a deux fichiers à parcourir ici: cotisations, dons...
+    // private static final String FILE_PATH = "Storage/cotisations.json";
 
     @FXML
     public void initialize() {
@@ -113,15 +125,20 @@ public class TreasureManagementController {
     }
 
     private void loadFinancialData() throws IOException {
-        File file = new File(FILE_PATH);
+        File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "cotisations.json").toFile();
         if (!file.exists()) {
-            System.out.println("No financial operations found.");
-            return;
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, List.of());
         }
         List<Map<String, Object>> data = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
-        file = Paths.get("Storage/dons.json").toFile();
+        file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "dons.json").toFile();
+        if (!file.exists()) {
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, List.of());
+        }
         List<Map<String, Object>> dons = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
-        file = Paths.get("Storage/debts.json").toFile();
+        file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "debts.json").toFile();
+        if (!file.exists()) {
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, List.of());
+        }
         List<Map<String, Object>> dettes = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
         List<Map<String, Object>> dettesPayees = dettes.stream()
                 .filter(debt -> "PAYEE".equals(debt.get("statut")))  // Filter condition
@@ -141,7 +158,7 @@ public class TreasureManagementController {
 
     private void saveFinancialData() {
         try {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(FILE_PATH), financialData);
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "cotisations.json").toFile(), financialData);
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Failed to save financial operations: " + e.getMessage());
@@ -233,7 +250,7 @@ public class TreasureManagementController {
     private List<Map<String, Object>> loadDebtsFromJson() {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            return objectMapper.readValue(new File("Storage/debts.json"), objectMapper.getTypeFactory().constructCollectionType(List.class, Map.class));
+            return objectMapper.readValue(Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "debts.json").toFile(), objectMapper.getTypeFactory().constructCollectionType(List.class, Map.class));
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -242,7 +259,7 @@ public class TreasureManagementController {
 
     private void payDebt(TableView<Map<String, Object>> debtTable, int rowIndex) throws IOException {
         // Logic for handling the payment
-        File jsonFile = Paths.get("Storage/infos.json").toFile(); // Replace with the actual JSON file path
+        File jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "infos.json").toFile(); // Replace with the actual JSON file path
         Map<String, Object> accountData = objectMapper.readValue(jsonFile, Map.class);
         double currentSolde = accountData.getOrDefault("solde", 0.0) instanceof Number
                 ? ((Number) accountData.get("solde")).doubleValue()
@@ -263,7 +280,7 @@ public class TreasureManagementController {
         System.out.println("TEEEEEEEEEEEEEST: ");
         System.out.println(debtToDelete);
         try {
-            jsonFile = Paths.get("Storage/debts.json").toFile();
+            jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "debts.json").toFile();
             List<Map<String, Object>> data = objectMapper.readValue(jsonFile, new TypeReference<List<Map<String, Object>>>() {});
 
             // Find and update the debt status from the data
@@ -301,7 +318,7 @@ public class TreasureManagementController {
 
     private void updateSoldeLabel() {
         try {
-            File jsonFile = Paths.get("Storage/infos.json").toFile(); // Replace with the actual JSON file path
+            File jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "infos.json").toFile(); // Replace with the actual JSON file path
             // Read the JSON file
             Map<String, Object> accountData = objectMapper.readValue(jsonFile, Map.class);
 
@@ -321,13 +338,13 @@ public class TreasureManagementController {
 
     private void updateDebtsLabel() {
         try {
-            File jsonFile = Paths.get("Storage/infos.json").toFile(); // Replace with the actual JSON file path
+            File jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "infos.json").toFile(); // Replace with the actual JSON file path
             Map<String, Object> accountData = objectMapper.readValue(jsonFile, Map.class);
             double currentSolde = accountData.getOrDefault("solde", 0.0) instanceof Number
                     ? ((Number) accountData.get("solde")).doubleValue()
                     : 0.0;
 
-            jsonFile = Paths.get("Storage/debts.json").toFile();
+            jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "debts.json").toFile();
             if (!jsonFile.exists()) {
                 objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, List.of());
             }

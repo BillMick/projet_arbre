@@ -15,6 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.example.Controllers.Node.AppChosenController;
 import org.example.Models.Association;
 import org.example.Models.Recette;
 import org.example.java_project.Application;
@@ -27,6 +28,17 @@ import java.util.List;
 import java.util.Map;
 
 public class MembresController {
+    private Map<String, Object> infos = AppChosenController.infosAssociation;
+    public void setInfos(Map<String, Object> infos) {
+        this.infos = infos;
+        System.out.println(infos);
+    }
+
+    public static final String REPERTOIRE_DE_BASE = "Storage";
+    public static final String REPERTOIRE_ASSOC = "Associations";
+    public static final String REPERTOIRE_MEMBRES = "Members";
+    public static final String REPERTOIRE_SERVICE = "Municipalite";
+    private String REPERTOIRE_PROPRIETAIRE = (String) infos.get("email");
 
     @FXML
     private Label soldeLabel;
@@ -39,6 +51,9 @@ public class MembresController {
 
     @FXML
     private TextField firstnameField;
+
+    @FXML
+    private CheckBox presidentCheckBox;
 
     @FXML
     private TableView<Map<String, Object>> membersTable;
@@ -58,7 +73,7 @@ public class MembresController {
     private ObservableList<Map<String, Object>> membersData = FXCollections.observableArrayList();
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final String FILE_PATH = "Storage/members.json"; // Update with your actual JSON file path
+    // private static final String FILE_PATH = "Storage/members.json"; // Update with your actual JSON file path
 
     @FXML
     public void initialize() {
@@ -91,30 +106,26 @@ public class MembresController {
     }
 
     private void deleteMember(int rowIndex) {
-        Map<String, Object> donorToDelete = membersTable.getItems().get(rowIndex);
-        System.out.println(donorToDelete);
+        Map<String, Object> memberToDelete = membersTable.getItems().get(rowIndex);
+        System.out.println(memberToDelete);
         membersTable.getItems().remove(rowIndex);
-
         // Remove from the data source (your JSON file)
         try {
-            File file = new File(FILE_PATH);
+            File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "members.json").toFile();
             List<Map<String, Object>> membersData = objectMapper.readValue(file, List.class);
+            membersData.removeIf(m -> m.get("email").equals(memberToDelete.get("email")));
 
-            // Find and remove the donor from the data
-            membersData.removeIf(donor -> donor.get("email").equals(donorToDelete.get("email")));
-
-            // Write the updated list back to the JSON file
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, membersData);
-            System.out.println("Donor " + donorToDelete.get("name") + " deleted");
+            System.out.println("Member " + memberToDelete.get("name") + " deleted");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void loadmembersData() throws IOException {
-        File file = new File(FILE_PATH);
+        File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "members.json").toFile();
         if (!file.exists()) {
-            System.out.println("Aucun donateur enregistré.");
+            System.out.println("Aucun membre enregistré.");
             return;
         }
         // Parse the JSON file into a list of maps
@@ -127,6 +138,7 @@ public class MembresController {
         String name = nameField.getText();
         String email = emailField.getText();
         String firstname = firstnameField.getText();
+        boolean isPresident = presidentCheckBox.isSelected();
 
         if (!name.isEmpty() && !email.isEmpty() && !firstname.isEmpty()) {
             Map<String, Object> newMember = Map.of(
@@ -134,104 +146,58 @@ public class MembresController {
                     "prenom", firstname,
                     "email", email
             );
-
-            // Add to the TableView
             membersData.add(newMember);
-
-            // Update the JSON file
-            saveDonorData();
-
-            // Clear fields
+            saveMembersData();
+            if (isPresident) {
+                savePresident(newMember);
+            }
             nameField.clear();
             firstnameField.clear();
             emailField.clear();
+            presidentCheckBox.setSelected(false);
+            newMember.put("solde", 0.0);
+            newMember.put("association", infos.get("email").toString());
+
+            createMemberSpace(newMember);
         }
     }
 
-//    @FXML
-//    private void onAskButtonClick() throws IOException {
-//
-//        Dialog<ButtonType> dialog = new Dialog<>();
-//        dialog.setTitle("Faire une demande");
-//
-//        VBox dialogVBox = new VBox();
-//        dialogVBox.setSpacing(10);
-//
-//        TextField amountField = new TextField();
-//        amountField.setPromptText("Entrer le montant");
-//
-//        ComboBox<String> donorComboBox = new ComboBox<>();
-//        donorComboBox.setPromptText("Choisir un donateur");
-//
-//        File file = new File(FILE_PATH);
-//        if (!file.exists()) {
-//            System.out.println("Aucun donateur enregistré.");
-//            return ;
-//        }
-//        List<Map<String, Object>> donors = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
-//        for (Map<String, Object> donor : donors) {
-//            donorComboBox.getItems().add((String) donor.get("nom"));
-//        }
-//
-//        dialogVBox.getChildren().addAll(amountField, donorComboBox);
-//
-//        dialog.getDialogPane().setContent(dialogVBox);
-//
-//        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-//        dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
-//
-//        dialog.setResultConverter(dialogButton -> {
-//            if (dialogButton == ButtonType.OK) {
-//                String selectedDonor = donorComboBox.getValue();
-//                double montant = Double.parseDouble(amountField.getText());
-//                onAddMoney(montant, selectedDonor);
-//                System.out.println("Donateur " + selectedDonor + " with " + montant);
-//                //processRequest(montant, selectedDonor);  // Handle the request logic
-//            }
-//            return null;
-//        });
-//
-//        dialog.showAndWait();
-//    }
-
+    private void createMemberSpace(Map<String, Object> member) {
+        try {
+            File userDir = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_MEMBRES, (String) member.get("email")).toFile();
+            if (userDir.exists()) {
+                showErrorDialog("Erreur", "Un compte avec ce mail existe déjà.");
+                return;
+            }
+            userDir.mkdirs();
+            File userInfoFile = Paths.get(userDir.toString(), "infos.json").toFile();
+            Map<String, Object> accountData = objectMapper.readValue(userInfoFile, Map.class);
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(userInfoFile, accountData);
+            System.out.println("Espace membre créé avec succès!");
+        } catch (IOException e) {
+            System.err.println("Error reading or writing JSON file for setting president: " + e.getMessage());
+        }
+    }
 
     @FXML
-    private void onAddMoney(double montant, String member) {
+    private void savePresident(Map<String, Object> member) {
         try {
-            File jsonFile = Paths.get("Storage/infos.json").toFile(); // Replace with the actual JSON file path
+            File jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "infos.json").toFile();
             Map<String, Object> accountData = objectMapper.readValue(jsonFile, Map.class);
-            double currentSolde = accountData.getOrDefault("solde", 0.0) instanceof Number
-                    ? ((Number) accountData.get("solde")).doubleValue()
-                    : 0.0;
-            double newSolde = currentSolde + montant;
-            accountData.put("solde", newSolde);
-            objectMapper.writeValue(jsonFile, accountData);
-            System.out.println("Solde mis à jour avec succès! Nouveau solde: " + newSolde);
-
-            Recette r = new Recette(montant, Recette.TypeRecette.COTISATION, member);
-            r.modifierStatut(Recette.StatutRecette.NONPERCUE);
-
-            Map<String, Object> newRecipe = Map.of(
-                    "date", Association.dateFormat.format(r.date()),
-                    "montant", r.montant(),
-                    "type", r.typeRecette(),
-                    "debiteur", r.debiteur(),
-                    "statut", r.statutRecette()
-            );
-            // Normally, add to the association list ...
-            saveRecipe(newRecipe);
-            System.out.println("BLAA");
-            updateSoldeLabel();
-
+            if (!jsonFile.exists()) {
+                return;
+            }
+            accountData.put("isPresident", member.get("email"));
+            accountData.put("presidentName", member.get("nom") + " " + member.get("prenom"));
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, accountData);
+            System.out.println("Président mis à jour avec succès!");
         } catch (IOException e) {
-            System.err.println("Error reading or writing JSON file: " + e.getMessage());
-        } catch (NumberFormatException e) {
-            System.err.println("Invalid amount entered: " + e.getMessage());
+            System.err.println("Error reading or writing JSON file for setting president: " + e.getMessage());
         }
     }
 
     private void saveRecipe(Map<String, Object> recipe) throws IOException {
-        File file = Paths.get("Storage/cotisations.json").toFile();
+        File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "cotisations.json").toFile();
         if (!file.exists()) {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, List.of(recipe));
             return;
@@ -241,24 +207,9 @@ public class MembresController {
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, data);
     }
 
-    @FXML
-//    private void handlePayCotisation() {
-//        Map<String, Object> cotisationOperation = Map.of(
-//                "date", java.time.LocalDate.now().toString(),
-//                "amount", "50.0",
-//                "type", "Cotisation",
-//                "description", "Cotisation annuelle"
-//        );
-//
-//        membersData.add(cotisationOperation);
-//
-//        // Update the JSON file
-////        saveFinancialData();
-//    }
-
-    private void saveDonorData() {
+    private void saveMembersData() {
         try {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(FILE_PATH), membersData);
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "members.json").toFile(), membersData);
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Echec de l'enregistrement: " + e.getMessage());
@@ -267,13 +218,13 @@ public class MembresController {
 
     private void updateSoldeLabel() {
         try {
-            File jsonFile = Paths.get("Storage/infos.json").toFile(); // Replace with the actual JSON file path
+            File jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "infos.json").toFile(); // Replace with the actual JSON file path
             Map<String, Object> accountData = objectMapper.readValue(jsonFile, Map.class);
             double currentSolde = accountData.getOrDefault("solde", 0.0) instanceof Number
                     ? ((Number) accountData.get("solde")).doubleValue()
                     : 0.0;
 
-            jsonFile = Paths.get("Storage/cotisations.json").toFile();
+            jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "cotisations.json").toFile();
             if (!jsonFile.exists()) {
                 objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, List.of());
             }

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.Controllers.Node.AppChosenController">
+    <!-- Top section: Dashboard Title -->
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 10; -fx-background-color: #4CAF50;">
+            <Label text="Point de distribution" style="-fx-font-size: 20; -fx-text-fill: white;"/>
+        </HBox>
+    </top>
+
+
+    <!-- Center section: Main Content -->
+    <center>
+        <VBox spacing="20" style="-fx-padding: 20;" alignment="BASELINE_CENTER">
+            <Label text="Connexion à l'application:" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+            <Button text="Association" fx:id="openAssociationAppButton" prefWidth="150" onAction="#onAssociationLoginButtonClick"/>
+            <Button text="Membre" fx:id="openMemberAppButton" prefWidth="150" onAction="#onMemberButtonClick"/>
+            <Button text="Service des Espaces verts" fx:id="openMunicipalityAppButton" prefWidth="150" onAction="#onMunicipalityButtonClick"/>
+            <Separator fx:id="separator" style="-fx-padding: 5; -fx-border-width: 1px;"/>
+            <Button text="Quitter"
+                    onAction="#onExitButtonClick"
+                    prefWidth="150" style="-fx-background-color: #FF6347; -fx-text-fill: white;"
+                    alignment="CENTER"
+            />
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #e0e0e0;">
+            <children>
+                <Label text="© 2025 Sauvons les Arbres - Application. Tous droits réservés." />
+            </children>
+        </HBox>
+    </bottom>
+</BorderPane>

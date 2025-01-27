@@ -1,10 +1,10 @@
 package org.example.Models;
 public class Entite {
-    protected int solde;
+    protected double solde;
     protected String nom;
     protected String email;
     
-    public Entite(String nom, String email, int solde) {
+    public Entite(String nom, String email, double solde) {
         this.nom = nom;
         this.email = email;
         this.solde = solde;
@@ -16,7 +16,7 @@ public class Entite {
         this.email = email;
     }
 
-    public int solde() {
+    public double solde() {
         return this.solde;
     }
 

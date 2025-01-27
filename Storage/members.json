@@ -10,4 +10,12 @@
   "nom" : "MAKOLE",
   "prenom" : "Céléna",
   "email" : "celena.makole@etu-upsaclay.fr"
+}, {
+  "nom" : "Mouse",
+  "prenom" : "Mickey",
+  "email" : "mickey@mouse.org"
+}, {
+  "prenom" : "Bill",
+  "nom" : "AHOUANDJINOU",
+  "email" : "bill.ahouandjinou@etu-upsaclay.fr"
 } ]

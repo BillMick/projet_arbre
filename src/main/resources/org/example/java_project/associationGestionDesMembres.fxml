@@ -60,10 +60,11 @@
             <Label text="Prénom :" style="-fx-font-size: 12; -fx-font-weight: bold;"/>
             <TextField fx:id="firstnameField" promptText="Ex: Jerry" />
             <Label text="Email :" style="-fx-font-size: 12; -fx-font-weight: bold;"/>
-            <TextField fx:id="emailField" promptText="Ex: donateur@gmail.com"/>
+            <TextField fx:id="emailField" promptText="Ex: membre@gmail.com"/>
+            <CheckBox fx:id="presidentCheckBox" text="Président ?" style="-fx-font-size: 12; -fx-font-weight: bold;"/>
 
             <Separator fx:id="separator3" style="-fx-padding: 5; -fx-border-width: 1px;"/>
-            <Button text="Ajouter" fx:id="addDonorButton" onAction="#handleAddMember" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+            <Button text="Ajouter" fx:id="addMembreButton" onAction="#handleAddMember" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
         </VBox>
     </right>
 

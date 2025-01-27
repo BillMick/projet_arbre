@@ -15,6 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.example.Controllers.Node.AppChosenController;
 import org.example.Models.Activite;
 import org.example.Models.Association;
 import org.example.Models.Recette;
@@ -29,6 +30,17 @@ import java.util.List;
 import java.util.Map;
 
 public class ActivitesController {
+    private Map<String, Object> infos = AppChosenController.infosAssociation;
+    public void setInfos(Map<String, Object> infos) {
+        this.infos = infos;
+        System.out.println(infos);
+    }
+
+    public static final String REPERTOIRE_DE_BASE = "Storage";
+    public static final String REPERTOIRE_ASSOC = "Associations";
+    public static final String REPERTOIRE_MEMBRES = "Members";
+    public static final String REPERTOIRE_SERVICE = "Municipalite";
+    private String REPERTOIRE_PROPRIETAIRE = (String) infos.get("email");
 
     @FXML
     private Label soldeLabel;
@@ -72,16 +84,13 @@ public class ActivitesController {
     @FXML
     private TableColumn<Map<String, Object>, String> actionColumn;
 
-    // @FXML
-    //private ComboBox<String> comboBox;
-
     @FXML
     private Button openDonorsInterfaceButton;
 
     private ObservableList<Map<String, Object>> activitiesData = FXCollections.observableArrayList();
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final String FILE_PATH = "Storage/activites.json"; // Update with your actual JSON file path
+    // private static final String FILE_PATH = "Storage/activites.json"; // Update with your actual JSON file path
 
     @FXML
     public void initialize() {
@@ -138,7 +147,7 @@ public class ActivitesController {
 
         // Populate the TableView
         try {
-            loadDonorsData();
+            loadActivitiesData();
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Echec du chargement des donateurs: " + e.getMessage());
@@ -154,7 +163,7 @@ public class ActivitesController {
         System.out.println(activityToDelete);
         activitiesTable.getItems().remove(rowIndex);
         try {
-            File file = new File("Storage/activites.json");
+            File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "activites.json").toFile();
             List<Map<String, Object>> activitiesData = objectMapper.readValue(file, List.class);
 
             // Find and remove the donor from the data
@@ -183,8 +192,8 @@ public class ActivitesController {
         }
     }
 
-    private void loadDonorsData() throws IOException {
-        File file = new File(FILE_PATH);
+    private void loadActivitiesData() throws IOException {
+        File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "activites.json").toFile();
         if (!file.exists()) {
             System.out.println("Aucune activité enregistrée.");
             return;
@@ -217,7 +226,7 @@ public class ActivitesController {
         ComboBox<String> activityComboBox = new ComboBox<>();
         activityComboBox.setPromptText("Choisir un arbre");
         // Load trees from the file
-        File file = new File("Storage/trees.json");
+        File file = new File(REPERTOIRE_DE_BASE, "trees.json");
         if (!file.exists()) {
             System.out.println("Aucun arbre enregistré.");
             return;
@@ -289,7 +298,7 @@ public class ActivitesController {
 
     private void saveActivitiesData() {
         try {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File("Storage/activites.json"), activitiesData);
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "activites.json").toFile(), activitiesData);
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Échec de l'enregistrement: " + e.getMessage());
@@ -298,13 +307,13 @@ public class ActivitesController {
 
     private void updateSoldeLabel() {
         try {
-            File jsonFile = Paths.get("Storage/infos.json").toFile(); // Replace with the actual JSON file path
+            File jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "infos.json").toFile();
             Map<String, Object> accountData = objectMapper.readValue(jsonFile, Map.class);
             double currentSolde = accountData.getOrDefault("solde", 0.0) instanceof Number
                     ? ((Number) accountData.get("solde")).doubleValue()
                     : 0.0;
 
-            jsonFile = Paths.get("Storage/dons.json").toFile();
+            jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "dons.json").toFile();
             if (!jsonFile.exists()) {
                 objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, List.of());
             }
@@ -324,12 +333,12 @@ public class ActivitesController {
 
     private void updateNbLabels() {
         try {
-            File jsonFile = Paths.get("Storage/notifications.json").toFile(); // Replace with the actual JSON file path
+            File jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "notifications.json").toFile(); // Replace with the actual JSON file path
             List<Map<String, Object>> notificationsData = objectMapper.readValue(jsonFile, new TypeReference<List<Map<String, Object>>>() {});
             int nb = notificationsData.size();
             nbNotificationsLabel.setText("Notification·s: " + nb);
 
-            File jsonFile1 = Paths.get("Storage/activites.json").toFile(); // Replace with the actual JSON file path
+            File jsonFile1 = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "activites.json").toFile(); // Replace with the actual JSON file path
             List<Map<String, Object>> activitiesData = objectMapper.readValue(jsonFile1, new TypeReference<List<Map<String, Object>>>() {});
             nb = activitiesData.size();
             nbActivitesLabel.setText("Activité·s: " + nb);

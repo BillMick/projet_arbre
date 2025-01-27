@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import org.example.Controllers.Node.AppChosenController;
 import org.example.java_project.Application;
 
 import java.io.File;
@@ -21,6 +22,17 @@ import java.util.List;
 import java.util.Map;
 
 public class NotificationsController {
+    private Map<String, Object> infos = AppChosenController.infosAssociation;
+    public void setInfos(Map<String, Object> infos) {
+        this.infos = infos;
+        System.out.println(infos);
+    }
+
+    public static final String REPERTOIRE_DE_BASE = "Storage";
+    public static final String REPERTOIRE_ASSOC = "Associations";
+    public static final String REPERTOIRE_MEMBRES = "Members";
+    public static final String REPERTOIRE_SERVICE = "Municipalite";
+    private String REPERTOIRE_PROPRIETAIRE = (String) infos.get("email");
 
     @FXML
     private TableView<Map<String, Object>> notificationsTableView;
@@ -36,7 +48,7 @@ public class NotificationsController {
 
     private ObservableList<Map<String, Object>> notificationsData = FXCollections.observableArrayList();
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final String NOTIFICATIONS_FILE_PATH = "Storage/notifications.json"; // Chemin vers le fichier JSON
+    // private static final String NOTIFICATIONS_FILE_PATH = "Storage/notifications.json"; // Chemin vers le fichier JSON
 
     @FXML
     public void initialize() {
@@ -64,7 +76,7 @@ public class NotificationsController {
     }
 
     private void loadNotifications() throws IOException {
-        File file = new File(NOTIFICATIONS_FILE_PATH);
+        File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "notifications.json").toFile();
         if (!file.exists()) {
             System.out.println("No notifications found.");
             return;
@@ -101,7 +113,7 @@ public class NotificationsController {
 
     private void saveNotifications() {
         try {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(NOTIFICATIONS_FILE_PATH), notificationsData);
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "notifications.json").toFile(), notificationsData);
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Failed to save notifications: " + e.getMessage());

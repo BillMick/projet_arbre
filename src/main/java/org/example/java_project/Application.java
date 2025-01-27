@@ -34,15 +34,19 @@ package org.example.java_project;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.example.Models.Association;
 
 import java.io.IOException;
 
 public class Application extends javafx.application.Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("memberDashboard.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
-        stage.setTitle("Home");
+        // récupérer les infos de connexion ...
+        // ...
+        // Association association = new Association("SauvonsLesArbres", "sauvons@les.arbre", 0.0);
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("node.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 400, 370);
+        stage.setTitle("Point de distribution");
         stage.setScene(scene);
         stage.show();
     }

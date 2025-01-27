@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.example.Controllers.Node.AppChosenController;
 import org.example.Models.Arbre;
 import org.example.java_project.Application;
 
@@ -23,6 +24,18 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class VotesController {
+
+    private Map<String, Object> infos = AppChosenController.infosAssociation;
+    public void setInfos(Map<String, Object> infos) {
+        this.infos = infos;
+        System.out.println(infos);
+    }
+
+    public static final String REPERTOIRE_DE_BASE = "Storage";
+    public static final String REPERTOIRE_ASSOC = "Associations";
+    public static final String REPERTOIRE_MEMBRES = "Members";
+    public static final String REPERTOIRE_SERVICE = "Municipalite";
+    private String REPERTOIRE_PROPRIETAIRE = (String) infos.get("email");
 
     @FXML
     private TableView<Map<String, Object>> votesTable;
@@ -40,7 +53,7 @@ public class VotesController {
 
     private ObservableList<Map<String, Object>> votesData = FXCollections.observableArrayList();
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final String FILE_PATH = "Storage/trees.json"; // Update with your actual JSON file path
+    // private static final String FILE_PATH = "Storage/trees.json"; // Update with your actual JSON file path
 
 
     @FXML
@@ -107,7 +120,7 @@ public class VotesController {
     }
 
     private void updateTableData() throws IOException {
-        File folder = new File("Storage/votes/");
+        File folder = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "votes/").toFile();
         List<Map<String, Object>> votes = new ArrayList<>();
         File[] files = folder.listFiles((dir, name) -> name.endsWith(".json"));
         if (files != null) {

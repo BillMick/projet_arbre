@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.example.Controllers.Node.AppChosenController;
 import org.example.Models.Arbre;
 import org.example.Models.Association;
 import org.example.java_project.Application;
@@ -26,6 +27,18 @@ import java.util.Map;
 
 public class AssociationDashboardController {
 
+    private Map<String, Object> infos = AppChosenController.infosAssociation;
+    public void setInfos(Map<String, Object> infos) {
+        this.infos = infos;
+        System.out.println(infos);
+    }
+
+    public static final String REPERTOIRE_DE_BASE = "Storage";
+    public static final String REPERTOIRE_ASSOC = "Associations";
+    public static final String REPERTOIRE_MEMBRES = "Members";
+    public static final String REPERTOIRE_SERVICE = "Municipalite";
+    private String REPERTOIRE_PROPRIETAIRE = (String) infos.get("email");
+
     @FXML
     private Label nbNotificationsLabel;
 
@@ -34,6 +47,9 @@ public class AssociationDashboardController {
 
     @FXML
     private Label anneeLabel;
+
+    @FXML
+    private Label presidentLabel;
 
     @FXML
     private TableView<Map<String, Object>> treesTable;
@@ -49,16 +65,9 @@ public class AssociationDashboardController {
 
     private ObservableList<Map<String, Object>> treesData = FXCollections.observableArrayList();
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final String FILE_PATH = "Storage/trees.json"; // Update with your actual JSON file path
-
 
     @FXML
     public void initialize() {
-        // Bind columns to Arbre properties
-//        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-//        locationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
-//        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
-
         // Set up the TableView columns
         nameColumn.setCellValueFactory(cellData -> {
             Object value = cellData.getValue().get("name");
@@ -118,20 +127,40 @@ public class AssociationDashboardController {
 
     private void updateNbLabels() {
         try {
-            File jsonFile = Paths.get("Storage/notifications.json").toFile(); // Replace with the actual JSON file path
+            if (REPERTOIRE_DE_BASE == null || REPERTOIRE_ASSOC == null || REPERTOIRE_PROPRIETAIRE == null) {
+                throw new IllegalArgumentException("Chemin inexistant.");
+            }
+            File jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "notifications.json").toFile();
+            if (!jsonFile.exists()) {
+                objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, List.of());
+            }
             List<Map<String, Object>> notificationsData = objectMapper.readValue(jsonFile, new TypeReference<List<Map<String, Object>>>() {});
-            int nb = notificationsData.size();
-            nbNotificationsLabel.setText("Notification·s: " + nb);
+            nbNotificationsLabel.setText("Notification·s: " + notificationsData.size());
 
-            File jsonFile1 = Paths.get("Storage/activites.json").toFile(); // Replace with the actual JSON file path
+            File jsonFile1 = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "activites.json").toFile();
+            if (!jsonFile1.exists()) {
+                objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile1, List.of());
+            }
             List<Map<String, Object>> activitiesData = objectMapper.readValue(jsonFile1, new TypeReference<List<Map<String, Object>>>() {});
-            nb = activitiesData.size();
-            nbActivitesLabel.setText("Activité·s: " + nb);
+            nbActivitesLabel.setText("Activité·s: " + activitiesData.size());
 
-            File jsonFile2 = Paths.get("Storage/begin.json").toFile(); // Replace with the actual JSON file path
-            Map<String, Object> begin = objectMapper.readValue(jsonFile2, new TypeReference<Map<String, Object>>() {});
-            nb = activitiesData.size();
-            anneeLabel.setText("Année d'exercice en cours: " + Association.dateFormat.format(begin.get("date")));
+            File jsonFile2 = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "periode.json").toFile();
+            if (!jsonFile2.exists()) {
+                objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile2, Map.of());
+            }
+            else {
+                Map<String, Object> begin = objectMapper.readValue(jsonFile2, new TypeReference<Map<String, Object>>() {});
+                if ((begin != null && begin.containsKey("debut") && begin.get("debut") != null)) {
+                    anneeLabel.setText("Année d'exercice en cours: " + Association.dateFormat.format(begin.get("debut")));
+                }
+            }
+
+            File jsonFile3 = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "infos.json").toFile();
+            if (!jsonFile3.exists()) {
+                objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile3, Map.of());
+            }
+            Map<String, Object> president = objectMapper.readValue(jsonFile3, new TypeReference<Map<String, Object>>() {});
+            presidentLabel.setText("Président: " + president.get("presidentName"));
         } catch (IOException e) {
             showErrorDialog("Error", "Unable to read data: " + e.getMessage());
         }
@@ -150,7 +179,7 @@ public class AssociationDashboardController {
         // Set the TableView's items
         treesTable.setItems(treesData);
 
-        File file = new File(FILE_PATH);
+        File file = new File(REPERTOIRE_DE_BASE, "trees.json");
         if (!file.exists()) {
             System.out.println("No trees data found.");
             return;
@@ -161,36 +190,44 @@ public class AssociationDashboardController {
         treesData.setAll(data);
     }
 
-    // Existing readTrees() method
-    public static Map<String, Object> readTrees() throws IOException {
-        // Your implementation of readTrees() function here
-        return Map.of(); // Replace with actual logic
-    }
-
 
     @FXML
     public void onBeginButtonClick() throws IOException {
-        File jsonFile = Paths.get("Storage/begin.json").toFile(); // Replace with the actual JSON file path
+        File jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "periode.json").toFile();
         if (!jsonFile.exists()) {
             Map<String, Object> begin = Map.of(
-                    "date", new Date()
+                    "debut", new Date()
             );
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, begin);
             updateNbLabels();
             return;
         }
         Map<String, Object> begin = objectMapper.readValue(jsonFile, new TypeReference<Map<String, Object>>() {});
-        if (begin != null) {
+
+        if (begin != null && begin.containsKey("debut") && begin.get("debut") != null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setContentText("L'année d'exercice actuellement en cours (" + Association.dateFormat.format(begin.get("date")) +  ") n'est pas encore clôturée.");
+            alert.setContentText("L'année d'exercice actuellement en cours (" + Association.dateFormat.format(begin.get("debut")) +  ") n'est pas encore clôturée.");
             alert.showAndWait();
-            return;
+        } else {
+            begin = Map.of(
+                    "debut", new Date()
+            );
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, begin);
+            updateNbLabels();
         }
     }
 
     @FXML
     public void onEndButtonClick() throws IOException {
-
+        // Nombre de donateurs
+        // Nombre de membres
+        // Nom du président
+        // Dettes
+        // Dons
+        // Cotisations
+        // Activités
+        // Scrutin
+        // Mentionner la fin de l'année dans un fichier
     }
 
     @FXML
@@ -272,16 +309,11 @@ public class AssociationDashboardController {
     @FXML
     public void onTreasuryButtonClick() {
         try {
-            // Load the new interface from the FXML file
             FXMLLoader loader = new FXMLLoader(Application.class.getResource("associationGestionDeTresorerie.fxml"));
             Parent root = loader.load();
-
-            // Create a new stage for the new interface
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Interface de Gestion de Trésorerie");
-
-            // Show the new stage
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();

@@ -15,6 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.example.Controllers.Node.AppChosenController;
 import org.example.Models.Association;
 import org.example.Models.Recette;
 import org.example.java_project.Application;
@@ -27,6 +28,18 @@ import java.util.List;
 import java.util.Map;
 
 public class DonateursController {
+
+    private Map<String, Object> infos = AppChosenController.infosAssociation;
+    public void setInfos(Map<String, Object> infos) {
+        this.infos = infos;
+        System.out.println(infos);
+    }
+
+    public static final String REPERTOIRE_DE_BASE = "Storage";
+    public static final String REPERTOIRE_ASSOC = "Associations";
+    public static final String REPERTOIRE_MEMBRES = "Members";
+    public static final String REPERTOIRE_SERVICE = "Municipalite";
+    private String REPERTOIRE_PROPRIETAIRE = (String) infos.get("email");
 
     @FXML
     private Label soldeLabel;
@@ -70,7 +83,7 @@ public class DonateursController {
     private ObservableList<Map<String, Object>> donorsData = FXCollections.observableArrayList();
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final String FILE_PATH = "Storage/donors.json"; // Update with your actual JSON file path
+    //private static final String FILE_PATH = "Storage/donors.json"; // Update with your actual JSON file path
 
     @FXML
     public void initialize() {
@@ -131,7 +144,7 @@ public class DonateursController {
 
         // Remove from the data source (your JSON file)
         try {
-            File file = new File(FILE_PATH);
+            File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "donors.json").toFile();
             List<Map<String, Object>> donorsData = objectMapper.readValue(file, List.class);
 
             // Find and remove the donor from the data
@@ -146,7 +159,7 @@ public class DonateursController {
     }
 
     private void loadDonorsData() throws IOException {
-        File file = new File(FILE_PATH);
+        File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "donors.json").toFile();
         if (!file.exists()) {
             System.out.println("Aucun donateur enregistré.");
             return;
@@ -197,7 +210,7 @@ public class DonateursController {
         ComboBox<String> donorComboBox = new ComboBox<>();
         donorComboBox.setPromptText("Choisir un donateur");
 
-        File file = new File(FILE_PATH);
+        File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "donors.json").toFile();
         if (!file.exists()) {
             System.out.println("Aucun donateur enregistré.");
             return ;
@@ -231,7 +244,7 @@ public class DonateursController {
     @FXML
     private void onAddMoney(double montant, String donor) {
         try {
-            File jsonFile = Paths.get("Storage/infos.json").toFile(); // Replace with the actual JSON file path
+            File jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "infos.json").toFile(); // Replace with the actual JSON file path
             Map<String, Object> accountData = objectMapper.readValue(jsonFile, Map.class);
             double currentSolde = accountData.getOrDefault("solde", 0.0) instanceof Number
                     ? ((Number) accountData.get("solde")).doubleValue()
@@ -264,7 +277,7 @@ public class DonateursController {
     }
 
     private void saveRecipe(Map<String, Object> recipe) throws IOException {
-        File file = Paths.get("Storage/dons.json").toFile();
+        File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "dons.json").toFile();
         if (!file.exists()) {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, List.of(recipe));
             return;
@@ -276,7 +289,7 @@ public class DonateursController {
 
     private void saveDonorData() {
         try {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(FILE_PATH), donorsData);
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "donors.json").toFile(), donorsData);
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Echec de l'enregistrement: " + e.getMessage());
@@ -285,13 +298,13 @@ public class DonateursController {
 
     private void updateSoldeLabel() {
         try {
-            File jsonFile = Paths.get("Storage/infos.json").toFile(); // Replace with the actual JSON file path
+            File jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "infos.json").toFile(); // Replace with the actual JSON file path
             Map<String, Object> accountData = objectMapper.readValue(jsonFile, Map.class);
             double currentSolde = accountData.getOrDefault("solde", 0.0) instanceof Number
                     ? ((Number) accountData.get("solde")).doubleValue()
                     : 0.0;
 
-            jsonFile = Paths.get("Storage/dons.json").toFile();
+            jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "dons.json").toFile();
             if (!jsonFile.exists()) {
                 objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, List.of());
             }

@@ -21,6 +21,7 @@ module org.example.java_project {
     opens org.example.java_project to javafx.fxml;
     opens org.example.Controllers.Membre to javafx.fxml;
     opens org.example.Controllers.Association to javafx.fxml;
+    opens org.example.Controllers.Node to javafx.fxml;
     exports org.example.java_project;
     exports org.example.Models;
 }
