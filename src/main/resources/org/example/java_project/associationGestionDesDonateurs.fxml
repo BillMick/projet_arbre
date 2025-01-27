@@ -28,12 +28,13 @@
             <Button text="Notifications" fx:id="openNotificationsInterfaceButton" prefWidth="150" onAction="#onNotificationsButtonClick"/>
             <Button text="Membres" fx:id="openMembersInterfaceButton" prefWidth="150" onAction="#onMembersButtonClick"/>
             <Button text="Trésorerie" fx:id="openTreasuryInterfaceButton" prefWidth="150" onAction="#onTreasuryButtonClick"/>
+            <Button text="Votes" fx:id="openVotesInterfaceButton" prefWidth="150" onAction="#onVotesButtonClick"/>
 
             <Separator fx:id="separator2" style="-fx-padding: 5; -fx-border-width: 1px;"/>
 
-            <Button text="Quitter"
-                    onAction="#onExitButtonClick"
-                    style="-fx-background-color: #f44336; -fx-text-fill: white;"
+            <Button text="Fermer"
+                    onAction="#onBackButtonClick"
+                    prefWidth="150" style="-fx-background-color: #2020FF; -fx-text-fill: white;"
                     alignment="CENTER"
             />
         </VBox>
@@ -70,10 +71,11 @@
         </VBox>
     </right>
 
-    <!-- Bottom section: Footer -->
     <bottom>
         <HBox alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #e0e0e0;">
-            <Label text="© 2025 Association Application. Tous droits réservés."/>
+            <children>
+                <Label text="© 2025 Sauvons les Arbres - Application. Tous droits réservés." />
+            </children>
         </HBox>
     </bottom>
 </BorderPane>

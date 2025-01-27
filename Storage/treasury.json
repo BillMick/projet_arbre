@@ -33,4 +33,14 @@
   "type" : "Dépôt",
   "description" : "Crédit",
   "date" : "2025-01-24"
+}, {
+  "type" : "Cotisation",
+  "description" : "Cotisation annuelle",
+  "date" : "2025-01-26",
+  "amount" : "50.0"
+}, {
+  "type" : "Dépôt",
+  "description" : "Depot",
+  "date" : "2025-01-26",
+  "amount" : "100"
 } ]

@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.example.Models.Arbre;
+import org.example.Models.Association;
 import org.example.java_project.Application;
 
 import javafx.stage.Stage;
@@ -19,6 +20,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +31,9 @@ public class AssociationDashboardController {
 
     @FXML
     private Label nbActivitesLabel;
+
+    @FXML
+    private Label anneeLabel;
 
     @FXML
     private TableView<Map<String, Object>> treesTable;
@@ -122,6 +127,11 @@ public class AssociationDashboardController {
             List<Map<String, Object>> activitiesData = objectMapper.readValue(jsonFile1, new TypeReference<List<Map<String, Object>>>() {});
             nb = activitiesData.size();
             nbActivitesLabel.setText("Activité·s: " + nb);
+
+            File jsonFile2 = Paths.get("Storage/begin.json").toFile(); // Replace with the actual JSON file path
+            Map<String, Object> begin = objectMapper.readValue(jsonFile2, new TypeReference<Map<String, Object>>() {});
+            nb = activitiesData.size();
+            anneeLabel.setText("Année d'exercice en cours: " + Association.dateFormat.format(begin.get("date")));
         } catch (IOException e) {
             showErrorDialog("Error", "Unable to read data: " + e.getMessage());
         }
@@ -136,14 +146,6 @@ public class AssociationDashboardController {
     }
 
     private void updateTableData() throws IOException {
-//        // Clear existing data
-//        treesData.clear();
-//
-//        // Load new data from the `readTrees` function
-//        Map<String, Object> treesMap = readTrees();
-//
-//        // Add all Arbre objects to the ObservableList
-//        treesData.addAll(treesMap.values());
 
         // Set the TableView's items
         treesTable.setItems(treesData);
@@ -166,6 +168,30 @@ public class AssociationDashboardController {
     }
 
 
+    @FXML
+    public void onBeginButtonClick() throws IOException {
+        File jsonFile = Paths.get("Storage/begin.json").toFile(); // Replace with the actual JSON file path
+        if (!jsonFile.exists()) {
+            Map<String, Object> begin = Map.of(
+                    "date", new Date()
+            );
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, begin);
+            updateNbLabels();
+            return;
+        }
+        Map<String, Object> begin = objectMapper.readValue(jsonFile, new TypeReference<Map<String, Object>>() {});
+        if (begin != null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setContentText("L'année d'exercice actuellement en cours (" + Association.dateFormat.format(begin.get("date")) +  ") n'est pas encore clôturée.");
+            alert.showAndWait();
+            return;
+        }
+    }
+
+    @FXML
+    public void onEndButtonClick() throws IOException {
+
+    }
 
     @FXML
     public void onDonorsButtonClick() {

@@ -367,6 +367,25 @@ public class MembresController {
         }
     }
 
+    @FXML
+    public void onVotesButtonClick() {
+        try {
+            // Load the new interface from the FXML file
+            FXMLLoader loader = new FXMLLoader(Application.class.getResource("associationVotes.fxml"));
+            Parent root = loader.load();
+
+            // Create a new stage for the new interface
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Interface de Visualisation des Votes");
+
+            // Show the new stage
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void showErrorDialog(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -385,5 +404,11 @@ public class MembresController {
         if (alert.showAndWait().get() == ButtonType.OK) {
             System.exit(0);
         }
+    }
+
+    @FXML
+    private void onBackButtonClick() {
+        Stage stage = (Stage) membersTable.getScene().getWindow();
+        stage.close();
     }
 }

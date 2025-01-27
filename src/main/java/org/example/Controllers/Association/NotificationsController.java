@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.example.java_project.Application;
 
@@ -22,216 +23,88 @@ import java.util.Map;
 public class NotificationsController {
 
     @FXML
-    private Label soldeLabel;
-
-    @FXML
-    private TextField amountField;
-
-    @FXML
-    private TextField descriptionField;
-
-    @FXML
-    private Button addMoneyButton;
-
-    @FXML
-    private Button payCotisationButton;
-
-    @FXML
-    private Label cotisationStatusLabel;
-
-    @FXML
-    private TableView<Map<String, Object>> financialTable;
+    private TableView<Map<String, Object>> notificationsTableView;
 
     @FXML
     private TableColumn<Map<String, Object>, String> dateColumn;
 
     @FXML
-    private TableColumn<Map<String, Object>, String> amountColumn;
+    private TableColumn<Map<String, Object>, String> timeColumn;
 
     @FXML
-    private TableColumn<Map<String, Object>, String> typeColumn;
+    private TableColumn<Map<String, Object>, String> statusColumn;
 
-    @FXML
-    private TableColumn<Map<String, Object>, String> descriptionColumn;
-
-    private ObservableList<Map<String, Object>> financialData = FXCollections.observableArrayList();
-
+    private ObservableList<Map<String, Object>> notificationsData = FXCollections.observableArrayList();
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final String FILE_PATH = "Storage/treasury.json"; // Update with your actual JSON file path
+    private static final String NOTIFICATIONS_FILE_PATH = "Storage/notifications.json"; // Chemin vers le fichier JSON
 
     @FXML
     public void initialize() {
-        // Set up the TableView columns
-        dateColumn.setCellValueFactory(cellData -> {
-            Object value = cellData.getValue().get("date");
-            return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
-        });
+        // Configuration des colonnes de la TableView
+        dateColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().get("date")).asString());
+        timeColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().get("time")).asString());
+        statusColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().get("status")).asString());
 
-        amountColumn.setCellValueFactory(cellData -> {
-            Object value = cellData.getValue().get("amount");
-            return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
-        });
-
-        typeColumn.setCellValueFactory(cellData -> {
-            Object value = cellData.getValue().get("type");
-            return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
-        });
-
-        descriptionColumn.setCellValueFactory(cellData -> {
-            Object value = cellData.getValue().get("description");
-            return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
-        });
-
-        // Populate the TableView
+        // Charger les notifications
         try {
-            loadFinancialData();
+            loadNotifications();
         } catch (IOException e) {
             e.printStackTrace();
-            System.err.println("Failed to load financial operations: " + e.getMessage());
+            System.err.println("Failed to load notifications: " + e.getMessage());
         }
 
-        updateSoldeLabel();
-
-        financialTable.setItems(financialData);
+        notificationsTableView.setItems(notificationsData);
+        notificationsTableView.setOnMouseClicked(this::handleNotificationClick);
+    }
+    @FXML
+    private void onBackButtonClick() {
+        // Ferme la fenêtre actuelle ou naviguer vers une autre vue
+        Stage stage = (Stage) notificationsTableView.getScene().getWindow();
+        stage.close(); // Fermer la fenêtre
     }
 
-    private void loadFinancialData() throws IOException {
-        File file = new File(FILE_PATH);
+    private void loadNotifications() throws IOException {
+        File file = new File(NOTIFICATIONS_FILE_PATH);
         if (!file.exists()) {
-            System.out.println("No financial operations found.");
+            System.out.println("No notifications found.");
             return;
         }
 
-        // Parse the JSON file into a list of maps
+        // Lire le fichier JSON dans une liste de cartes
         List<Map<String, Object>> data = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
-        financialData.setAll(data);
+        notificationsData.setAll(data);
     }
 
-    @FXML
-    private void handleAddMoney() {
-        String amountText = amountField.getText();
-        String description = descriptionField.getText();
+    private void handleNotificationClick(MouseEvent event) {
+        if (event.getClickCount() == 2) { // Vérifie si l'utilisateur double-clique
+            Map<String, Object> selectedNotification = notificationsTableView.getSelectionModel().getSelectedItem();
+            if (selectedNotification != null) {
+                String message = (String) selectedNotification.get("message");
+                String date = (String) selectedNotification.get("date");
+                String time = (String) selectedNotification.get("time");
+                String status = (String) selectedNotification.get("status");
 
-        if (!amountText.isEmpty() && !description.isEmpty()) {
-            Map<String, Object> newOperation = Map.of(
-                    "date", java.time.LocalDate.now().toString(),
-                    "amount", amountText,
-                    "type", "Dépôt",
-                    "description", description
-            );
+                // Afficher le contenu de la notification dans une alerte
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Message");
+                alert.setHeaderText(message);
+                alert.setContentText("Date: " + date + "\nHeure: " + time );
+                alert.showAndWait();
 
-            // Add to the TableView
-            financialData.add(newOperation);
-
-            // Update the JSON file
-            saveFinancialData();
-
-            // Clear fields
-            amountField.clear();
-            descriptionField.clear();
-        }
-    }
-
-    // Called when the "Ajouter" button is clicked
-    @FXML
-    private void onAddMoney() {
-        try {
-            // Get the amount entered by the user
-            String amountText = amountField.getText();
-            double amountToAdd = Double.parseDouble(amountText); // Make sure the input is numeric
-            String description = descriptionField.getText();
-
-            if (!amountText.isEmpty() && !description.isEmpty()) {
-                File jsonFile = Paths.get("Storage/infos.json").toFile(); // Replace with the actual JSON file path
-
-                // Load the current data from the JSON file
-                Map<String, Object> accountData = objectMapper.readValue(jsonFile, Map.class);
-
-                // Get the current "solde" from the file
-                double currentSolde = accountData.getOrDefault("solde", 0.0) instanceof Number
-                        ? ((Number) accountData.get("solde")).doubleValue()
-                        : 0.0;
-
-                // Update the "solde"
-                double newSolde = currentSolde + amountToAdd;
-                accountData.put("solde", newSolde);
-
-                // Write the updated data back to the JSON file
-                objectMapper.writeValue(jsonFile, accountData);
-
-                System.out.println("Successfully added money! New solde: " + newSolde);
-                updateSoldeLabel();
-
-                Map<String, Object> newOperation = Map.of(
-                        "date", java.time.LocalDate.now().toString(),
-                        "amount", amountText,
-                        "type", "Dépôt",
-                        "description", description
-                );
-
-                // Add to the TableView
-                financialData.add(newOperation);
-
-                // Update the JSON file
-                saveFinancialData();
-
-                // Clear fields
-                amountField.clear();
-                descriptionField.clear();
+                // Mettre à jour le statut
+                selectedNotification.put("status", "Lu");
+                notificationsTableView.refresh();
+                saveNotifications(); // Enregistrer les modifications
             }
-
-            // Optionally, clear the input field
-            amountField.clear();
-
-        } catch (IOException e) {
-            System.err.println("Error reading or writing JSON file: " + e.getMessage());
-        } catch (NumberFormatException e) {
-            System.err.println("Invalid amount entered: " + e.getMessage());
         }
     }
 
-    @FXML
-    private void handlePayCotisation() {
-        Map<String, Object> cotisationOperation = Map.of(
-                "date", java.time.LocalDate.now().toString(),
-                "amount", "50.0",
-                "type", "Cotisation",
-                "description", "Cotisation annuelle"
-        );
-
-        financialData.add(cotisationOperation);
-        cotisationStatusLabel.setText("Payée");
-        cotisationStatusLabel.setStyle("-fx-text-fill: green;");
-
-        // Update the JSON file
-        saveFinancialData();
-    }
-
-    private void saveFinancialData() {
+    private void saveNotifications() {
         try {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(FILE_PATH), financialData);
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(NOTIFICATIONS_FILE_PATH), notificationsData);
         } catch (IOException e) {
             e.printStackTrace();
-            System.err.println("Failed to save financial operations: " + e.getMessage());
-        }
-    }
-
-    private void updateSoldeLabel() {
-        try {
-            File jsonFile = Paths.get("Storage/infos.json").toFile(); // Replace with the actual JSON file path
-            // Read the JSON file
-            Map<String, Object> accountData = objectMapper.readValue(jsonFile, Map.class);
-
-            // Get the current solde or default to 0
-            double currentSolde = accountData.getOrDefault("solde", 0.0) instanceof Number
-                    ? ((Number) accountData.get("solde")).doubleValue()
-                    : 0.0;
-
-            // Set the Label text
-            soldeLabel.setText("Blabla: " + currentSolde + " €");
-
-        } catch (IOException e) {
-            showErrorDialog("Error", "Unable to read solde: " + e.getMessage());
+            System.err.println("Failed to save notifications: " + e.getMessage());
         }
     }
 
@@ -293,6 +166,25 @@ public class NotificationsController {
     }
 
     @FXML
+    public void onActivitiesButtonClick() {
+        try {
+            // Load the new interface from the FXML file
+            FXMLLoader loader = new FXMLLoader(Application.class.getResource("associationGestionDesActivites.fxml"));
+            Parent root = loader.load();
+
+            // Create a new stage for the new interface
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Interface de Gestion des Activités");
+
+            // Show the new stage
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     public void onTreasuryButtonClick() {
         try {
             // Load the new interface from the FXML file
@@ -302,7 +194,26 @@ public class NotificationsController {
             // Create a new stage for the new interface
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
-            stage.setTitle("Treasury Interface");
+            stage.setTitle("Interface de Gestion de la Trésorerie");
+
+            // Show the new stage
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void onVotesButtonClick() {
+        try {
+            // Load the new interface from the FXML file
+            FXMLLoader loader = new FXMLLoader(Application.class.getResource("associationVotes.fxml"));
+            Parent root = loader.load();
+
+            // Create a new stage for the new interface
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Interface de Visualisation des Votes");
 
             // Show the new stage
             stage.show();

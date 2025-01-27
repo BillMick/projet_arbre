@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="org.example.Controllers.Association.TreeVotingController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="org.example.Controllers.Membre.TreeVotingController">
 
     <top>
         <HBox style="-fx-padding: 10; -fx-background-color: #4CAF50;">
@@ -13,6 +13,20 @@
         </HBox>
     </top>
 
+    <left>
+        <VBox spacing="10" style="-fx-padding: 10; -fx-background-color: #f0f0f0; -fx-border-color: lightgray; -fx-border-width: 1;" alignment="CENTER">
+            <Label text="Menu" style="-fx-font-weight: bold;"/>
+            <Button text="Notifications" fx:id="openNotificationsInterfaceButton" prefWidth="150" onAction="#onNotificationsButtonClick"/>
+            <Button text="Activités" fx:id="openActivitiesInterfaceButton" prefWidth="150" onAction="#onActivitiesButtonClick"/>
+            <Button text="Trésorerie" fx:id="openTreasuryInterfaceButton" prefWidth="150" onAction="#onTreasuryButtonClick"/>
+            <Separator fx:id="separator3" style="-fx-padding: 5; -fx-border-width: 1px;"/>
+            <Button text="Fermer"
+                    onAction="#onBackButtonClick"
+                    prefWidth="150" style="-fx-background-color: #2F2FFF; -fx-text-fill: white;"
+                    alignment="CENTER"
+            />
+        </VBox>
+    </left>
 
     <center>
         <VBox spacing="10" style="-fx-padding: 20;">
@@ -20,14 +34,10 @@
                 <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="Liste des arbres" />
                 <TableView fx:id="treeTable" prefHeight="300">
                     <columns>
-
-                        <TableColumn fx:id="nameColumn" prefWidth="150.0" text="Nom" />
-
+                        <TableColumn fx:id="nameColumn" prefWidth="150.0" text="Nom" style="-fx-font-weight: bold;"/>
                         <TableColumn fx:id="locationColumn" prefWidth="200.0" text="Localisation" />
-
                         <TableColumn fx:id="statusColumn" prefWidth="150.0" text="Statut" />
-
-                        <TableColumn fx:id="actionColumn" prefWidth="150.0" text="Action" />
+                        <TableColumn fx:id="actionColumn" prefWidth="150.0" text="Action" style="-fx-font-weight: bold;"/>
                     </columns>
                 </TableView>
             </children>
@@ -38,7 +48,7 @@
     <bottom>
         <HBox alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #e0e0e0;">
             <children>
-                <Label text="© 2025 Association Application. Tous droits réservés." />
+                <Label text="© 2025 Sauvons les Arbres - Application. Tous droits réservés." />
             </children>
         </HBox>
     </bottom>

@@ -290,4 +290,10 @@ public class VotesController {
             System.exit(0);
         }
     }
+
+    @FXML
+    private void onBackButtonClick() {
+        Stage stage = (Stage) votesTable.getScene().getWindow();
+        stage.close();
+    }
 }

@@ -7,10 +7,15 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import org.example.Models.Membre;
+import org.example.java_project.Application;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +42,7 @@ public class TreeVotingController {
     private ObservableList<Map<String, Object>> treeData = FXCollections.observableArrayList();
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final String TREE_FILE_PATH = "Storage/trees.json";
-    private static final String VOTES_FILE_PATH = "Storage/votes.json";
+    private static final String VOTES_FILE_PATH = "Storage/votes/votes.json";
 
     private Membre currentUser;
 
@@ -47,11 +52,11 @@ public class TreeVotingController {
         // (ici, un utilisateur par défaut est utilisé)
         // Mais je n'ai pas compris comment obtenir l'utilisateur actuel dans ce système
 
-        currentUser = new Membre("JIA", "Yamin", "jia.yamin@example.com");
+//        currentUser = new Membre("JIA", "Yamin", "jia.yamin@example.com");
 
         // Configurer la liaison des données pour les colonnes
         nameColumn.setCellValueFactory(cellData -> {
-            Object value = cellData.getValue().get("nom");
+            Object value = cellData.getValue().get("name");
             return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
         });
 
@@ -63,6 +68,36 @@ public class TreeVotingController {
         statusColumn.setCellValueFactory(cellData -> {
             Object value = cellData.getValue().get("status");
             return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
+        });
+
+        statusColumn.setCellFactory(param -> {
+            return new TableCell<Map<String, Object>, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                        setStyle("");
+                    } else {
+                        setText(item);
+                        switch (item) { //.toLowerCase()
+                            case "REMARQUABLE":
+                                setStyle("-fx-text-fill: #074994;"); // Blue
+                                break;
+                            case "ABATTU":
+                                setStyle("-fx-text-fill: #8B0000;"); // Red
+                                break;
+                            case "en croissance":
+                                setStyle("-fx-text-fill: #32CD32;"); // Green
+                                break;
+                            case "NON REMARQUABLE":
+                            default:
+                                setStyle("-fx-text-fill: black;"); // Default to black if no match
+                                break;
+                        }
+                    }
+                }
+            };
         });
 
 
@@ -170,11 +205,71 @@ public class TreeVotingController {
         }
     }
 
+    @FXML
+    public void onTreasuryButtonClick() {
+        try {
+            // Load the new interface from the FXML file
+            FXMLLoader loader = new FXMLLoader(Application.class.getResource("memberGestionDeTresorerie.fxml"));
+            Parent root = loader.load();
+
+            // Create a new stage for the new interface
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Treasury Interface");
+
+            // Show the new stage
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void onActivitiesButtonClick() {
+        try {
+            // Load the new interface from the FXML file
+            FXMLLoader loader = new FXMLLoader(Application.class.getResource("MemberActivities.fxml"));
+            Parent root = loader.load();
+
+            // Create a new stage for the new interface
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Treasury Interface");
+
+            // Show the new stage
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void onNotificationsButtonClick() {
+        try {
+            FXMLLoader loader = new FXMLLoader(Application.class.getResource("MemberNotifications.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Notifications");
+
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void showErrorDialog(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    @FXML
+    private void onBackButtonClick() {
+        Stage stage = (Stage) treeTable.getScene().getWindow();
+        stage.close();
     }
 }

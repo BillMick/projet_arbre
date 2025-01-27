@@ -7,32 +7,33 @@
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.Controllers.Membre.TreasureManagementController">
     <!-- Top section: Title -->
     <top>
-        <HBox alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #4CAF50;">
-            <Label text="Gestion de Trésorerie" style="-fx-font-size: 20; -fx-text-fill: white;"/>
+        <HBox alignment="CENTER" style="-fx-padding: 15; -fx-background-color: #4CAF50; -fx-border-radius: 10;">
+            <Label text="Gestion de Trésorerie" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: white;"/>
         </HBox>
     </top>
 
     <!-- Left section: Form for adding money -->
     <left>
-        <VBox spacing="10" style="-fx-padding: 20; -fx-background-color: #f9f9f9; -fx-border-color: lightgray; -fx-border-width: 1;" alignment="CENTER">
-            <Label fx:id="soldeLabel" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
-            <Separator fx:id="separator" style="-fx-padding: 5; -fx-border-width: 1px;"/>
+        <VBox spacing="15" style="-fx-padding: 20; -fx-background-color: #f9f9f9; -fx-border-color: #cccccc; -fx-border-radius: 10; -fx-border-width: 1;" alignment="CENTER">
+            <Label fx:id="soldeLabel" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+            <Separator style="-fx-background-color: #cccccc; -fx-padding: 5;"/>
 
+            <Label text="Ajouter de l'argent" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+            <GridPane hgap="10" vgap="10" style="-fx-padding: 10;">
+                <Label text="Montant :" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <TextField fx:id="amountField" promptText="Montant en €" GridPane.rowIndex="0" GridPane.columnIndex="1" style="-fx-pref-width: 150px;"/>
 
-            <Label text="Ajouter de l'argent" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+                <Label text="Description :" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <TextField fx:id="descriptionField" promptText="Ex: Dépôt, Don, etc." GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            </GridPane>
 
-            <Label text="Montant :"/>
-            <TextField fx:id="amountField" promptText="Montant en €"/>
+            <Button text="Ajouter" fx:id="addMoneyButton" onAction="#onAddMoney"
+                    style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10; -fx-border-radius: 5;"/>
 
-            <Label text="Description :"/>
-            <TextField fx:id="descriptionField" promptText="Ex: Dépôt, Don, etc."/>
-
-            <Button text="Ajouter" fx:id="addMoneyButton" onAction="#onAddMoney" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
-            <Separator fx:id="separator2" style="-fx-padding: 5; -fx-border-width: 1px;"/>
-
-            <Button text="Quitter"
-                    onAction="#onExitButtonClick"
-                    style="-fx-background-color: #f44336; -fx-text-fill: white;"
+            <Separator style="-fx-background-color: #cccccc; -fx-padding: 5;"/>
+            <Button text="Fermer"
+                    onAction="#onBackButtonClick"
+                    prefWidth="150" style="-fx-background-color: #2020FF; -fx-text-fill: white;"
                     alignment="CENTER"
             />
         </VBox>
@@ -40,9 +41,9 @@
 
     <!-- Center section: Financial operations table -->
     <center>
-        <VBox spacing="10" style="-fx-padding: 20;">
-            <Label text="Opérations financières" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
-            <TableView fx:id="financialTable" prefHeight="300">
+        <VBox spacing="20" style="-fx-padding: 20; -fx-background-color: #ffffff; -fx-border-color: #dddddd; -fx-border-radius: 10; -fx-border-width: 1;">
+            <Label text="Opérations financières" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+            <TableView fx:id="financialTable" style="-fx-border-radius: 10;" prefHeight="300">
                 <columns>
                     <TableColumn text="Date" fx:id="dateColumn" prefWidth="100"/>
                     <TableColumn text="Montant (€)" fx:id="amountColumn" prefWidth="100"/>
@@ -55,20 +56,22 @@
 
     <!-- Right section: Cotisation button -->
     <right>
-        <VBox spacing="20" alignment="CENTER" style="-fx-padding: 20; -fx-background-color: #f1f1f1; -fx-border-color: lightgray; -fx-border-width: 1;">
-            <Label text="Cotisation Annuelle" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+        <VBox spacing="15" alignment="CENTER" style="-fx-padding: 20; -fx-background-color: #f1f1f1; -fx-border-color: #dddddd; -fx-border-radius: 10; -fx-border-width: 1;">
+            <Label text="Cotisation Annuelle" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+            <Button text="Payer la cotisation" fx:id="payCotisationButton" onAction="#onPayCotisation"
+                    style="-fx-background-color: #FF6347; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10; -fx-border-radius: 5;"/>
 
-            <Button text="Payer la cotisation" fx:id="payCotisationButton" style="-fx-background-color: #FF6347; -fx-text-fill: white;"/>
-
-            <Label text="Statut cotisation :" style="-fx-font-weight: bold;"/>
-            <Label fx:id="cotisationStatusLabel" text="Non Payée" style="-fx-text-fill: red;"/>
+            <Label text="Statut cotisation :" style="-fx-font-weight: bold; -fx-font-size: 14;"/>
+            <Label fx:id="cotisationStatusLabel" text="Non Payée" style="-fx-text-fill: red; -fx-font-size: 14;"/>
         </VBox>
     </right>
 
     <!-- Bottom section: Footer -->
     <bottom>
         <HBox alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #e0e0e0;">
-            <Label text="© 2025 Gestion de Trésorerie. Tous droits réservés."/>
+            <children>
+                <Label text="© 2025 Sauvons les Arbres - Application. Tous droits réservés." />
+            </children>
         </HBox>
     </bottom>
 </BorderPane>

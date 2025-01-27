@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.Controllers.Membre.MemberActivitiesController">
+    <top>
+        <HBox alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #4CAF50;">
+            <Label text="Activités des Membres" style="-fx-font-size: 20; -fx-text-fill: white;"/>
+        </HBox>
+    </top>
+
+    <left>
+        <VBox spacing="10" style="-fx-padding: 20; -fx-background-color: #f9f9f9; -fx-border-color: lightgray; -fx-border-width: 1;" alignment="CENTER">
+            <Label text="Sélectionner une visite" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+
+            <Label text="Activité(s) proposée(s) :" />
+            <ComboBox fx:id="treeSelection" promptText="Choisir une activité" onAction="#onTreeSelected"/>
+
+            <Label text="Description :" />
+            <TextArea fx:id="descriptionField" promptText="Description de la visite" wrapText="true"/>
+
+            <Label text="Date de visite prévue :" />
+            <DatePicker fx:id="visitDatePicker"/>
+
+            <Button text="Ajouter une visite" fx:id="addVisitButton" onAction="#onAddVisit" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+            <Separator style="-fx-background-color: #cccccc; -fx-padding: 5;"/>
+            <Button text="Fermer"
+                    onAction="#onBackButtonClick"
+                    prefWidth="150" style="-fx-background-color: #2020FF; -fx-text-fill: white;"
+                    alignment="CENTER"
+            />
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="10" style="-fx-padding: 20;">
+            <Label text="Liste des Visites Programmées" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+            <TableView fx:id="visitsTable" prefHeight="300" style="-fx-text-fill: black;">
+                <columns>
+                    <TableColumn text="Date" fx:id="dateColumn" prefWidth="100"/>
+                    <TableColumn text="Type" fx:id="typeColumn" prefWidth="150"/>
+                    <TableColumn text="Description" fx:id="descriptionColumn" prefWidth="200"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+
+    <right>
+        <VBox spacing="20" alignment="CENTER" style="-fx-padding: 20; -fx-background-color: #f1f1f1; -fx-border-color: lightgray; -fx-border-width: 1;">
+            <Label text="Options" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+
+            <Button text="Créer Rapport" fx:id="createReportButton" onAction="#onCreateReport" style="-fx-background-color: #FF9800; -fx-text-fill: white;"/>
+            <Button text="Voir Rapport" fx:id="viewReportButton" onAction="#onViewReport" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+
+            <Label text="Défraiement Total :" style="-fx-font-weight: bold;"/>
+            <Label fx:id="totalReimbursementLabel" text="0 €" style="-fx-font-size: 14;"/>
+
+            <Label text="Rapports :" style="-fx-font-weight: bold;"/>
+            <ListView fx:id="reportListView" prefHeight="200"/>
+        </VBox>
+    </right>
+
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #e0e0e0;">
+            <children>
+                <Label text="© 2025 Sauvons les Arbres - Application. Tous droits réservés." />
+            </children>
+        </HBox>
+    </bottom>
+</BorderPane>

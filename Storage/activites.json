@@ -1,9 +1,21 @@
 [ {
-  "cout" : 47.0,
-  "dateDePlanification" : "2025-01-31",
-  "arbre" : "Goyavier",
   "type" : "VISITE",
-  "statut" : "ATTENTE",
+  "dateDePlanification" : "27-01-2025",
+  "cout" : 14,
+  "executeur" : "",
   "rapport" : "",
-  "executeur" : ""
+  "statut" : "ATTENTE",
+  "description" : "",
+  "nomArbre" : "Goyavier",
+  "localisationArbre" : "Ile-de-France"
+}, {
+  "type" : "VISITE",
+  "dateDePlanification" : "27-01-2025",
+  "cout" : 87,
+  "executeur" : "",
+  "rapport" : "",
+  "statut" : "ATTENTE",
+  "description" : "",
+  "nomArbre" : "Cocotier",
+  "localisationArbre" : "Cocotier"
 } ]

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.Controllers.Membre.MemberDashboardController">
+    <!-- Top section: Dashboard Title -->
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 10; -fx-background-color: #4CAF50;">
+            <Label text="Mon Dashboard" style="-fx-font-size: 20; -fx-text-fill: white;"/>
+        </HBox>
+    </top>
+
+    <!-- Left section: Sidebar -->
+    <left>
+        <VBox spacing="10" style="-fx-padding: 10; -fx-background-color: #f0f0f0; -fx-border-color: lightgray; -fx-border-width: 1;">
+            <Label text="Menu" style="-fx-font-weight: bold;"/>
+<!--            <Button text="Home" prefWidth="150"/>-->
+            <Button text="Activités" prefWidth="150"/>
+            <Button text="Notifications" prefWidth="150"/>
+            <Button text="Trésorerie" fx:id="openTreasuryInterfaceButton" prefWidth="150" onAction="#onTreasuryButtonClick"/>
+            <Button text="Quitter"
+                    onAction="#onExitButtonClick"
+                    prefWidth="150" style="-fx-background-color: #FF6347; -fx-text-fill: white;"
+                    alignment="CENTER"
+            />
+        </VBox>
+    </left>
+
+    <!-- Center section: Main Content -->
+    <center>
+        <VBox spacing="20" style="-fx-padding: 20;">
+            <Label text="Bienvenu·e, [Member Name]" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+
+            <GridPane hgap="10" vgap="10">
+                <Label text="Member ID:"/>
+                <TextField fx:id="memberIdField" editable="false" text="[ID]" style="-fx-background-color: lightgray;"/>
+
+                <Label text="Email:"/>
+                <TextField fx:id="emailField" editable="false" text="[email]" style="-fx-background-color: lightgray;"/>
+
+                <Label text="Membership Status:"/>
+                <TextField fx:id="statusField" editable="false" text="[Active]" style="-fx-background-color: lightgray;"/>
+            </GridPane>
+
+            <Label text="Trees" style="-fx-font-weight: bold;"/>
+            <TableView fx:id="treesTable" prefHeight="200">
+                <columns>
+                    <TableColumn text="Name" fx:id="nameColumn" prefWidth="150"/>
+                    <TableColumn text="Location" fx:id="locationColumn" prefWidth="150"/>
+                    <TableColumn text="Status" fx:id="statusColumn" prefWidth="100"/>
+                </columns>
+            </TableView>
+
+        </VBox>
+    </center>
+
+    <!-- Right section: Quick Stats or Info -->
+    <right>
+        <VBox spacing="10" style="-fx-padding: 10; -fx-background-color: #f8f8f8;">
+            <Label text="Quick Stats" style="-fx-font-weight: bold;"/>
+            <Label text="Total Activities: 15"/>
+            <Label text="Notifications: 3"/>
+        </VBox>
+    </right>
+
+    <!-- Bottom section: Footer -->
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #e0e0e0;">
+            <children>
+                <Label text="© 2025 Sauvons les Arbres - Application. Tous droits réservés." />
+            </children>
+        </HBox>
+    </bottom>
+</BorderPane>

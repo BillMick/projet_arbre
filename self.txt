@@ -36,4 +36,24 @@ Faudrait-il exiger que ce soit la municipalité qui lance la fin des exercices b
 
 Comment gérer les dates ?
 
-Créditer le compte des associations lorsqu'un membre paie sa cotisation 
+Créditer le compte des associations lorsqu'un membre paie sa cotisation
+
+[ {
+  "type" : "VISITE",
+  "dateDePlanification" : "2025-01-26",
+  "cout" : 14,
+  "executeur" : "Céléna",
+  "rapport" : "",
+  "statut" : "PLANIFIEE",
+  "nomArbre" : "Goyavier",
+  "localisationArbre" : "Ile-de-France"
+}, {
+  "type" : "VISITE",
+  "dateDePlanification" : "2025-01-28",
+  "cout" : 87,
+  "executeur" : "",
+  "rapport" : "",
+  "statut" : "ATTENTE",
+  "nomArbre" : "Cocotier",
+  "localisationArbre" : "Cocotier"
+} ]

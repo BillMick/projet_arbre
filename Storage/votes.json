@@ -1,0 +1,13 @@
+[ {
+  "user" : "jia.yamin@example.com",
+  "status" : "NON REMARQUABLE",
+  "timestamp" : 1737935718175,
+  "name" : "Cocotier",
+  "location" : "Lille"
+}, {
+  "user" : "jia.yamin@example.com",
+  "status" : "REMARQUABLE",
+  "timestamp" : 1737936248309,
+  "name" : "Citronnier",
+  "location" : "Haut-De-France"
+} ]

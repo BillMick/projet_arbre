@@ -1,26 +1,25 @@
 package org.example.Models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+// import java.time.LocalDate;
 import java.util.Date;
 
 
 public class Activite {
-    private final TypeActivite type;
+    private TypeActivite type;
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date dateDePlanification;
-    private Date dateDExecution;
+    //private Date dateDExecution;
     private int cout;
     // private String nomAssociation; // pas vraiment nécessaire...
     // private Object executeur; // juste email ou nom ?
     private String executeur;
-    private Object compteRendu;
+    private Object rapport;
     private StatutActivte statut = StatutActivte.ATTENTE;
-
-    // utilisé par Membre
-    // public Activite(TypeActivite type, Date dateDePlanification, Object executeur) {
-    //     this.type = type;
-    //     this.dateDePlanification = dateDePlanification; // or new Date()
-    //     this.executeur = executeur;
-
-    // }
+    private String description = "";
 
     // type activités
     public enum TypeActivite {
@@ -52,38 +51,71 @@ public class Activite {
     }
 
     // setters
-    public boolean ajouterCompteRendu(Rapport compteRendu) {
-        this.compteRendu = compteRendu;
+    public boolean ajouterCompteRendu(Rapport rapport) {
+        this.rapport = rapport;
         return true;
     }
 
+    @JsonSetter("executeur")
+    public void setExecuteur(String executeur) {
+        this.executeur = executeur;
+    }
+
+    @JsonSetter("description")
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @JsonSetter("rapport")
+    public void setRapport(Object rapport) {
+        this.rapport = rapport;
+    }
+
+    @JsonSetter("dateDePlanification")  // Jackson will now use this setter
+    public void setDateDePlanification(Date dateDePlanification) {
+        this.dateDePlanification = dateDePlanification;
+    }
+
+    @JsonSetter("statut")
+    public void setStatut(Activite.StatutActivte statut) {
+        this.statut = statut;
+    }
+
+    @JsonSetter("cout")
+    public void setCout(int cout) {
+        this.cout = cout;
+    }
+
+    @JsonSetter("type")
+    public void setType(TypeActivite type) {
+        this.type = type;
+    }
+
     // getters
-    public StatutActivte statut() {
+    public StatutActivte getStatut() {
         return this.statut;
     }
 
-    public TypeActivite type() {
+    public TypeActivite getType() {
         return this.type;
     }
 
-    public Date dateDePlanification() {
+    public Date getDateDePlanification() {
         return this.dateDePlanification;
     }
 
-    public Date dateDExecution() {
-        return this.dateDExecution;
-    }
-
-    public String executeur() {
+    public String getExecuteur() {
         return this.executeur;
     }
 
-    public int cout() {
+    public String getDescription() { return this.description; }
+
+    public int getCout() {
         return this.cout;
     }
 
-    public Object compteRendu() {
-        return this.compteRendu;
+    public Object getRapport() {
+        return this.rapport;
     }
 }
 

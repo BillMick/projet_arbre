@@ -87,7 +87,7 @@ public class ActivitesController {
     public void initialize() {
         // Set up the TableView columns
         nameColumn.setCellValueFactory(cellData -> {
-            Object value = cellData.getValue().get("arbre");
+            Object value = cellData.getValue().get("nomArbre");
             return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
         });
 
@@ -177,7 +177,7 @@ public class ActivitesController {
 
             // Write the updated list back to the JSON file
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, activitiesData);
-            System.out.println("Donor " + activityToDelete.get("arbre") + " deleted");
+            System.out.println("Visite " + activityToDelete.get("arbre") + " deleted");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -259,7 +259,8 @@ public class ActivitesController {
                                 "dateDePlanification", dateDePlanification,
                                 "cout", cost,
                                 "statut", Activite.StatutActivte.ATTENTE,
-                                "arbre", selectedTree,
+                                "nomArbre", selectedTree,
+                                "localisationArbre", selectedTree,
                                 "type", selectedActivityType,
                                 "rapport", "",
                                 "executeur", ""
@@ -467,5 +468,11 @@ public class ActivitesController {
         if (alert.showAndWait().get() == ButtonType.OK) {
             System.exit(0);
         }
+    }
+
+    @FXML
+    private void onBackButtonClick() {
+        Stage stage = (Stage) activitiesTable.getScene().getWindow();
+        stage.close();
     }
 }
