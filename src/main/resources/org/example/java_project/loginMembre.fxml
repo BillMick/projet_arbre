@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.Controllers.Node.AppChosenController">
+    <!-- Top section: Dashboard Title -->
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 10; -fx-background-color: #4CAF50;">
+            <Label text="Membre | Connexion" style="-fx-font-size: 20; -fx-text-fill: white;"/>
+        </HBox>
+    </top>
+
+
+    <!-- Center section: Main Content -->
+    <center>
+        <VBox spacing="5" alignment="CENTER" style="-fx-padding: 20; -fx-background-color: #f1f1f1; -fx-border-color: lightgray; -fx-border-width: 1;">
+            <Label text="Veuillez entrer vos identifiants" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+
+            <Label text="Identifiant du membre :" style="-fx-font-size: 12; -fx-font-weight: bold;"/>
+            <TextField fx:id="memberField" promptText="Ex: mem@mail.com"/>
+            <Separator fx:id="separator" style="-fx-padding: 5; -fx-border-width: 1px;"/>
+            <Button text="Se connecter" fx:id="loginButton" onAction="#handleMemberLogin" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #e0e0e0;">
+            <children>
+                <Label text="© 2025 Sauvons les Arbres - Application. Tous droits réservés." />
+            </children>
+        </HBox>
+    </bottom>
+</BorderPane>

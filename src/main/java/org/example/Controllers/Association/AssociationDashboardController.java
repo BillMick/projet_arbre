@@ -14,16 +14,16 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import org.example.Controllers.Node.AppChosenController;
 import org.example.Models.Arbre;
 import org.example.Models.Association;
+import org.example.Models.Dette;
 import org.example.java_project.Application;
 
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AssociationDashboardController {
 
@@ -38,6 +38,7 @@ public class AssociationDashboardController {
     public static final String REPERTOIRE_MEMBRES = "Members";
     public static final String REPERTOIRE_SERVICE = "Municipalite";
     private String REPERTOIRE_PROPRIETAIRE = (String) infos.get("email");
+    private String REPERTOIRE_COURANT = "Courant";
 
     @FXML
     private Label nbNotificationsLabel;
@@ -67,7 +68,22 @@ public class AssociationDashboardController {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @FXML
-    public void initialize() {
+    public void initialize() throws IOException {
+        Path yearPath = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE);
+        File directory = yearPath.toFile();
+        if (directory.exists() && directory.isDirectory()) {
+            File[] subdirectories = directory.listFiles(File::isDirectory);
+            if (subdirectories == null || subdirectories.length == 0) {
+                onBeginButtonClick();
+            } else {
+                System.out.println("Il existe des sous dossiers: " + subdirectories.length);
+                Arrays.sort(subdirectories, Comparator.comparingLong(File::lastModified).reversed());
+                REPERTOIRE_COURANT = subdirectories[0].getName();
+            }
+        } else {
+            System.out.println("Le dossier spécifié n'existe pas.");
+        }
+
         // Set up the TableView columns
         nameColumn.setCellValueFactory(cellData -> {
             Object value = cellData.getValue().get("name");
@@ -127,7 +143,7 @@ public class AssociationDashboardController {
 
     private void updateNbLabels() {
         try {
-            if (REPERTOIRE_DE_BASE == null || REPERTOIRE_ASSOC == null || REPERTOIRE_PROPRIETAIRE == null) {
+            if (REPERTOIRE_DE_BASE == null || REPERTOIRE_ASSOC == null || REPERTOIRE_PROPRIETAIRE == null || REPERTOIRE_COURANT == "Courant") {
                 throw new IllegalArgumentException("Chemin inexistant.");
             }
             File jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "notifications.json").toFile();
@@ -144,14 +160,15 @@ public class AssociationDashboardController {
             List<Map<String, Object>> activitiesData = objectMapper.readValue(jsonFile1, new TypeReference<List<Map<String, Object>>>() {});
             nbActivitesLabel.setText("Activité·s: " + activitiesData.size());
 
-            File jsonFile2 = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "periode.json").toFile();
+            File jsonFile2 = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "infos.json").toFile();
             if (!jsonFile2.exists()) {
-                objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile2, Map.of());
+                showErrorDialog("Erreur", "Quelque chose s'est mal passé.");
+                return;
             }
             else {
-                Map<String, Object> begin = objectMapper.readValue(jsonFile2, new TypeReference<Map<String, Object>>() {});
-                if ((begin != null && begin.containsKey("debut") && begin.get("debut") != null)) {
-                    anneeLabel.setText("Année d'exercice en cours: " + Association.dateFormat.format(begin.get("debut")));
+                Map<String, Object> infos = objectMapper.readValue(jsonFile2, new TypeReference<Map<String, Object>>() {});
+                if ((infos.containsKey("debut"))) {
+                    anneeLabel.setText("Année d'exercice en cours: " + Association.dateFormat.format(infos.get("debut")));
                 }
             }
 
@@ -162,7 +179,7 @@ public class AssociationDashboardController {
             Map<String, Object> president = objectMapper.readValue(jsonFile3, new TypeReference<Map<String, Object>>() {});
             presidentLabel.setText("Président: " + president.get("presidentName"));
         } catch (IOException e) {
-            showErrorDialog("Error", "Unable to read data: " + e.getMessage());
+            showErrorDialog("Erreur", "Problème de lecture de données: " + e.getMessage());
         }
     }
 
@@ -175,59 +192,142 @@ public class AssociationDashboardController {
     }
 
     private void updateTableData() throws IOException {
-
-        // Set the TableView's items
         treesTable.setItems(treesData);
-
-        File file = new File(REPERTOIRE_DE_BASE, "trees.json");
+        File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_SERVICE, "trees.json").toFile();
         if (!file.exists()) {
             System.out.println("No trees data found.");
             return;
         }
-
-        // Parse the JSON file into a list of maps
         List<Map<String, Object>> data = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
         treesData.setAll(data);
     }
 
-
     @FXML
     public void onBeginButtonClick() throws IOException {
-        File jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "periode.json").toFile();
+        File jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "infos.json").toFile();
         if (!jsonFile.exists()) {
-            Map<String, Object> begin = Map.of(
-                    "debut", new Date()
-            );
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, begin);
-            updateNbLabels();
+            showErrorDialog("Erreur", "Quelque chose s'est mal passé.");
             return;
         }
-        Map<String, Object> begin = objectMapper.readValue(jsonFile, new TypeReference<Map<String, Object>>() {});
+        Map<String, Object> infos = objectMapper.readValue(jsonFile, new TypeReference<Map<String, Object>>() {});
 
-        if (begin != null && begin.containsKey("debut") && begin.get("debut") != null) {
+        if (infos.containsKey("debut")) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setContentText("L'année d'exercice actuellement en cours (" + Association.dateFormat.format(begin.get("debut")) +  ") n'est pas encore clôturée.");
+            alert.setContentText("L'année d'exercice actuellement en cours (" + Association.dateFormat.format(infos.get("debut")) +  ") n'est pas encore clôturée.");
             alert.showAndWait();
         } else {
-            begin = Map.of(
-                    "debut", new Date()
-            );
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, begin);
+            Date beginning = new Date();
+            while (true) {
+                Path yearPath = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, Association.dateFormat.format(beginning));
+                File yearDir = new File(yearPath.toString());
+                if (!yearDir.exists()) {
+                    yearDir.mkdirs();
+                    infos.put("debut", beginning);
+                    objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, infos);
+                    REPERTOIRE_COURANT = Association.dateFormat.format(beginning);
+                    // Création de dettes
+                    Path path = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "debts.json");
+                    File dir = new File(path.toString());
+                    Map<String, Object> dette = new HashMap<>();
+                    dette.put("statut", Dette.StatutDette.IMPAYEE);
+                    dette.put("type", Dette.TypeDette.FACTURE);
+                    dette.put("crediteur", "Fournisseur");
+                    dette.put("montant", 150.0);
+                    objectMapper.writerWithDefaultPrettyPrinter().writeValue(dir, dette);
+                    Map<String, Object> dette1 = new HashMap<>();
+                    dette1.put("statut", Dette.StatutDette.IMPAYEE);
+                    dette1.put("type", Dette.TypeDette.FACTURE);
+                    dette1.put("crediteur", "Etat");
+                    dette1.put("montant", 35.0);
+                    objectMapper.writerWithDefaultPrettyPrinter().writeValue(dir, dette1);
+                    break;
+                }
+                beginning = addDays(beginning, 1);
+            }
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, infos);
             updateNbLabels();
         }
     }
 
+    public Date addDays(Date date, int days) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, days);
+        return calendar.getTime();
+    }
+
     @FXML
     public void onEndButtonClick() throws IOException {
+        if (REPERTOIRE_DE_BASE == null || REPERTOIRE_ASSOC == null || REPERTOIRE_PROPRIETAIRE == null || REPERTOIRE_COURANT == "Courant") {
+            throw new IllegalArgumentException("Chemin inexistant.");
+        }
         // Nombre de donateurs
+        File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "donors.json").toFile();
+        List<Map<String, Object>> donors = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
         // Nombre de membres
+        file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "members.json").toFile();
+        List<Map<String, Object>> members = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
         // Nom du président
+        File infoFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "infos.json").toFile();
+        Map<String, Object> infos = objectMapper.readValue(file, new TypeReference<Map<String, Object>>() {});
         // Dettes
+        file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "debts.json").toFile();
+        List<Map<String, Object>> debts = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
         // Dons
+        file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "dons.json").toFile();
+        List<Map<String, Object>> dons = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
         // Cotisations
+        file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "cotisations.json").toFile();
+        List<Map<String, Object>> cotisations = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
         // Activités
+        file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "activites.json").toFile();
+        List<Map<String, Object>> activities = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
         // Scrutin
-        // Mentionner la fin de l'année dans un fichier
+        file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "votes", "votes.json").toFile();
+        List<Map<String, Object>> votes = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
+
+        file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "periode.json").toFile();
+        if (file.exists()) {
+            showErrorDialog("Erreur", "Quelque chose s'est mal passé.");
+            return;
+        }
+        Map<String, Object> periode = new HashMap<>();
+        periode.put("debut", infos.get("debut"));
+        periode.put("fin", new Date());
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(infoFile, periode);
+        infos.remove("debut");
+
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, infos);
+
+        file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "rapportFinal.json").toFile();
+        Map<String, Object> rapport = new HashMap<>();
+        double sommeC = cotisations.stream()
+                .filter(cotisation -> cotisation.containsKey("montant"))
+                .mapToDouble(cotisation -> Double.parseDouble(cotisation.get("montant").toString()))
+                .sum();
+        double sommeD = dons.stream()
+                .filter(cotisation -> cotisation.containsKey("montant"))
+                .mapToDouble(cotisation -> Double.parseDouble(cotisation.get("montant").toString()))
+                .sum();
+        double sommeDe = debts.stream()
+                .filter(cotisation -> cotisation.containsKey("montant"))
+                .mapToDouble(cotisation -> Double.parseDouble(cotisation.get("montant").toString()))
+                .sum();
+        rapport.put("debut", periode.get("debut"));
+        rapport.put("fin", periode.get("fin"));
+        rapport.put("activites", activities);
+        rapport.put("cotisations", cotisations);
+        rapport.put("SommeCotisations", sommeC);
+        rapport.put("dons", sommeD);
+        rapport.put("SommeDons", debts);
+        rapport.put("recetteTotale", dons);
+        rapport.put("dettes", debts);
+        rapport.put("SommeDettes", sommeDe);
+        rapport.put("soldeFinal", infos.get("solde"));
+        rapport.put("classificationProposee", votes);
+        rapport.put("nombreDeMembres", members.size());
+        rapport.put("nombreDeDonateurs", donors.size());
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, rapport);
     }
 
     @FXML

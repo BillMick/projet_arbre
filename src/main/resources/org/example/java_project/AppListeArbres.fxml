@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="650.0" maxWidth="1000.0" minHeight="650.0" minWidth="1000.0" prefHeight="650.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.Service.AppListeArbres">
+    <children>
+        <VBox prefHeight="750.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <MenuBar prefHeight="26.0" prefWidth="960.0">
+                </MenuBar>
+                <HBox prefHeight="37.0" prefWidth="1000.0">
+                    <children>
+                        <TextField fx:id="searchField" prefHeight="25.0" prefWidth="667.0" translateX="25.0" translateY="5.0" />
+                        <Button fx:id="btnRechercher" mnemonicParsing="false" onAction="#activerRecherche" prefHeight="25.0" prefWidth="150.0" text="Activer la Recherche" translateX="150.0" translateY="5.0" />
+                    </children>
+                </HBox>
+                <ScrollPane fitToHeight="true" prefHeight="550.0" prefWidth="1000.0">
+                    <content>
+                        <TableView fx:id="tableView" prefHeight="43000.0" prefWidth="2500.0">
+                        </TableView>
+                    </content>
+                </ScrollPane>
+                <Button fx:id="btnRetour" alignment="CENTER" maxHeight="25.0" maxWidth="80.0" minHeight="25.0" minWidth="80.0" mnemonicParsing="false" onAction="#Retours" text="Retour" textFill="#06ba6b" translateX="900.0" translateY="5.0">
+                    <font>
+                        <Font name="Arial Nova" size="12.0" />
+                    </font>
+                </Button>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

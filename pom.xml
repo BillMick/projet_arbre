@@ -27,6 +27,12 @@
       <artifactId>jackson-core</artifactId>
       <version>2.15.2</version>
     </dependency>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.11.0</version> <!-- Use the appropriate version -->
+    </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
@@ -42,7 +48,7 @@
       <artifactId>javafx-fxml</artifactId>
       <version>21</version>
     </dependency>
-<dependency>
+    <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-web</artifactId>
       <version>21</version>
@@ -52,7 +58,7 @@
         <artifactId>javafx-swing</artifactId>
         <version>21</version>
       </dependency>
-<dependency>
+    <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-media</artifactId>
       <version>21</version>
@@ -60,7 +66,8 @@
       <groupId>org.controlsfx</groupId>
       <artifactId>controlsfx</artifactId>
       <version>11.2.1</version>
-    </dependency><dependency>
+    </dependency>
+    <dependency>
       <groupId>com.dlsc.formsfx</groupId>
       <artifactId>formsfx-core</artifactId>
       <version>11.6.0</version>
@@ -70,7 +77,8 @@
           <artifactId>*</artifactId>
         </exclusion>
       </exclusions>
-    </dependency><dependency>
+    </dependency>
+    <dependency>
       <groupId>net.synedra</groupId>
       <artifactId>validatorfx</artifactId>
       <version>0.5.0</version>
@@ -80,15 +88,18 @@
           <artifactId>*</artifactId>
         </exclusion>
       </exclusions>
-    </dependency><dependency>
+    </dependency>
+    <dependency>
       <groupId>org.kordamp.ikonli</groupId>
       <artifactId>ikonli-javafx</artifactId>
       <version>12.3.1</version>
-    </dependency><dependency>
+    </dependency>
+    <dependency>
       <groupId>org.kordamp.bootstrapfx</groupId>
       <artifactId>bootstrapfx-core</artifactId>
       <version>0.4.0</version>
-    </dependency><dependency>
+    </dependency>
+    <dependency>
       <groupId>eu.hansolo</groupId>
       <artifactId>tilesfx</artifactId>
       <version>21.0.3</version>
@@ -98,7 +109,8 @@
           <artifactId>*</artifactId>
         </exclusion>
       </exclusions>
-    </dependency><dependency>
+    </dependency>
+    <dependency>
       <groupId>com.github.almasb</groupId>
       <artifactId>fxgl</artifactId>
       <version>17.3</version>
@@ -109,7 +121,7 @@
         </exclusion>
       </exclusions>
     </dependency>
-<dependency>
+    <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
       <version>${junit.version}</version>
@@ -121,11 +133,11 @@
       <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>com.itextpdf</groupId>
-      <artifactId>itext7-core</artifactId>
-      <version>7.1.14</version> <!-- Vérifiez la dernière version -->
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>com.itextpdf</groupId>-->
+<!--      <artifactId>itext7-core</artifactId>-->
+<!--      <version>7.1.14</version> &lt;!&ndash; Vérifiez la dernière version &ndash;&gt;-->
+<!--    </dependency>-->
     <dependency>
       <groupId>org.apache.pdfbox</groupId>
       <artifactId>pdfbox</artifactId>
@@ -136,6 +148,19 @@
       <artifactId>jackson-datatype-jsr310</artifactId>
       <version>2.15.2</version> <!-- Or the latest version -->
     </dependency>
+
+    <dependency>
+      <groupId>com.opencsv</groupId>
+      <artifactId>opencsv</artifactId>
+      <version>5.8</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.10.1</version>
+    </dependency>
+
   </dependencies>
 
   <repositories>

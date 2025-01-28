@@ -22,10 +22,9 @@ import org.example.java_project.Application;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DonateursController {
 
@@ -40,6 +39,7 @@ public class DonateursController {
     public static final String REPERTOIRE_MEMBRES = "Members";
     public static final String REPERTOIRE_SERVICE = "Municipalite";
     private String REPERTOIRE_PROPRIETAIRE = (String) infos.get("email");
+    private String REPERTOIRE_COURANT = "Courant";
 
     @FXML
     private Label soldeLabel;
@@ -87,6 +87,21 @@ public class DonateursController {
 
     @FXML
     public void initialize() {
+
+        Path yearPath = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE);
+        File directory = yearPath.toFile();
+        if (directory.exists() && directory.isDirectory()) {
+            File[] subdirectories = directory.listFiles(File::isDirectory);
+            if (subdirectories == null || subdirectories.length == 0) {
+            } else {
+                System.out.println("Il existe des sous dossiers: " + subdirectories.length);
+                Arrays.sort(subdirectories, Comparator.comparingLong(File::lastModified).reversed());
+                REPERTOIRE_COURANT = subdirectories[0].getName();
+            }
+        } else {
+            System.out.println("Le dossier spécifié n'existe pas.");
+        }
+
         // Set up the TableView columns
         nameColumn.setCellValueFactory(cellData -> {
             Object value = cellData.getValue().get("nom");
@@ -277,7 +292,10 @@ public class DonateursController {
     }
 
     private void saveRecipe(Map<String, Object> recipe) throws IOException {
-        File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "dons.json").toFile();
+        if (REPERTOIRE_DE_BASE == null || REPERTOIRE_ASSOC == null || REPERTOIRE_PROPRIETAIRE == null || REPERTOIRE_COURANT == "Courant") {
+            throw new IllegalArgumentException("Chemin inexistant.");
+        }
+        File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "dons.json").toFile();
         if (!file.exists()) {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, List.of(recipe));
             return;
@@ -298,13 +316,16 @@ public class DonateursController {
 
     private void updateSoldeLabel() {
         try {
-            File jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "infos.json").toFile(); // Replace with the actual JSON file path
+            if (REPERTOIRE_DE_BASE == null || REPERTOIRE_ASSOC == null || REPERTOIRE_PROPRIETAIRE == null || REPERTOIRE_COURANT == "Courant") {
+                throw new IllegalArgumentException("Chemin inexistant.");
+            }
+            File jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "infos.json").toFile();
             Map<String, Object> accountData = objectMapper.readValue(jsonFile, Map.class);
             double currentSolde = accountData.getOrDefault("solde", 0.0) instanceof Number
                     ? ((Number) accountData.get("solde")).doubleValue()
                     : 0.0;
 
-            jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "dons.json").toFile();
+            jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "dons.json").toFile();
             if (!jsonFile.exists()) {
                 objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, List.of());
             }

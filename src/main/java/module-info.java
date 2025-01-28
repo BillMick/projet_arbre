@@ -11,17 +11,20 @@ module org.example.java_project {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
 
-    requires kernel;
-    requires layout;
-    requires io;
+//    requires kernel;
+//    requires layout;
+//    requires io;
     requires org.apache.pdfbox;
     requires com.fasterxml.jackson.datatype.jsr310;
     requires com.fasterxml.jackson.databind;
+    requires com.opencsv;
+    requires com.google.gson;
 
     opens org.example.java_project to javafx.fxml;
     opens org.example.Controllers.Membre to javafx.fxml;
     opens org.example.Controllers.Association to javafx.fxml;
     opens org.example.Controllers.Node to javafx.fxml;
+    opens org.example.Controllers.Service to javafx.fxml;
     exports org.example.java_project;
     exports org.example.Models;
 }

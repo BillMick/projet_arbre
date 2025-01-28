@@ -24,10 +24,9 @@ import org.example.java_project.Application;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ActivitesController {
     private Map<String, Object> infos = AppChosenController.infosAssociation;
@@ -41,6 +40,7 @@ public class ActivitesController {
     public static final String REPERTOIRE_MEMBRES = "Members";
     public static final String REPERTOIRE_SERVICE = "Municipalite";
     private String REPERTOIRE_PROPRIETAIRE = (String) infos.get("email");
+    private String REPERTOIRE_COURANT = "Courant";
 
     @FXML
     private Label soldeLabel;
@@ -94,6 +94,21 @@ public class ActivitesController {
 
     @FXML
     public void initialize() {
+
+        Path yearPath = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE);
+        File directory = yearPath.toFile();
+        if (directory.exists() && directory.isDirectory()) {
+            File[] subdirectories = directory.listFiles(File::isDirectory);
+            if (subdirectories == null || subdirectories.length == 0) {
+            } else {
+                System.out.println("Il existe des sous dossiers: " + subdirectories.length);
+                Arrays.sort(subdirectories, Comparator.comparingLong(File::lastModified).reversed());
+                REPERTOIRE_COURANT = subdirectories[0].getName();
+            }
+        } else {
+            System.out.println("Le dossier spécifié n'existe pas.");
+        }
+
         // Set up the TableView columns
         nameColumn.setCellValueFactory(cellData -> {
             Object value = cellData.getValue().get("nomArbre");
@@ -163,7 +178,10 @@ public class ActivitesController {
         System.out.println(activityToDelete);
         activitiesTable.getItems().remove(rowIndex);
         try {
-            File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "activites.json").toFile();
+            if (REPERTOIRE_DE_BASE == null || REPERTOIRE_ASSOC == null || REPERTOIRE_PROPRIETAIRE == null || REPERTOIRE_COURANT == "Courant") {
+                throw new IllegalArgumentException("Chemin inexistant.");
+            }
+            File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "activites.json").toFile();
             List<Map<String, Object>> activitiesData = objectMapper.readValue(file, List.class);
 
             // Find and remove the donor from the data
@@ -193,7 +211,10 @@ public class ActivitesController {
     }
 
     private void loadActivitiesData() throws IOException {
-        File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "activites.json").toFile();
+        if (REPERTOIRE_DE_BASE == null || REPERTOIRE_ASSOC == null || REPERTOIRE_PROPRIETAIRE == null || REPERTOIRE_COURANT == "Courant") {
+            throw new IllegalArgumentException("Chemin inexistant.");
+        }
+        File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "activites.json").toFile();
         if (!file.exists()) {
             System.out.println("Aucune activité enregistrée.");
             return;
@@ -226,7 +247,7 @@ public class ActivitesController {
         ComboBox<String> activityComboBox = new ComboBox<>();
         activityComboBox.setPromptText("Choisir un arbre");
         // Load trees from the file
-        File file = new File(REPERTOIRE_DE_BASE, "trees.json");
+        File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_SERVICE, "trees.json").toFile();
         if (!file.exists()) {
             System.out.println("Aucun arbre enregistré.");
             return;
@@ -297,8 +318,11 @@ public class ActivitesController {
     }
 
     private void saveActivitiesData() {
+        if (REPERTOIRE_DE_BASE == null || REPERTOIRE_ASSOC == null || REPERTOIRE_PROPRIETAIRE == null || REPERTOIRE_COURANT == "Courant") {
+            throw new IllegalArgumentException("Chemin inexistant.");
+        }
         try {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "activites.json").toFile(), activitiesData);
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "activites.json").toFile(), activitiesData);
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Échec de l'enregistrement: " + e.getMessage());
@@ -306,6 +330,9 @@ public class ActivitesController {
     }
 
     private void updateSoldeLabel() {
+        if (REPERTOIRE_DE_BASE == null || REPERTOIRE_ASSOC == null || REPERTOIRE_PROPRIETAIRE == null || REPERTOIRE_COURANT == "Courant") {
+            throw new IllegalArgumentException("Chemin inexistant.");
+        }
         try {
             File jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "infos.json").toFile();
             Map<String, Object> accountData = objectMapper.readValue(jsonFile, Map.class);
@@ -313,7 +340,7 @@ public class ActivitesController {
                     ? ((Number) accountData.get("solde")).doubleValue()
                     : 0.0;
 
-            jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "dons.json").toFile();
+            jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "dons.json").toFile();
             if (!jsonFile.exists()) {
                 objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, List.of());
             }
@@ -333,17 +360,25 @@ public class ActivitesController {
 
     private void updateNbLabels() {
         try {
-            File jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "notifications.json").toFile(); // Replace with the actual JSON file path
+            if (REPERTOIRE_DE_BASE == null || REPERTOIRE_ASSOC == null || REPERTOIRE_PROPRIETAIRE == null || REPERTOIRE_COURANT == "Courant") {
+                throw new IllegalArgumentException("Chemin inexistant.");
+            }
+            File jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "notifications.json").toFile();
+            if (!jsonFile.exists()) {
+                objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, List.of());
+            }
             List<Map<String, Object>> notificationsData = objectMapper.readValue(jsonFile, new TypeReference<List<Map<String, Object>>>() {});
-            int nb = notificationsData.size();
-            nbNotificationsLabel.setText("Notification·s: " + nb);
+            nbNotificationsLabel.setText("Notification·s: " + notificationsData.size());
 
-            File jsonFile1 = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "activites.json").toFile(); // Replace with the actual JSON file path
+            File jsonFile1 = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "activites.json").toFile();
+            if (!jsonFile1.exists()) {
+                objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile1, List.of());
+            }
             List<Map<String, Object>> activitiesData = objectMapper.readValue(jsonFile1, new TypeReference<List<Map<String, Object>>>() {});
-            nb = activitiesData.size();
-            nbActivitesLabel.setText("Activité·s: " + nb);
+            nbActivitesLabel.setText("Activité·s: " + activitiesData.size());
+
         } catch (IOException e) {
-            showErrorDialog("Error", "Unable to read data: " + e.getMessage());
+            showErrorDialog("Erreur", "Problème de lecture de données: " + e.getMessage());
         }
     }
 

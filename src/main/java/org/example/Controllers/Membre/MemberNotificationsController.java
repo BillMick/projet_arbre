@@ -9,14 +9,32 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import org.example.Controllers.Node.AppChosenController;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
 public class MemberNotificationsController {
+
+    private Map<String, Object> infos = AppChosenController.infosMembre1;
+    public void setInfos(Map<String, Object> infos) {
+        this.infos = infos;
+        System.out.println(infos);
+    }
+
+    public static final String REPERTOIRE_DE_BASE = "Storage";
+    public static final String REPERTOIRE_ASSOC = "Associations";
+    public static final String REPERTOIRE_MEMBRES = "Members";
+    public static final String REPERTOIRE_SERVICE = "Municipalite";
+    private String REPERTOIRE_PROPRIETAIRE = (String) infos.get("email");
+    private String REPERTOIRE_COURANT = "Courant";
+
 
     @FXML
     private TableView<Map<String, Object>> notificationsTableView;
@@ -32,10 +50,24 @@ public class MemberNotificationsController {
 
     private ObservableList<Map<String, Object>> notificationsData = FXCollections.observableArrayList();
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final String NOTIFICATIONS_FILE_PATH = "Storage/notifications.json"; // Chemin vers le fichier JSON
+    // private static final String NOTIFICATIONS_FILE_PATH = "Storage/notifications.json";
 
     @FXML
     public void initialize() {
+        Path yearPath = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, infos.get("association").toString());
+        File directory = yearPath.toFile();
+        if (directory.exists() && directory.isDirectory()) {
+            File[] subdirectories = directory.listFiles(File::isDirectory);
+            if (subdirectories == null || subdirectories.length == 0) {
+                //
+            } else {
+                System.out.println("Il existe des sous dossiers: " + subdirectories.length);
+                Arrays.sort(subdirectories, Comparator.comparingLong(File::lastModified).reversed());
+                REPERTOIRE_COURANT = subdirectories[0].getName();
+            }
+        } else {
+            System.out.println("Le dossier spécifié n'existe pas.");
+        }
         // Configuration des colonnes de la TableView
         dateColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().get("date")).asString());
         timeColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().get("time")).asString());
@@ -60,7 +92,7 @@ public class MemberNotificationsController {
     }
 
     private void loadNotifications() throws IOException {
-        File file = new File(NOTIFICATIONS_FILE_PATH);
+        File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, infos.get("association").toString(), "notifications.json").toFile();
         if (!file.exists()) {
             System.out.println("No notifications found.");
             return;
@@ -97,7 +129,7 @@ public class MemberNotificationsController {
 
     private void saveNotifications() {
         try {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(NOTIFICATIONS_FILE_PATH), notificationsData);
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, infos.get("association").toString(), "notifications.json").toFile(), notificationsData);
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Failed to save notifications: " + e.getMessage());

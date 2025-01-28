@@ -13,12 +13,14 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.example.Controllers.Node.AppChosenController;
 import org.example.Models.Arbre;
+import org.example.Models.Association;
 import org.example.java_project.Application;
 
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -36,6 +38,7 @@ public class VotesController {
     public static final String REPERTOIRE_MEMBRES = "Members";
     public static final String REPERTOIRE_SERVICE = "Municipalite";
     private String REPERTOIRE_PROPRIETAIRE = (String) infos.get("email");
+    private String REPERTOIRE_COURANT = "Courant";
 
     @FXML
     private TableView<Map<String, Object>> votesTable;
@@ -58,6 +61,21 @@ public class VotesController {
 
     @FXML
     public void initialize() {
+
+        Path yearPath = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE);
+        File directory = yearPath.toFile();
+        if (directory.exists() && directory.isDirectory()) {
+            File[] subdirectories = directory.listFiles(File::isDirectory);
+            if (subdirectories == null || subdirectories.length == 0) {
+            } else {
+                System.out.println("Il existe des sous dossiers: " + subdirectories.length);
+                Arrays.sort(subdirectories, Comparator.comparingLong(File::lastModified).reversed());
+                REPERTOIRE_COURANT = subdirectories[0].getName();
+            }
+        } else {
+            System.out.println("Le dossier spécifié n'existe pas.");
+        }
+
         nameColumn.setCellValueFactory(cellData -> {
             Object value = cellData.getValue().get("name");
             return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
@@ -120,12 +138,15 @@ public class VotesController {
     }
 
     private void updateTableData() throws IOException {
-        File folder = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "votes/").toFile();
+        if (REPERTOIRE_DE_BASE == null || REPERTOIRE_ASSOC == null || REPERTOIRE_PROPRIETAIRE == null || REPERTOIRE_COURANT == "Courant") {
+            throw new IllegalArgumentException("Chemin inexistant.");
+        }
+        File folder = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "votes").toFile();
         List<Map<String, Object>> votes = new ArrayList<>();
         File[] files = folder.listFiles((dir, name) -> name.endsWith(".json"));
         if (files != null) {
             for (File file : files) {
-                if (file.exists()) {
+                if (file.exists() && !file.getName().equals("votes.json")) {
                     try {
                         List<Map<String, Object>> fileVotes = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {
                         });
@@ -139,7 +160,6 @@ public class VotesController {
             System.out.println("No JSON files found in the folder.");
         }
 
-        // Step 1: Group by "name", "location", and "status", and count occurrences
         Map<String, Map<String, Map<String, Long>>> groupedOccurrences = votes.stream()
                 .filter(vote -> vote.containsKey("name") && vote.containsKey("location") && vote.containsKey("status"))  // Ensure all keys exist
                 .map(vote -> {
@@ -154,22 +174,17 @@ public class VotesController {
                                 Collectors.groupingBy(entry -> entry.getValue().getValue(), Collectors.counting()))  // Third level by status
                 ));
 
-        // Step 2: Flatten the grouped results
-        // Now we flatten the map structure correctly
         List<Map<String, Object>> flattenedResults = new ArrayList<>();
         for (Map.Entry<String, Map<String, Map<String, Long>>> nameEntry : groupedOccurrences.entrySet()) {
             String name = nameEntry.getKey();
 
-            // Process each location for this name
             for (Map.Entry<String, Map<String, Long>> locationEntry : nameEntry.getValue().entrySet()) {
                 String location = locationEntry.getKey();
 
-                // Process each status for this location
                 for (Map.Entry<String, Long> statusEntry : locationEntry.getValue().entrySet()) {
                     String status = statusEntry.getKey();
                     Long count = statusEntry.getValue();
 
-                    // Add the result to the list
                     Map<String, Object> result = new HashMap<>();
                     result.put("name", name);
                     result.put("location", location);
@@ -180,7 +195,6 @@ public class VotesController {
             }
         }
 
-        // Step 3: Sort and select top 5 results based on count
         List<Map<String, Object>> top5Results = flattenedResults.stream()
                 .sorted((entry1, entry2) -> Long.compare((Long) entry2.get("count"), (Long) entry1.get("count")))  // Sort by count descending
                 .limit(5)  // Get the top 5
@@ -192,7 +206,11 @@ public class VotesController {
         // Step 4: Update the TableView with the top 5 results
         votesData.setAll(top5Results);
 
-        //votesData.setAll(votes);
+        Path path = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "votes");
+        File dir = new File(path.toString());
+        dir.mkdirs();
+        File file = Paths.get(dir.toString(), "votes.json").toFile();
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, top5Results);
     }
 
 

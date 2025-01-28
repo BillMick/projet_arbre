@@ -14,6 +14,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.example.Controllers.Association.AssociationDashboardController;
+import org.example.Controllers.Membre.MemberDashboardController;
 import org.example.Models.Association;
 import org.example.Models.Donateur;
 import org.example.java_project.Application;
@@ -38,6 +39,8 @@ public class AppChosenController {
 
     public static final String REPERTOIRE_DE_BASE = "Storage";
     public static final String REPERTOIRE_ASSOC = "Associations";
+    public static final String REPERTOIRE_MEMBRES = "Members";
+    public static final String REPERTOIRE_SERVICE = "Municipalite";
     // public static final String REPERTOIRE_PROPRIETAIRE = "assoc@mail.com"; // à dynamiser .......
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -46,6 +49,8 @@ public class AppChosenController {
 
     @FXML
     private TextField presidentField;
+    @FXML
+    private TextField memberField;
 
     @FXML
     public void initialize() {}
@@ -84,6 +89,39 @@ public class AppChosenController {
         showErrorDialog("Erreur de connexion", "Identifiants incorrects ou inexistants. Veuillez réessayer.");
     }
 
+    @FXML
+    public void handleMemberLogin() throws IOException {
+        String email = memberField.getText();
+        Path path = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_MEMBRES, email);
+        File dir = new File(path.toString());
+        if (!dir.exists()) {
+            memberField.clear();
+            showErrorDialog("Erreur de connexion1", "Identifiants incorrects ou inexistants. Veuillez réessayer.");
+            return;
+        }
+        path = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_MEMBRES, email, "infos.json");
+        dir = new File(path.toString());
+        if (!dir.exists()) {
+            memberField.clear();
+            showErrorDialog("Erreur de connexion2", "Identifiants incorrects ou inexistants. Veuillez réessayer.");
+            return;
+        }
+        infosMembre1 = objectMapper.readValue(dir, new TypeReference<Map<String, Object>>() {});
+        if (infosMembre1.get("email").equals(email)) {
+            try {
+                System.out.println(infosMembre1);
+                Stage stage = (Stage) memberField.getScene().getWindow();
+                stage.close();
+                onMemberButtonClick(infosMembre1);
+                return;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        memberField.clear();
+        showErrorDialog("Erreur de connexion", "Identifiants incorrects ou inexistants. Veuillez réessayer.");
+    }
+
     public void handleAssociationRegister() {
         try {
             FXMLLoader loader = new FXMLLoader(Application.class.getResource("register.fxml"));
@@ -102,6 +140,32 @@ public class AppChosenController {
     private void clearFields() {
         associationField.clear();
         presidentField.clear();
+    }
+
+    public void onMemberButtonClick(Map<String, Object> infos) {
+        if (infos == null || infos.isEmpty()) {
+            showErrorDialog("Error", "Member data is invalid or missing.");
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(Application.class.getResource("memberDashboard.fxml"));
+            Parent root = loader.load();
+            MemberDashboardController controller = loader.getController();
+            controller.setInfos(infos);
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Association | Dashboard");
+            stage.show();
+            Stage currentStage = (Stage) ((Node) memberField).getScene().getWindow();
+            currentStage.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            showErrorDialog("Error", "Unable to load the dashboard view: " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            showErrorDialog("Error", "An unexpected error occurred: " + e.getMessage());
+        }
     }
 
     @FXML
@@ -221,7 +285,7 @@ public class AppChosenController {
     @FXML
     public void onMemberButtonClick() {
         try {
-            FXMLLoader loader = new FXMLLoader(Application.class.getResource("memberDashboard.fxml"));
+            FXMLLoader loader = new FXMLLoader(Application.class.getResource("loginMembre.fxml"));
             Parent root = loader.load();
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
@@ -236,7 +300,7 @@ public class AppChosenController {
     public void onMunicipalityButtonClick() {
         try {
             // Load the new interface from the FXML file
-            FXMLLoader loader = new FXMLLoader(Application.class.getResource("associationDashboard.fxml"));
+            FXMLLoader loader = new FXMLLoader(Application.class.getResource("AppPrincipale.fxml"));
             Parent root = loader.load();
 
             // Create a new stage for the new interface

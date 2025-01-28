@@ -16,19 +16,36 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.example.Controllers.Node.AppChosenController;
 import org.example.Models.Activite;
 import org.example.Models.Association;
+import org.example.Models.Dette;
 import org.example.Models.Visite;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class MemberActivitiesController {
+
+    private Map<String, Object> infos = AppChosenController.infosMembre1;
+    public void setInfos(Map<String, Object> infos) {
+        this.infos = infos;
+        System.out.println(infos);
+    }
+
+    public static final String REPERTOIRE_DE_BASE = "Storage";
+    public static final String REPERTOIRE_ASSOC = "Associations";
+    public static final String REPERTOIRE_MEMBRES = "Members";
+    public static final String REPERTOIRE_SERVICE = "Municipalite";
+    private String REPERTOIRE_PROPRIETAIRE = (String) infos.get("email");
+    private String REPERTOIRE_COURANT = "Courant";
 
     @FXML
     private ComboBox<Visite> treeSelection;
@@ -47,25 +64,39 @@ public class MemberActivitiesController {
     @FXML
     private Label totalReimbursementLabel;
     @FXML
-    private ListView<String> reportListView; // Liste pour afficher les rapports
+    private ListView<String> reportListView;
 
     private ObservableList<Visite> visitList = FXCollections.observableArrayList();
-    private List<Report> reports = new ArrayList<>(); // Liste pour stocker les rapports
-    private int reimbursementPerVisit = 20; // Montant fixe par visite
+    private List<Report> reports = new ArrayList<>();
+    private int reimbursementPerVisit = 20;
     private String selectedTreeType;
-    private static final String VISITS_FILE_PATH = "Storage/visits.json"; // Chemin vers le fichier JSON
+    //private static final String VISITS_FILE_PATH = "Storage/visits.json";
     private static final ObjectMapper objectMapper = new ObjectMapper();
     // objectMapper.registerModule(new JavaTimeModule());
 
     @FXML
     public void initialize() throws IOException {
+        Path yearPath = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, infos.get("association").toString());
+        File directory = yearPath.toFile();
+        if (directory.exists() && directory.isDirectory()) {
+            File[] subdirectories = directory.listFiles(File::isDirectory);
+            if (subdirectories == null || subdirectories.length == 0) {
+                //
+            } else {
+                System.out.println("Il existe des sous dossiers: " + subdirectories.length);
+                Arrays.sort(subdirectories, Comparator.comparingLong(File::lastModified).reversed());
+                REPERTOIRE_COURANT = subdirectories[0].getName();
+            }
+        } else {
+            System.out.println("Le dossier spécifié n'existe pas.");
+        }
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("dateDePlanification"));
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("executeur"));
 
         visitsTable.setItems(visitList);
 
-        File file = new File("Storage/activites.json");
+        File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, infos.get("association").toString(), REPERTOIRE_COURANT, "activites.json").toFile();
         if (!file.exists()) {
             System.out.println("Aucune activité proposée.");
             return ;
@@ -82,7 +113,7 @@ public class MemberActivitiesController {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        File file = new File("Storage/activites.json");
+        File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, infos.get("association").toString(), REPERTOIRE_COURANT, "activites.json").toFile();
         List<Visite> activites = objectMapper.readValue(file, new TypeReference<List<Visite>>() {});
         List<Visite> activitesEnAttente = activites.stream()
                 .filter(ac -> Activite.StatutActivte.ATTENTE.equals(ac.getStatut()))
@@ -106,7 +137,7 @@ public class MemberActivitiesController {
     }
 
     private void updateTableData() throws IOException {
-        File file = new File("Storage/activitesMembre.json");
+        File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_MEMBRES, REPERTOIRE_PROPRIETAIRE, "activites.json").toFile();
         if (!file.exists()) {
             System.out.println("No trees data found.");
             return;
@@ -120,9 +151,9 @@ public class MemberActivitiesController {
 
     private void loadVisitsAndReports() {
         try {
-            File file = new File(VISITS_FILE_PATH);
+            File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_MEMBRES, REPERTOIRE_PROPRIETAIRE, "activites.json").toFile();
             if (!file.exists()) {
-                System.out.println("No visits file found. Starting fresh.");
+                System.out.println("No visits file found.");
                 return;
             }
 
@@ -151,6 +182,7 @@ public class MemberActivitiesController {
 
     @FXML
     private void onAddVisit() throws IOException, InstantiationException, IllegalAccessException {
+
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
@@ -170,8 +202,7 @@ public class MemberActivitiesController {
         System.out.println(treeSelection.getValue()); //
         System.out.println("AFTER GET VISIT");
 
-        // Read existing activities (visits) from activites.json
-        File file = new File("Storage/activites.json");
+        File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, infos.get("association").toString(), REPERTOIRE_COURANT, "activites.json").toFile();
         List<Visite> activities = new ArrayList<>();
         if (file.exists()) {
             try {
@@ -184,14 +215,23 @@ public class MemberActivitiesController {
 
         // Check if a visit is selected (edit mode)
         if (selectedVisit != null) {
-            // Find the activity to update based on some unique property (e.g., the "arbre" or another identifier)
             for (Visite activity : activities) {
                 if (activity.getNomArbre().equals(selectedVisit.getNomArbre())) {
-                    // Update the selected visit's fields
-                    activity.setExecuteur(description);  // Assuming 'description' is used for 'executeur'
+                    activity.setExecuteur(description);
                     activity.setDateDePlanification(date.getClass().newInstance());
                     activity.setStatut(Activite.StatutActivte.PLANIFIEE);
                     selectedVisit = activity;
+
+                    // DEFRAIEMENT
+                    Path path = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, infos.get("association").toString(), REPERTOIRE_COURANT, "debts.json");
+                    File dir = new File(path.toString());
+                    Map<String, Object> dette1 = new HashMap<>();
+                    dette1.put("statut", Dette.StatutDette.IMPAYEE);
+                    dette1.put("type", Dette.TypeDette.DEFRAIEMENT);
+                    dette1.put("crediteur", infos.get("nom") + " " + infos.get("prenom"));
+                    dette1.put("montant", selectedVisit.getCout());
+                    objectMapper.writerWithDefaultPrettyPrinter().writeValue(dir, dette1);
+
                     break;
                 }
             }
@@ -209,6 +249,7 @@ public class MemberActivitiesController {
                 visitList.set(visitList.indexOf(selectedVisit), selectedVisit);
             }
             updateVisit(selectedVisit);
+
             System.out.println("selectedVisit.............");
         }
 
@@ -226,14 +267,13 @@ public class MemberActivitiesController {
         selectedTreeType = null;
         selectedVisit = null;
 
-        // Optionally, show a confirmation message
         Alert alert = new Alert(Alert.AlertType.INFORMATION, "Visite ajoutée/Modifiée avec succès.", ButtonType.OK);
         alert.showAndWait();
         initialize();
     }
 
     private void updateVisit(Visite activity) throws IOException {
-        File file = new File("Storage/activitesMembre.json");
+        File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_MEMBRES, REPERTOIRE_PROPRIETAIRE, "activites.json").toFile();
         List<Visite> activities = new ArrayList<>();
         if (file.exists()) {
             try {
@@ -351,7 +391,7 @@ public class MemberActivitiesController {
     private void saveVisitsAndReports() {
         try {
             VisitData data = new VisitData(visitList, reports);
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(VISITS_FILE_PATH), data);
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_MEMBRES, REPERTOIRE_PROPRIETAIRE, "activites.json").toFile(), data);
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Failed to save visits and reports: " + e.getMessage());

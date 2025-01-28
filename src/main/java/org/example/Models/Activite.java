@@ -13,7 +13,7 @@ public class Activite {
     @JsonFormat(pattern = "dd-MM-yyyy")
     private Date dateDePlanification;
     //private Date dateDExecution;
-    private int cout;
+    private double cout;
     // private String nomAssociation; // pas vraiment nécessaire...
     // private Object executeur; // juste email ou nom ?
     private String executeur;
@@ -110,7 +110,7 @@ public class Activite {
 
     public String getDescription() { return this.description; }
 
-    public int getCout() {
+    public double getCout() {
         return this.cout;
     }
 

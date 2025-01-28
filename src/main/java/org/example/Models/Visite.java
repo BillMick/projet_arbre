@@ -30,14 +30,14 @@ public class Visite extends Activite {
 
     public Visite(Activite.TypeActivite type, Date dateDePlanification, Arbre arbre, String executeur) {
         super(type, dateDePlanification, executeur);
-        this.nomArbre = arbre.nom();
-        this.localisationArbre = arbre.localisation();
+        this.nomArbre = arbre.getLibelleFr();
+        this.localisationArbre = arbre.getLieuAdresse();
     }
 
     public Visite(Activite.TypeActivite type, Date dateDePlanification, Arbre arbre, int cout) {
         super(type, dateDePlanification, cout);
-        this.nomArbre = arbre.nom();
-        this.localisationArbre = arbre.localisation();
+        this.nomArbre = arbre.getLibelleFr();
+        this.localisationArbre = arbre.getLieuAdresse();
     }
 
     public String getNomArbre() {

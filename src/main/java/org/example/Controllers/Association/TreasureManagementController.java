@@ -22,6 +22,7 @@ import org.example.java_project.Application;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -38,6 +39,7 @@ public class TreasureManagementController {
     public static final String REPERTOIRE_MEMBRES = "Members";
     public static final String REPERTOIRE_SERVICE = "Municipalite";
     private String REPERTOIRE_PROPRIETAIRE = (String) infos.get("email");
+    private String REPERTOIRE_COURANT = "Courant";
 
     @FXML
     private Label soldeLabel;
@@ -70,6 +72,21 @@ public class TreasureManagementController {
 
     @FXML
     public void initialize() {
+
+        Path yearPath = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE);
+        File directory = yearPath.toFile();
+        if (directory.exists() && directory.isDirectory()) {
+            File[] subdirectories = directory.listFiles(File::isDirectory);
+            if (subdirectories == null || subdirectories.length == 0) {
+            } else {
+                System.out.println("Il existe des sous dossiers: " + subdirectories.length);
+                Arrays.sort(subdirectories, Comparator.comparingLong(File::lastModified).reversed());
+                REPERTOIRE_COURANT = subdirectories[0].getName();
+            }
+        } else {
+            System.out.println("Le dossier spécifié n'existe pas.");
+        }
+
         // Set up the TableView columns
         dateColumn.setCellValueFactory(cellData -> {
             Object value = cellData.getValue().get("date");
@@ -125,17 +142,20 @@ public class TreasureManagementController {
     }
 
     private void loadFinancialData() throws IOException {
-        File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "cotisations.json").toFile();
+        if (REPERTOIRE_DE_BASE == null || REPERTOIRE_ASSOC == null || REPERTOIRE_PROPRIETAIRE == null || REPERTOIRE_COURANT == "Courant") {
+            throw new IllegalArgumentException("Chemin inexistant.");
+        }
+        File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "cotisations.json").toFile();
         if (!file.exists()) {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, List.of());
         }
         List<Map<String, Object>> data = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
-        file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "dons.json").toFile();
+        file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "dons.json").toFile();
         if (!file.exists()) {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, List.of());
         }
         List<Map<String, Object>> dons = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
-        file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "debts.json").toFile();
+        file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "debts.json").toFile();
         if (!file.exists()) {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, List.of());
         }
@@ -158,7 +178,7 @@ public class TreasureManagementController {
 
     private void saveFinancialData() {
         try {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "cotisations.json").toFile(), financialData);
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "cotisations.json").toFile(), financialData);
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Failed to save financial operations: " + e.getMessage());
@@ -248,9 +268,12 @@ public class TreasureManagementController {
     }
 
     private List<Map<String, Object>> loadDebtsFromJson() {
+        if (REPERTOIRE_DE_BASE == null || REPERTOIRE_ASSOC == null || REPERTOIRE_PROPRIETAIRE == null || REPERTOIRE_COURANT == "Courant") {
+            throw new IllegalArgumentException("Chemin inexistant.");
+        }
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            return objectMapper.readValue(Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "debts.json").toFile(), objectMapper.getTypeFactory().constructCollectionType(List.class, Map.class));
+            return objectMapper.readValue(Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "debts.json").toFile(), objectMapper.getTypeFactory().constructCollectionType(List.class, Map.class));
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -258,8 +281,11 @@ public class TreasureManagementController {
     }
 
     private void payDebt(TableView<Map<String, Object>> debtTable, int rowIndex) throws IOException {
+        if (REPERTOIRE_DE_BASE == null || REPERTOIRE_ASSOC == null || REPERTOIRE_PROPRIETAIRE == null || REPERTOIRE_COURANT == "Courant") {
+            throw new IllegalArgumentException("Chemin inexistant.");
+        }
         // Logic for handling the payment
-        File jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "infos.json").toFile(); // Replace with the actual JSON file path
+        File jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "infos.json").toFile();
         Map<String, Object> accountData = objectMapper.readValue(jsonFile, Map.class);
         double currentSolde = accountData.getOrDefault("solde", 0.0) instanceof Number
                 ? ((Number) accountData.get("solde")).doubleValue()
@@ -280,7 +306,7 @@ public class TreasureManagementController {
         System.out.println("TEEEEEEEEEEEEEST: ");
         System.out.println(debtToDelete);
         try {
-            jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "debts.json").toFile();
+            jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "debts.json").toFile();
             List<Map<String, Object>> data = objectMapper.readValue(jsonFile, new TypeReference<List<Map<String, Object>>>() {});
 
             // Find and update the debt status from the data
@@ -337,6 +363,9 @@ public class TreasureManagementController {
     }
 
     private void updateDebtsLabel() {
+        if (REPERTOIRE_DE_BASE == null || REPERTOIRE_ASSOC == null || REPERTOIRE_PROPRIETAIRE == null || REPERTOIRE_COURANT == "Courant") {
+            throw new IllegalArgumentException("Chemin inexistant.");
+        }
         try {
             File jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "infos.json").toFile(); // Replace with the actual JSON file path
             Map<String, Object> accountData = objectMapper.readValue(jsonFile, Map.class);
@@ -344,7 +373,7 @@ public class TreasureManagementController {
                     ? ((Number) accountData.get("solde")).doubleValue()
                     : 0.0;
 
-            jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "debts.json").toFile();
+            jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "debts.json").toFile();
             if (!jsonFile.exists()) {
                 objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, List.of());
             }

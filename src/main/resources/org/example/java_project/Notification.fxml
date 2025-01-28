@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.Controllers.Service.NotificationController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <!-- Section pour afficher les notifications reçues -->
+    <VBox layoutX="10.0" layoutY="10.0" spacing="10.0">
+        <Label text="Notifications Reçues"/>
+        <ListView fx:id="receivedNotificationsList" prefHeight="150.0" prefWidth="560.0"/>
+    </VBox>
+
+    <!-- Section pour afficher les notifications envoyées -->
+    <VBox layoutX="10.0" layoutY="200.0" spacing="10.0">
+        <Label text="Notifications Envoyées"/>
+        <ListView fx:id="sentNotificationsList" prefHeight="150.0" prefWidth="560.0"/>
+    </VBox>
+
+</AnchorPane>

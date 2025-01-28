@@ -22,10 +22,9 @@ import org.example.java_project.Application;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MembresController {
     private Map<String, Object> infos = AppChosenController.infosAssociation;
@@ -39,6 +38,7 @@ public class MembresController {
     public static final String REPERTOIRE_MEMBRES = "Members";
     public static final String REPERTOIRE_SERVICE = "Municipalite";
     private String REPERTOIRE_PROPRIETAIRE = (String) infos.get("email");
+    private String REPERTOIRE_COURANT = "Courant";
 
     @FXML
     private Label soldeLabel;
@@ -77,6 +77,21 @@ public class MembresController {
 
     @FXML
     public void initialize() {
+
+        Path yearPath = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE);
+        File directory = yearPath.toFile();
+        if (directory.exists() && directory.isDirectory()) {
+            File[] subdirectories = directory.listFiles(File::isDirectory);
+            if (subdirectories == null || subdirectories.length == 0) {
+            } else {
+                System.out.println("Il existe des sous dossiers: " + subdirectories.length);
+                Arrays.sort(subdirectories, Comparator.comparingLong(File::lastModified).reversed());
+                REPERTOIRE_COURANT = subdirectories[0].getName();
+            }
+        } else {
+            System.out.println("Le dossier spécifié n'existe pas.");
+        }
+
         // Set up the TableView columns
         nameColumn.setCellValueFactory(cellData -> {
             Object value = cellData.getValue().get("nom");
@@ -141,11 +156,10 @@ public class MembresController {
         boolean isPresident = presidentCheckBox.isSelected();
 
         if (!name.isEmpty() && !email.isEmpty() && !firstname.isEmpty()) {
-            Map<String, Object> newMember = Map.of(
-                    "nom", name,
-                    "prenom", firstname,
-                    "email", email
-            );
+            Map<String, Object> newMember = new HashMap<>();
+            newMember.put("nom", name);
+            newMember.put("prenom", firstname);
+            newMember.put("email", email);
             membersData.add(newMember);
             saveMembersData();
             if (isPresident) {
@@ -171,11 +185,10 @@ public class MembresController {
             }
             userDir.mkdirs();
             File userInfoFile = Paths.get(userDir.toString(), "infos.json").toFile();
-            Map<String, Object> accountData = objectMapper.readValue(userInfoFile, Map.class);
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(userInfoFile, accountData);
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(userInfoFile, member);
             System.out.println("Espace membre créé avec succès!");
         } catch (IOException e) {
-            System.err.println("Error reading or writing JSON file for setting president: " + e.getMessage());
+            System.err.println("Error reading or writing JSON file for member space: " + e.getMessage());
         }
     }
 
@@ -196,17 +209,6 @@ public class MembresController {
         }
     }
 
-    private void saveRecipe(Map<String, Object> recipe) throws IOException {
-        File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "cotisations.json").toFile();
-        if (!file.exists()) {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, List.of(recipe));
-            return;
-        }
-        List<Map<String, Object>> data = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
-        data.add(recipe);
-        objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, data);
-    }
-
     private void saveMembersData() {
         try {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "members.json").toFile(), membersData);
@@ -217,14 +219,17 @@ public class MembresController {
     }
 
     private void updateSoldeLabel() {
+        if (REPERTOIRE_DE_BASE == null || REPERTOIRE_ASSOC == null || REPERTOIRE_PROPRIETAIRE == null || REPERTOIRE_COURANT == "Courant") {
+            throw new IllegalArgumentException("Chemin inexistant.");
+        }
         try {
-            File jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "infos.json").toFile(); // Replace with the actual JSON file path
+            File jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "infos.json").toFile();
             Map<String, Object> accountData = objectMapper.readValue(jsonFile, Map.class);
             double currentSolde = accountData.getOrDefault("solde", 0.0) instanceof Number
                     ? ((Number) accountData.get("solde")).doubleValue()
                     : 0.0;
 
-            jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "cotisations.json").toFile();
+            jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "cotisations.json").toFile();
             if (!jsonFile.exists()) {
                 objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, List.of());
             }

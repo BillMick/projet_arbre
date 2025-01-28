@@ -1,9 +1,0 @@
-[ {
-  "email" : "jerry@tom.us",
-  "type" : "INDIVIDU",
-  "nom" : "Jerry"
-}, {
-  "type" : "ENTREPRISE",
-  "nom" : "KANOUO",
-  "email" : "k@gmail.com"
-} ]

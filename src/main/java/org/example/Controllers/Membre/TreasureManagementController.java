@@ -1,6 +1,7 @@
 package org.example.Controllers.Membre;
 
 import javafx.stage.Stage;
+import org.example.Controllers.Node.AppChosenController;
 import org.example.Models.Membre;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,11 +13,28 @@ import javafx.scene.control.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
 public class TreasureManagementController {
+
+    private Map<String, Object> infos = AppChosenController.infosMembre1;
+    public void setInfos(Map<String, Object> infos) {
+        this.infos = infos;
+        System.out.println(infos);
+    }
+
+    public static final String REPERTOIRE_DE_BASE = "Storage";
+    public static final String REPERTOIRE_ASSOC = "Associations";
+    public static final String REPERTOIRE_MEMBRES = "Members";
+    public static final String REPERTOIRE_SERVICE = "Municipalite";
+    private String REPERTOIRE_PROPRIETAIRE = (String) infos.get("email");
+    private String REPERTOIRE_COURANT = "Courant";
+
 
     @FXML
     private Label soldeLabel;
@@ -55,13 +73,28 @@ public class TreasureManagementController {
 
     private Membre membre; // Instance de Membre
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final String FILE_PATH = "Storage/treasury.json"; // Chemin vers le fichier JSON
-    private static final String MEMBER_FILE = "Storage/infos.json"; // Chemin vers le fichier membre
+    // private static final String FILE_PATH = "Storage/treasury.json"; // Chemin vers le fichier JSON
+    // private static final String MEMBER_FILE = "Storage/infos.json"; // Chemin vers le fichier membre
 
     @FXML
     public void initialize() {
-        this.membre = new Membre("Nom", "Prénom", "email@example.com");
-        this.membre.ajoutersolde(100.0); // Initialiser le solde pour les tests
+        Path yearPath = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, infos.get("association").toString());
+        File directory = yearPath.toFile();
+        if (directory.exists() && directory.isDirectory()) {
+            File[] subdirectories = directory.listFiles(File::isDirectory);
+            if (subdirectories == null || subdirectories.length == 0) {
+                //
+            } else {
+                System.out.println("Il existe des sous dossiers: " + subdirectories.length);
+                Arrays.sort(subdirectories, Comparator.comparingLong(File::lastModified).reversed());
+                REPERTOIRE_COURANT = subdirectories[0].getName();
+            }
+        } else {
+            System.out.println("Le dossier spécifié n'existe pas.");
+        }
+
+//        this.membre = new Membre(infos.get("nom"), infos.get("prenom"), infos.get("email"));
+//        this.membre.ajoutersolde(100.0); // Initialiser le solde pour les tests
 
         // Configuration des colonnes de la TableView
         dateColumn.setCellValueFactory(cellData -> {
@@ -97,7 +130,7 @@ public class TreasureManagementController {
     }
 
     private void loadFinancialData() throws IOException {
-        File file = new File(FILE_PATH);
+        File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_MEMBRES, REPERTOIRE_PROPRIETAIRE, "financial.json").toFile();
         if (!file.exists()) {
             System.out.println("No financial operations found.");
             return;
@@ -137,16 +170,14 @@ public class TreasureManagementController {
     private void onAddMoney() {
         try {
             String amountText = amountField.getText();
-            double amountToAdd = Double.parseDouble(amountText); // Assurez-vous que l'entrée est numérique
+            double amountToAdd = Double.parseDouble(amountText);
             String description = descriptionField.getText();
 
             if (!amountText.isEmpty() && !description.isEmpty()) {
-                File jsonFile = Paths.get(MEMBER_FILE).toFile(); // Chemin vers le fichier JSON
+                File jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_MEMBRES, REPERTOIRE_PROPRIETAIRE, "infos.json").toFile();
 
-                // Charger les données actuelles du fichier JSON
                 Map<String, Object> accountData = objectMapper.readValue(jsonFile, Map.class);
 
-                // Obtenir le "solde" actuel du fichier
                 double currentSolde = accountData.getOrDefault("solde", 0.0) instanceof Number
                         ? ((Number) accountData.get("solde")).doubleValue()
                         : 0.0;
@@ -156,7 +187,7 @@ public class TreasureManagementController {
                 accountData.put("solde", newSolde);
 
                 // Écrire les données mises à jour dans le fichier JSON
-                objectMapper.writeValue(jsonFile, accountData);
+                objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, accountData);
 
                 System.out.println("Successfully added money! New solde: " + newSolde);
                 updateSoldeLabel();
@@ -192,7 +223,7 @@ public class TreasureManagementController {
 
         try {
             // Charger les données actuelles du fichier JSON
-            File jsonFile = Paths.get(MEMBER_FILE).toFile();
+            File jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_MEMBRES, REPERTOIRE_PROPRIETAIRE, "infos.json").toFile();
             Map<String, Object> accountData = objectMapper.readValue(jsonFile, Map.class);
 
             // Obtenir le "solde" actuel
@@ -205,7 +236,8 @@ public class TreasureManagementController {
                 // Mettre à jour le solde
                 double newSolde = currentSolde - montantCotisation;
                 accountData.put("solde", newSolde);
-                objectMapper.writeValue(jsonFile, accountData); // Écrire les données mises à jour dans le fichier JSON
+                accountData.put("cotisation", montantCotisation);
+                objectMapper.writeValue(jsonFile, accountData);
 
                 // La cotisation a été payée avec succès
                 Map<String, Object> cotisationOperation = Map.of(
@@ -225,7 +257,7 @@ public class TreasureManagementController {
                 cotisationStatusLabel.setStyle("-fx-text-fill: green;");
 
                 // Changer le style du bouton et le désactiver
-                payCotisationButton.setStyle("-fx-background-color: #A9A9A9; -fx-text-fill: white;"); // Change to gray
+                payCotisationButton.setStyle("-fx-background-color: #A9A9A9; -fx-text-fill: white;");
                 payCotisationButton.setDisable(true);
             } else {
                 showErrorDialog("Erreur", "Fonds insuffisants pour payer la cotisation.");
@@ -238,7 +270,7 @@ public class TreasureManagementController {
 
     private void saveFinancialData() {
         try {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(FILE_PATH), financialData);
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_MEMBRES, REPERTOIRE_PROPRIETAIRE, "financial.json").toFile(), financialData);
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Failed to save financial operations: " + e.getMessage());
@@ -247,7 +279,7 @@ public class TreasureManagementController {
 
     private void updateSoldeLabel() {
         try {
-            File jsonFile = Paths.get(MEMBER_FILE).toFile(); // Chemin vers le fichier JSON
+            File jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_MEMBRES, REPERTOIRE_PROPRIETAIRE, "infos.json").toFile();
             // Lire le fichier JSON
             Map<String, Object> accountData = objectMapper.readValue(jsonFile, Map.class);
 
@@ -258,6 +290,16 @@ public class TreasureManagementController {
 
             // Mettre à jour le texte du label
             soldeLabel.setText("Current Solde: " + currentSolde + " €");
+
+            if (accountData.containsKey("cotisation")) {
+                // Mettre à jour le statut de la cotisation
+                cotisationStatusLabel.setText("Payée");
+                cotisationStatusLabel.setStyle("-fx-text-fill: green;");
+
+                // Changer le style du bouton et le désactiver
+                payCotisationButton.setStyle("-fx-background-color: #A9A9A9; -fx-text-fill: white;");
+                payCotisationButton.setDisable(true);
+            }
 
         } catch (IOException e) {
             showErrorDialog("Error", "Unable to read solde: " + e.getMessage());
