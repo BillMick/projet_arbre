@@ -27,6 +27,7 @@ Dans ce cas, l'algorithme mis en place considérera que l'année est lancée le 
 - Les dépendances sont présentes dans le pom.xml
 - Version de Java utilisée: 21
 - IDE: Intellij
+- Outil collaboratif: GitHub
 
 # Lancement de l'application
 - Retrouver le fichier Application.java (chemin: ```src/main/java/org/example/java_project/Application.java```)
