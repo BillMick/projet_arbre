@@ -226,10 +226,12 @@ public class MemberActivitiesController {
                     Path path = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, infos.get("association").toString(), REPERTOIRE_COURANT, "debts.json");
                     File dir = new File(path.toString());
                     Map<String, Object> dette1 = new HashMap<>();
+                    List<Map<String, Object>> listOfDebts = List.of();
                     dette1.put("statut", Dette.StatutDette.IMPAYEE);
                     dette1.put("type", Dette.TypeDette.DEFRAIEMENT);
                     dette1.put("crediteur", infos.get("nom") + " " + infos.get("prenom"));
                     dette1.put("montant", selectedVisit.getCout());
+                    listOfDebts.add(dette1);
                     objectMapper.writerWithDefaultPrettyPrinter().writeValue(dir, dette1);
 
                     break;

@@ -1,0 +1,11 @@
+[ {
+  "description" : "a",
+  "type" : "Dépôt",
+  "amount" : "100",
+  "date" : "2025-01-28"
+}, {
+  "description" : "Cotisation annuelle",
+  "type" : "Cotisation",
+  "amount" : "50.0",
+  "date" : "2025-01-28"
+} ]
