@@ -153,7 +153,7 @@ public class AssociationDashboardController {
             List<Map<String, Object>> notificationsData = objectMapper.readValue(jsonFile, new TypeReference<List<Map<String, Object>>>() {});
             nbNotificationsLabel.setText("Notification·s: " + notificationsData.size());
 
-            File jsonFile1 = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "activites.json").toFile();
+            File jsonFile1 = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "activites.json").toFile();
             if (!jsonFile1.exists()) {
                 objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile1, List.of());
             }
@@ -172,12 +172,12 @@ public class AssociationDashboardController {
                 }
             }
 
-            File jsonFile3 = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "infos.json").toFile();
-            if (!jsonFile3.exists()) {
-                objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile3, Map.of());
-            }
-            Map<String, Object> president = objectMapper.readValue(jsonFile3, new TypeReference<Map<String, Object>>() {});
-            presidentLabel.setText("Président: " + president.get("presidentName"));
+//            File jsonFile3 = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "infos.json").toFile();
+//            if (!jsonFile3.exists()) {
+//                objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile3, Map.of());
+//            }
+//            Map<String, Object> president = objectMapper.readValue(jsonFile3, new TypeReference<Map<String, Object>>() {});
+            presidentLabel.setText("Président: " + infos.get("presidentName"));
         } catch (IOException e) {
             showErrorDialog("Erreur", "Problème de lecture de données: " + e.getMessage());
         }

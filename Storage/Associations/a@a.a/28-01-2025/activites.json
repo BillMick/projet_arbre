@@ -1,0 +1,11 @@
+[ {
+  "type" : "VISITE",
+  "dateDePlanification" : "28-01-2025",
+  "cout" : 45.0,
+  "executeur" : "Hey hey",
+  "rapport" : "",
+  "statut" : "PLANIFIEE",
+  "description" : "",
+  "nomArbre" : "Goyavier",
+  "localisationArbre" : "Goyavier"
+} ]
