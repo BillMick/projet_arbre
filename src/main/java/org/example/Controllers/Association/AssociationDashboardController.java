@@ -233,13 +233,15 @@ public class AssociationDashboardController {
                     dette.put("type", Dette.TypeDette.FACTURE);
                     dette.put("crediteur", "Fournisseur");
                     dette.put("montant", 150.0);
-                    objectMapper.writerWithDefaultPrettyPrinter().writeValue(dir, dette);
+                    // objectMapper.writerWithDefaultPrettyPrinter().writeValue(dir, List.of(dette));
                     Map<String, Object> dette1 = new HashMap<>();
                     dette1.put("statut", Dette.StatutDette.IMPAYEE);
                     dette1.put("type", Dette.TypeDette.FACTURE);
                     dette1.put("crediteur", "Etat");
                     dette1.put("montant", 35.0);
-                    objectMapper.writerWithDefaultPrettyPrinter().writeValue(dir, dette1);
+                    List<Map<String, Object>> dettes = new ArrayList<>();
+                    dettes.add(dette); dettes.add(dette1);
+                    objectMapper.writerWithDefaultPrettyPrinter().writeValue(dir, dettes);
                     break;
                 }
                 beginning = addDays(beginning, 1);

@@ -138,8 +138,8 @@ public class AppChosenController {
     }
 
     private void clearFields() {
-        associationField.clear();
-        presidentField.clear();
+        if (associationField.getText() != null) associationField.clear();
+        if (presidentField.getText() != null) presidentField.clear();
     }
 
     public void onMemberButtonClick(Map<String, Object> infos) {
@@ -189,9 +189,14 @@ public class AppChosenController {
             stage.setTitle("Association | Dashboard");
             stage.show();
 
-            // Optional: Close the current stage (if required)
-            Stage currentStage = (Stage) ((Node) associationField).getScene().getWindow();
-            currentStage.close();
+            // Close the current stage
+            if (associationField != null) {
+                Stage currentStage = (Stage) ((Node) associationField).getScene().getWindow();
+                currentStage.close();
+            } else if (emailField != null) {
+                Stage currentStage = (Stage) ((Node) emailField).getScene().getWindow();
+                currentStage.close();
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -240,7 +245,7 @@ public class AppChosenController {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(userInfoFile, userInfo);
             infosAssociation = userInfo;
-            showInfoDialog("Success", "Compte créer avec succès! \n Vous devez créer au moins un membre et désigner votre président avant la prochaine déconnexion.");
+            showInfoDialog("Success", "Compte créé avec succès! \nIl vous est conseiller de créer au moins un membre et de désigner votre président avant la prochaine déconnexion.");
             onAssociationButtonClick(userInfo);
             closeCurrentStage();
         } catch (IOException e) {
