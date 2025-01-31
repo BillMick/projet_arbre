@@ -21,6 +21,9 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 
+import java.io.File;
+import java.nio.file.Paths;
+
 import static org.example.Models.LectureCSV.loadCSVData;
 
 
@@ -31,7 +34,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         try {
             // Charge le fichier FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AppPrincipale.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("AppPrincipale.fxml"));
             Parent root = loader.load();
             // Désactiver la croix de fermeture
             primaryStage.setOnCloseRequest(event -> {
@@ -43,10 +46,11 @@ public class Main extends Application {
                 event.consume();
 
             });
-            loadCSVData("projet_arbre/resources/liste_arbres.csv");
+            // File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_SERVICE, "liste_arbres.csv").toFile();
+            // loadCSVData(String.valueOf(file));
 
             // Crée une image de fond
-            Image backgroundImage = new Image(getClass().getResource("resources/images/img.png").toExternalForm());
+            Image backgroundImage = new Image(String.valueOf(getClass().getResource("images/img.png")));
             BackgroundImage bgImage = new BackgroundImage(
                     backgroundImage,
                     BackgroundRepeat.NO_REPEAT,

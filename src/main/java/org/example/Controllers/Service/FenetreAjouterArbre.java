@@ -133,6 +133,7 @@ public class FenetreAjouterArbre {
         txtRemarquable.clear();
         txtGeo.clear();
     }
+
     @FXML
     public void retourGestionArbre(javafx.event.ActionEvent event) {
         // Fermer la fenêtre actuelle (FenetreAjouterArbre)
@@ -149,8 +150,5 @@ public class FenetreAjouterArbre {
             e.printStackTrace();
         }
     }
-
-
-
 
 }

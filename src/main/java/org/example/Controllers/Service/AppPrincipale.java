@@ -15,6 +15,11 @@ import java.io.IOException;
 public class AppPrincipale {
 
     @FXML
+    public void initialize() throws IOException {
+
+    }
+
+    @FXML
     public void Principale(javafx.event.ActionEvent event){
         try {
             // Chargement du fichier FXML de la nouvelle vue
@@ -24,7 +29,7 @@ public class AppPrincipale {
 
 
             // Crée une image de fond
-            Image backgroundImage = new Image(Application.class.getResource("resources/images/img.png").toExternalForm());
+            Image backgroundImage = new Image(String.valueOf(Application.class.getResource("images/img.png")));
             BackgroundImage bgImage = new BackgroundImage(
                     backgroundImage,
                     BackgroundRepeat.NO_REPEAT,

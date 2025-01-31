@@ -18,7 +18,7 @@ public class AppGestion {
             // Chargement du fichier FXML de la nouvelle vue
             FXMLLoader loader = new FXMLLoader(Application.class.getResource("AppGestion.fxml"));
             Parent root = loader.load();
-            Image backgroundImage = new Image(getClass().getResource("resources/images/img2.png").toExternalForm());
+            Image backgroundImage = new Image(String.valueOf(Application.class.getResource("images/img2.png")));
             BackgroundImage bgImage = new BackgroundImage(
                     backgroundImage,
                     BackgroundRepeat.NO_REPEAT,
@@ -61,6 +61,7 @@ public class AppGestion {
         AppPrincipale AP = new AppPrincipale();
         AP.Principale(event);
     }
+
     @FXML
     public void ouvrirFenetreAjouterArbre(javafx.event.ActionEvent event) {
         try {
@@ -69,7 +70,7 @@ public class AppGestion {
             Parent root = loader.load();
 
             // Crée une image de fond
-            Image backgroundImage = new Image(getClass().getResource("resources/images/img3.png").toExternalForm());
+            Image backgroundImage = new Image(String.valueOf(getClass().getResource("images/img3.png")));
             BackgroundImage bgImage = new BackgroundImage(
                     backgroundImage,
                     BackgroundRepeat.NO_REPEAT,

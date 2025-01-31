@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class AssociationDashboardController {
 
@@ -270,29 +271,39 @@ public class AssociationDashboardController {
         if (REPERTOIRE_DE_BASE == null || REPERTOIRE_ASSOC == null || REPERTOIRE_PROPRIETAIRE == null || REPERTOIRE_COURANT == "Courant") {
             throw new IllegalArgumentException("Chemin inexistant.");
         }
+
         // Nombre de donateurs
         File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "donors.json").toFile();
         List<Map<String, Object>> donors = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
+
         // Nombre de membres
         file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "members.json").toFile();
         List<Map<String, Object>> members = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
+
         // Nom du président
         File infoFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "infos.json").toFile();
         Map<String, Object> infos = objectMapper.readValue(file, new TypeReference<Map<String, Object>>() {});
+
         // Dettes
         file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "debts.json").toFile();
         List<Map<String, Object>> debts = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
+
         // Dons
         file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "dons.json").toFile();
         List<Map<String, Object>> dons = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
+
         // Cotisations
         file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "cotisations.json").toFile();
         List<Map<String, Object>> cotisations = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
+
         // Activités
         file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "activites.json").toFile();
         List<Map<String, Object>> activities = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
+
         // Scrutin
-        file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "votes", "votes.json").toFile();
+        // Constitution et transmission de la liste proposée pour la classification en arbres remarquables.
+        updateVotesFile();
+        File voteFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "votes", "votes.json").toFile();
         List<Map<String, Object>> votes = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
 
         file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "periode.json").toFile();
@@ -338,8 +349,71 @@ public class AssociationDashboardController {
         rapport.put("nombreDeDonateurs", donors.size());
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, rapport);
 
-        // Constitution et transmission de la liste proposée pour la classification en arbres remarquables.
-        file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_SERVICE, "votes", "votes.json").toFile();
+
+    }
+
+    private void updateVotesFile() throws IOException {
+        if (REPERTOIRE_DE_BASE == null || REPERTOIRE_ASSOC == null || REPERTOIRE_PROPRIETAIRE == null || REPERTOIRE_COURANT == "Courant") {
+            throw new IllegalArgumentException("Chemin inexistant.");
+        }
+        File folder = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "votes").toFile();
+        List<Map<String, Object>> votes = new ArrayList<>();
+        File[] files = folder.listFiles((dir, name) -> name.endsWith(".json"));
+        if (files != null) {
+            for (File file : files) {
+                if (file.exists() && !file.getName().equals("votes.json")) {
+                    try {
+                        List<Map<String, Object>> fileVotes = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {
+                        });
+                        votes.addAll(fileVotes);
+                    } catch (IOException e) {
+                        System.err.println("Error reading " + file.getName() + ": " + e.getMessage());
+                    }
+                }
+            }
+        } else {
+            System.out.println("No JSON files found in the folder.");
+        }
+        Map<String, Map<String, Map<String, Long>>> groupedOccurrences = votes.stream()
+                .filter(vote -> vote.containsKey("name") && vote.containsKey("location") && vote.containsKey("status"))  // Ensure all keys exist
+                .map(vote -> {
+                    String name = (String) vote.get("name");
+                    String location = (String) vote.get("location");
+                    String status = (String) vote.get("status");
+                    return new AbstractMap.SimpleEntry<>(name, new AbstractMap.SimpleEntry<>(location, status));  // Group by name, location, status
+                })
+                .collect(Collectors.groupingBy(
+                        Map.Entry::getKey,  // First level of grouping by name
+                        Collectors.groupingBy(entry -> entry.getValue().getKey(),  // Second level by location
+                                Collectors.groupingBy(entry -> entry.getValue().getValue(), Collectors.counting()))  // Third level by status
+                ));
+        List<Map<String, Object>> flattenedResults = new ArrayList<>();
+        for (Map.Entry<String, Map<String, Map<String, Long>>> nameEntry : groupedOccurrences.entrySet()) {
+            String name = nameEntry.getKey();
+            for (Map.Entry<String, Map<String, Long>> locationEntry : nameEntry.getValue().entrySet()) {
+                String location = locationEntry.getKey();
+                for (Map.Entry<String, Long> statusEntry : locationEntry.getValue().entrySet()) {
+                    String status = statusEntry.getKey();
+                    Long count = statusEntry.getValue();
+                    Map<String, Object> result = new HashMap<>();
+                    result.put("name", name);
+                    result.put("location", location);
+                    result.put("status", status);
+                    result.put("count", count);
+                    flattenedResults.add(result);
+                }
+            }
+        }
+        List<Map<String, Object>> top5Results = flattenedResults.stream()
+                .sorted((entry1, entry2) -> Long.compare((Long) entry2.get("count"), (Long) entry1.get("count")))  // Sort by count descending
+                .limit(5)  // Get the top 5
+                .collect(Collectors.toList());
+        System.out.println(top5Results);
+        Path path = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "votes");
+        File dir = new File(path.toString());
+        dir.mkdirs();
+        File file = Paths.get(dir.toString(), "votes.json").toFile();
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, top5Results);
     }
 
     @FXML

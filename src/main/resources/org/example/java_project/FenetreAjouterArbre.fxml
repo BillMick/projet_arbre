@@ -38,8 +38,6 @@
                 <TextField fx:id="txtArrondissement" prefWidth="150.0" />
             </HBox>
 
-
-
             <HBox spacing="10.0">
                 <Label text="Complément adresse:">
                <font>
@@ -139,8 +137,6 @@
                 <Font name="Arial Narrow" size="14.0" />
             </font>
         </Button>
-
-
 
     </children>
 </AnchorPane>

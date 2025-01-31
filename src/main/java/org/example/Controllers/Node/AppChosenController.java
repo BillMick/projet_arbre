@@ -12,6 +12,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import org.example.Controllers.Association.AssociationDashboardController;
 import org.example.Controllers.Membre.MemberDashboardController;
@@ -27,6 +29,9 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.example.Models.LectureCSV.loadCSVData;
+
 public class AppChosenController {
 
     public static Map<String, Object> infosAssociation;
@@ -314,6 +319,24 @@ public class AppChosenController {
             // Load the new interface from the FXML file
             FXMLLoader loader = new FXMLLoader(Application.class.getResource("AppPrincipale.fxml"));
             Parent root = loader.load();
+
+            // Crée une image de fond
+            Image backgroundImage = new Image(String.valueOf(Application.class.getResource("images/img.png")));
+            BackgroundImage bgImage = new BackgroundImage(
+                    backgroundImage,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.CENTER,
+                    new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, false, true)
+            );
+
+            File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_SERVICE, "liste_arbres.csv").toFile();
+            loadCSVData(String.valueOf(file));
+
+            // Applique l'image de fond à la racine
+            if (root instanceof Pane) {
+                ((Pane) root).setBackground(new Background(bgImage));
+            }
 
             // Create a new stage for the new interface
             Stage stage = new Stage();
