@@ -246,12 +246,14 @@ public class MemberDashboardController {
         try {
             File jsonFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, infos.get("association").toString(), "notifications.json").toFile();
             List<Map<String, Object>> notificationsData = objectMapper.readValue(jsonFile, new TypeReference<List<Map<String, Object>>>() {});
-            int nb = notificationsData.size();
-            nbNotificationsLabel.setText("Notification·s: " + nb);
+            int notificationNl = (int) notificationsData.stream()
+                    .filter(notification -> notification.get("status").equals(false))
+                    .count();
+            nbNotificationsLabel.setText("Notification·s non lue·s: " + notificationNl);
 
             File jsonFile1 = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, infos.get("association").toString(), REPERTOIRE_COURANT, "activites.json").toFile();
             List<Map<String, Object>> activitiesData = objectMapper.readValue(jsonFile1, new TypeReference<List<Map<String, Object>>>() {});
-            nb = activitiesData.size();
+            int nb = activitiesData.size();
             nbActivitesLabel.setText("Activité·s: " + nb);
 
             File jsonFile2 = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, infos.get("association").toString(), "infos.json").toFile();

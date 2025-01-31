@@ -27,4 +27,5 @@ module org.example.java_project {
     opens org.example.Controllers.Service to javafx.fxml;
     exports org.example.java_project;
     exports org.example.Models;
+    exports org.example.Controllers.Membre;
 }

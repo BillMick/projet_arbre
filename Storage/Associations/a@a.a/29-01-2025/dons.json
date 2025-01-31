@@ -1,0 +1,7 @@
+[ {
+  "type" : "DON",
+  "montant" : 500.0,
+  "debiteur" : "ORG",
+  "statut" : "PERCUE",
+  "date" : "29-01-2025"
+} ]

@@ -17,8 +17,6 @@
             <Label fx:id="soldeLabel" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
             <Separator fx:id="separator" style="-fx-padding: 5; -fx-border-width: 1px;"/>
 
-
-
             <Button text="Activités" fx:id="openActivitiesInterfaceButton" prefWidth="150" onAction="#onActivitiesButtonClick"/>
             <Button text="Membres" fx:id="openMembersInterfaceButton" prefWidth="150" onAction="#onMembersButtonClick"/>
             <Button text="Donateurs" fx:id="openDonorsInterfaceButton" prefWidth="150" onAction="#onDonorsButtonClick"/>
@@ -44,6 +42,17 @@
             </columns>
         </TableView>
     </center>
+
+    <right>
+        <VBox spacing="10" style="-fx-padding: 20; -fx-background-color: #f8f8f8;" alignment="CENTER">
+            <Label text="Quick Stats" style="-fx-font-weight: bold;"/>
+            <Label fx:id="nbActivitesLabel" style="-fx-font-size: 13;"/>
+            <Separator fx:id="separator3" style="-fx-padding: 5; -fx-border-width: 1px;"/>
+            <Label fx:id="nbNotificationsLabel" style="-fx-font-size: 13;"/>
+            <Separator fx:id="separator4" style="-fx-padding: 5; -fx-border-width: 1px;"/>
+            <Button fx:id="subscribeButton" text="Subscribe to Newsletter" style="-fx-font-size: 13;" onAction="#toggleSubscription"/>
+        </VBox>
+    </right>
 
     <bottom>
         <HBox alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #e0e0e0;">

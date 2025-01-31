@@ -17,7 +17,8 @@ public class Activite {
     // private String nomAssociation; // pas vraiment nécessaire...
     // private Object executeur; // juste email ou nom ?
     private String executeur;
-    private Object rapport;
+    private String rapport;
+    private String titre;
     private StatutActivte statut = StatutActivte.ATTENTE;
     private String description = "";
 
@@ -51,10 +52,10 @@ public class Activite {
     }
 
     // setters
-    public boolean ajouterCompteRendu(Rapport rapport) {
-        this.rapport = rapport;
-        return true;
-    }
+//    public boolean ajouterCompteRendu(Rapport rapport) {
+//        this.rapport = rapport;
+//        return true;
+//    }
 
     @JsonSetter("executeur")
     public void setExecuteur(String executeur) {
@@ -67,8 +68,13 @@ public class Activite {
     }
 
     @JsonSetter("rapport")
-    public void setRapport(Object rapport) {
+    public void setRapport(String rapport) {
         this.rapport = rapport;
+    }
+
+    @JsonSetter("titre")
+    public void setTitre(String titre) {
+        this.titre = titre;
     }
 
     @JsonSetter("dateDePlanification")  // Jackson will now use this setter
@@ -114,8 +120,12 @@ public class Activite {
         return this.cout;
     }
 
-    public Object getRapport() {
+    public String getRapport() {
         return this.rapport;
+    }
+
+    public String getTitre() {
+        return this.titre;
     }
 }
 

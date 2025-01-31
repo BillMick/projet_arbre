@@ -191,12 +191,18 @@ public class AppChosenController {
 
             // Close the current stage
             if (associationField != null) {
-                Stage currentStage = (Stage) ((Node) associationField).getScene().getWindow();
-                currentStage.close();
-            } else if (emailField != null) {
-                Stage currentStage = (Stage) ((Node) emailField).getScene().getWindow();
+                Stage currentStage = (Stage) associationField.getScene().getWindow();
                 currentStage.close();
             }
+            if (emailField != null) {
+                Stage currentStage = (Stage) emailField.getScene().getWindow();
+                currentStage.close();
+            }
+            if(presidentField != null) {
+                Stage currentStage = (Stage) presidentField.getScene().getWindow();
+                currentStage.close();
+            }
+
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -241,6 +247,7 @@ public class AppChosenController {
             userInfo.put("solde", balance instanceof Number ? balance : 0.0);
             userInfo.put("isPresident", "");
             userInfo.put("presidentName", "");
+            userInfo.put("souscription", false);
 
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(userInfoFile, userInfo);

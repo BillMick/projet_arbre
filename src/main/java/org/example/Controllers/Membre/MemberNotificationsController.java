@@ -15,10 +15,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class MemberNotificationsController {
 
@@ -69,9 +67,33 @@ public class MemberNotificationsController {
             System.out.println("Le dossier spécifié n'existe pas.");
         }
         // Configuration des colonnes de la TableView
-        dateColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().get("date")).asString());
-        timeColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().get("time")).asString());
-        statusColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().get("status")).asString());
+        dateColumn.setCellValueFactory(cellData -> {
+            Long timestampLong = (Long) cellData.getValue().get("timestamps");
+            if (timestampLong != null) {
+                Date timestamp = new Date(timestampLong);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                return new ReadOnlyObjectWrapper<>(dateFormat.format(timestamp));
+            }
+            return new ReadOnlyObjectWrapper<>("");
+        });
+        timeColumn.setCellValueFactory(cellData -> {
+            Long timestampLong = (Long) cellData.getValue().get("timestamps");
+            if (timestampLong != null) {
+                Date timestamp = new Date(timestampLong);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+                return new ReadOnlyObjectWrapper<>(dateFormat.format(timestamp));
+            }
+            return new ReadOnlyObjectWrapper<>("");
+        });
+        statusColumn.setCellValueFactory(cellData -> {
+            Object value = cellData.getValue().get("status");
+
+            if (value != null && value instanceof Boolean) {
+                boolean status = (Boolean) value;
+                return new ReadOnlyObjectWrapper<>(status ? "Lu" : "Non lu");
+            }
+            return new ReadOnlyObjectWrapper<>("Non lu");
+        });
 
         // Charger les notifications
         try {
@@ -110,7 +132,7 @@ public class MemberNotificationsController {
                 String message = (String) selectedNotification.get("message");
                 String date = (String) selectedNotification.get("date");
                 String time = (String) selectedNotification.get("time");
-                String status = (String) selectedNotification.get("status");
+                Boolean status = (boolean) selectedNotification.get("status");
 
                 // Afficher le contenu de la notification dans une alerte
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -120,9 +142,11 @@ public class MemberNotificationsController {
                 alert.showAndWait();
 
                 // Mettre à jour le statut
-                selectedNotification.put("status", "Lu");
-                notificationsTableView.refresh();
-                saveNotifications(); // Enregistrer les modifications
+                if (!status) {
+                    selectedNotification.put("status", true);
+                    notificationsTableView.refresh();
+                    saveNotifications();
+                }
             }
         }
     }

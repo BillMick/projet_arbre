@@ -1,0 +1,34 @@
+[ {
+  "type" : "VISITE",
+  "dateDePlanification" : "29-01-2025",
+  "cout" : 245.0,
+  "executeur" : "Tom Cat",
+  "rapport" : "",
+  "titre" : "",
+  "statut" : "PLANIFIEE",
+  "description" : "",
+  "nomArbre" : "Citronnier",
+  "localisationArbre" : "Citronnier"
+}, {
+  "type" : "VISITE",
+  "dateDePlanification" : "30-01-2025",
+  "cout" : 19.0,
+  "executeur" : "Tom",
+  "rapport" : "",
+  "titre" : "",
+  "statut" : "PLANIFIEE",
+  "description" : "",
+  "nomArbre" : "Manguier",
+  "localisationArbre" : "Manguier"
+}, {
+  "type" : "VISITE",
+  "dateDePlanification" : "30-01-2025",
+  "cout" : 100.0,
+  "executeur" : "Tom",
+  "rapport" : "",
+  "titre" : "",
+  "statut" : "PLANIFIEE",
+  "description" : "",
+  "nomArbre" : "Cocotier",
+  "localisationArbre" : "Cocotier"
+} ]

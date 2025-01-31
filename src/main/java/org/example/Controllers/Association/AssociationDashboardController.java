@@ -151,7 +151,10 @@ public class AssociationDashboardController {
                 objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, List.of());
             }
             List<Map<String, Object>> notificationsData = objectMapper.readValue(jsonFile, new TypeReference<List<Map<String, Object>>>() {});
-            nbNotificationsLabel.setText("Notification·s: " + notificationsData.size());
+            int notificationNl = (int) notificationsData.stream()
+                    .filter(notification -> notification.get("status").equals(false))
+                    .count();
+            nbNotificationsLabel.setText("Notification·s non lue·s: " + notificationNl);
 
             File jsonFile1 = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "activites.json").toFile();
             if (!jsonFile1.exists()) {
@@ -260,6 +263,10 @@ public class AssociationDashboardController {
 
     @FXML
     public void onEndButtonClick() throws IOException {
+//        Révocation des membres n'ayant pas réglé leur cotisation pour l'exercice écoulé.
+
+//                Génération du rapport d'activité pour l'exercice écoulé.
+//        Envoi des demandes de subventions/dons et réception des éventuelles sommes d'argent. Pour simplifier, on supposera une réponse et un versement des fonds éventuels immédiats.
         if (REPERTOIRE_DE_BASE == null || REPERTOIRE_ASSOC == null || REPERTOIRE_PROPRIETAIRE == null || REPERTOIRE_COURANT == "Courant") {
             throw new IllegalArgumentException("Chemin inexistant.");
         }
@@ -330,6 +337,9 @@ public class AssociationDashboardController {
         rapport.put("nombreDeMembres", members.size());
         rapport.put("nombreDeDonateurs", donors.size());
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, rapport);
+
+        // Constitution et transmission de la liste proposée pour la classification en arbres remarquables.
+        file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_SERVICE, "votes", "votes.json").toFile();
     }
 
     @FXML

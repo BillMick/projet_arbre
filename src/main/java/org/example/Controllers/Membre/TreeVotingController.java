@@ -187,6 +187,7 @@ public class TreeVotingController {
 
             // Vérifier si l'utilisateur a déjà voté pour 5 arbres
             if (userVoteCount >= 5) {
+
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Limite de votes atteinte");
                 alert.setHeaderText(null);

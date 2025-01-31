@@ -40,6 +40,8 @@
                 <columns>
                     <TableColumn text="Date" fx:id="dateColumn" prefWidth="100"/>
                     <TableColumn text="Type" fx:id="typeColumn" prefWidth="150"/>
+                    <TableColumn text="Type" fx:id="nomArbreColumn" prefWidth="150"/>
+                    <TableColumn text="Type" fx:id="localisationArbreColumn" prefWidth="150"/>
                     <TableColumn text="Description" fx:id="descriptionColumn" prefWidth="200"/>
                 </columns>
             </TableView>

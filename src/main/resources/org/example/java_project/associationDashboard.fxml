@@ -12,7 +12,6 @@
         </HBox>
     </top>
 
-    <!-- Left section: Sidebar -->
     <left>
         <VBox spacing="10" style="-fx-padding: 10; -fx-background-color: #f0f0f0; -fx-border-color: lightgray; -fx-border-width: 1;" alignment="CENTER">
             <Label text="Menu" style="-fx-font-weight: bold;"/>
@@ -39,7 +38,6 @@
         </VBox>
     </left>
 
-    <!-- Center section: Main Content -->
     <center>
         <VBox spacing="20" style="-fx-padding: 20;">
             <Label text="Bienvenu·e !" style="-fx-font-size: 18; -fx-font-weight: bold;"/>

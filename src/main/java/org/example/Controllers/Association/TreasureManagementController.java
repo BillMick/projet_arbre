@@ -295,7 +295,7 @@ public class TreasureManagementController {
         debtTable.getItems().remove(rowIndex);
         double newSolde = currentSolde - ((Number) debtToDelete.get("montant")).doubleValue();
         accountData.put("solde", newSolde);
-        objectMapper.writeValue(jsonFile, accountData);
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, accountData);
         System.out.println("Solde mis à jour avec succès! Nouveau solde: " + newSolde);
         // Mise à jour du statut et réinsertion
         Dette.TypeDette type = Dette.TypeDette.DEFRAIEMENT;
@@ -334,6 +334,7 @@ public class TreasureManagementController {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, data);
             updateDebtsLabel(); updateSoldeLabel();
             System.out.println("Debt " + debtToDelete.get("name") + " deleted");
+            loadFinancialData();
             // Il faudra créditer le compte du bénéficiaire....
         } catch (IOException e) {
             e.printStackTrace();

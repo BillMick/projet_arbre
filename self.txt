@@ -57,3 +57,18 @@ Créditer le compte des associations lorsqu'un membre paie sa cotisation
   "nomArbre" : "Cocotier",
   "localisationArbre" : "Cocotier"
 } ]
+
+Notification
+{
+  "date" : "2025-01-25",
+  "time" : "10:00",
+  "timestamps" : "10:00",
+  "status" : "Lu",
+  "message" : "Plantation d'un Chêne Millénaire."
+}
+{
+  "timestamps" : "10:00",
+  "status" : true,
+  "sender" : "Sender",
+  "message" : "Plantation d'un Chêne Millénaire."
+}

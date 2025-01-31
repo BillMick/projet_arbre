@@ -1,0 +1,11 @@
+[ {
+  "date" : "2025-01-29",
+  "amount" : "100",
+  "type" : "Dépôt",
+  "description" : "Dépôt"
+}, {
+  "date" : "2025-01-29",
+  "amount" : "50",
+  "type" : "Dépôt",
+  "description" : "Complément"
+} ]

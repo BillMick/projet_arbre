@@ -60,6 +60,10 @@ public class MemberActivitiesController {
     @FXML
     private TableColumn<Map<String, Object>, String> typeColumn;
     @FXML
+    private TableColumn<Map<String, Object>, Date> nomArbreColumn;
+    @FXML
+    private TableColumn<Map<String, Object>, String> localisationArbreColumn;
+    @FXML
     private TableColumn<Map<String, Object>, String> descriptionColumn;
     @FXML
     private Label totalReimbursementLabel;
@@ -67,7 +71,8 @@ public class MemberActivitiesController {
     private ListView<String> reportListView;
 
     private ObservableList<Visite> visitList = FXCollections.observableArrayList();
-    private List<Report> reports = new ArrayList<>();
+
+    // private List<Report> reports = new ArrayList<>();
     private int reimbursementPerVisit = 20;
     private String selectedTreeType;
     //private static final String VISITS_FILE_PATH = "Storage/visits.json";
@@ -92,9 +97,9 @@ public class MemberActivitiesController {
         }
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("dateDePlanification"));
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+        nomArbreColumn.setCellValueFactory(new PropertyValueFactory<>("nomArbre"));
+        localisationArbreColumn.setCellValueFactory(new PropertyValueFactory<>("localisationArbre"));
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("executeur"));
-
-        visitsTable.setItems(visitList);
 
         File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, infos.get("association").toString(), REPERTOIRE_COURANT, "activites.json").toFile();
         if (!file.exists()) {
@@ -105,7 +110,8 @@ public class MemberActivitiesController {
         updateComboBox();
 
         loadVisitsAndReports();
-        updateTableData();
+        // updateTableData();
+        // visitsTable.setItems(visitList);
         visitsTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     }
 
@@ -157,10 +163,11 @@ public class MemberActivitiesController {
                 return;
             }
 
-            VisitData data = objectMapper.readValue(file, VisitData.class);
-            visitList.setAll(data.getVisits());
-            reports.clear();
-            reports.addAll(data.getReports());
+            List<Visite> data = objectMapper.readValue(file, new TypeReference<List<Visite>>() {});
+            visitList.setAll(data);
+            visitsTable.setItems(visitList);
+            // reports.clear();
+            // reports.addAll(data.getReports());
             updateReportListView();
         } catch (IOException e) {
             e.printStackTrace();
@@ -319,11 +326,13 @@ public class MemberActivitiesController {
             Optional<String> result = dialog.showAndWait();
             result.ifPresent(reportContent -> {
                 String reportTitle = "Rapport de la " + selectedVisit.getType() + " du " + Association.dateFormat.format(selectedVisit.getDateDePlanification());
-                Report report = new Report(reportTitle, "\n Arbre: " + selectedVisit.getNomArbre() + "\n Arbre: " + selectedVisit.getLocalisationArbre() + reportContent);
-                reports.add(report);
+                // Report report = new Report(reportTitle, "\n Arbre: " + selectedVisit.getNomArbre() + "\n Arbre: " + selectedVisit.getLocalisationArbre() + reportContent);
+                String report = "\n Arbre: " + selectedVisit.getNomArbre() + "\n Localisation: " + selectedVisit.getLocalisationArbre() + "\n" + reportContent;
+                selectedVisit.setRapport(report);
+                selectedVisit.setTitre(reportTitle);
                 updateReportListView();
                 saveVisitsAndReports();
-                saveReportToPDF(report);
+                saveReportToPDF(selectedVisit);
             });
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Veuillez sélectionner une visite pour créer un rapport.", ButtonType.OK);
@@ -331,14 +340,13 @@ public class MemberActivitiesController {
         }
     }
 
-    private void saveReportToPDF(Report report) {
+    private void saveReportToPDF(Visite visite) {
         try {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Sauvegarder le Rapport");
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
 
-            // Utiliser le titre du rapport pour le nom du fichier
-            fileChooser.setInitialFileName(report.getTitle() + ".pdf");
+            fileChooser.setInitialFileName("Rapport de la " + visite.getType() + " du " + Association.dateFormat.format(visite.getDateDePlanification()) + ".pdf");
             File pdfFile = fileChooser.showSaveDialog(new Stage());
 
             if (pdfFile != null) {
@@ -346,17 +354,61 @@ public class MemberActivitiesController {
                     PDPage page = new PDPage();
                     document.addPage(page);
 
-                    try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+                    PDPageContentStream contentStream = new PDPageContentStream(document, page);
+                    try {
                         contentStream.beginText();
-                        contentStream.setFont(PDType1Font.HELVETICA, 12);
-                        contentStream.newLineAtOffset(25, 700); // Position du texte
-                        contentStream.showText(report.getTitle()); // Afficher le titre du rapport
-                        contentStream.newLineAtOffset(0, -20); // Nouvelle ligne
-                        contentStream.showText(report.getContent()); // Afficher le contenu du rapport
-                        contentStream.endText();
+                        contentStream.setFont(PDType1Font.HELVETICA, 12); // Use Helvetica font to avoid control character issues
+                        contentStream.newLineAtOffset(25, 700); // Starting position of the text
+
+                        // Clean the report text (remove control characters like tabs)
+                        String cleanedReportText = visite.getRapport().replaceAll("[\\x00-\\x1F\\x7F]", " ");
+
+                        // Title of the report
+                        contentStream.showText("Rapport de la " + visite.getType() + " du " + Association.dateFormat.format(visite.getDateDePlanification()));
+                        contentStream.newLineAtOffset(0, -20); // Move to the next line after the title
+
+                        // Write the cleaned report content
+                        String reportText = cleanedReportText;
+
+                        // Handle line breaks manually
+                        float margin = 25; // Left margin
+                        float yPosition = 680; // Starting Y position for text
+                        float lineHeight = 15f; // Height of each line
+
+                        contentStream.setTextRise(0); // Set the text rise to default
+
+                        // Write the report content while handling \n automatically
+                        for (char c : reportText.toCharArray()) {
+                            if (c == '\n') {
+                                yPosition -= lineHeight;
+                                contentStream.newLineAtOffset(-25, -lineHeight); // Move to the next line
+                            } else {
+                                contentStream.showText(String.valueOf(c));
+                            }
+
+                            // If we're about to exceed the page height, create a new page
+                            if (yPosition <= margin) {
+                                contentStream.endText();
+                                page = new PDPage(); // Create a new page
+                                document.addPage(page);
+                                contentStream.close(); // Close the current contentStream
+                                contentStream = new PDPageContentStream(document, page); // Recreate the contentStream for the new page
+                                contentStream.beginText();
+                                contentStream.setFont(PDType1Font.HELVETICA, 12);
+                                contentStream.newLineAtOffset(margin, yPosition); // Reset position for the new page
+                                yPosition = 680; // Reset the Y position for the new page
+                            }
+                        }
+
+                        contentStream.endText(); // End the text block
+                    } finally {
+                        // Ensure contentStream is closed after finishing all actions
+                        contentStream.close();
                     }
 
-                    document.save(pdfFile); // Enregistrer le fichier PDF
+                    document.save(pdfFile); // Save the PDF to the file
+
+                    // Show success message
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "Rapport sauvegardé : " + pdfFile.getAbsolutePath(), ButtonType.OK);
                     alert.showAndWait();
                 }
@@ -368,10 +420,16 @@ public class MemberActivitiesController {
         }
     }
 
+
+
+
+
+
     private void updateReportListView() {
         List<String> reportTitles = new ArrayList<>();
-        for (Report report : reports) {
-            reportTitles.add(report.getTitle());
+        for (Visite visit : visitList) {
+            if (visit.getTitre() != "")
+            reportTitles.add(visit.getTitre());
         }
         reportListView.setItems(FXCollections.observableArrayList(reportTitles));
     }
@@ -380,7 +438,7 @@ public class MemberActivitiesController {
     private void onViewReport() {
         int selectedIndex = reportListView.getSelectionModel().getSelectedIndex();
         if (selectedIndex >= 0) {
-            Report selectedReport = reports.get(selectedIndex);
+            Visite selectedReport = visitList.get(selectedIndex);
             saveReportToPDF(selectedReport); // Visualiser le rapport après avoir généré un fichier PDF
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Veuillez sélectionner un rapport à ouvrir.", ButtonType.OK);
@@ -390,8 +448,8 @@ public class MemberActivitiesController {
 
     private void saveVisitsAndReports() {
         try {
-            VisitData data = new VisitData(visitList, reports);
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_MEMBRES, REPERTOIRE_PROPRIETAIRE, "activites.json").toFile(), data);
+//            List<Visite> data = new VisitData(visitList, reports);
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_MEMBRES, REPERTOIRE_PROPRIETAIRE, "activites.json").toFile(), visitList);
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Failed to save visits and reports: " + e.getMessage());
@@ -429,45 +487,45 @@ public class MemberActivitiesController {
 //        }
 //    }
 
-    public static class Report {
-        private String title;
-        private String content;
-
-        public Report(String title, String content) {
-            this.title = title;
-            this.content = content;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public String getContent() {
-            return content;
-        }
-    }
-
-    public static class VisitData {
-        private List<Visite> visits;
-        private List<Report> reports;
-
-        public VisitData() {
-            this.visits = new ArrayList<>();
-            this.reports = new ArrayList<>();
-        }
-
-        public VisitData(List<Visite> visits, List<Report> reports) {
-            this.visits = visits;
-            this.reports = reports;
-        }
-
-        @JsonProperty
-        public List<Visite> getVisits() {
-            return visits;
-        }
-
-        public List<Report> getReports() {
-            return reports;
-        }
-    }
+//    public static class Report {
+//        private String title;
+//        private String content;
+//
+//        public Report(String title, String content) {
+//            this.title = title;
+//            this.content = content;
+//        }
+//
+//        public String getTitle() {
+//            return title;
+//        }
+//
+//        public String getContent() {
+//            return content;
+//        }
+//    }
+//
+//    public static class VisitData {
+//        private List<Visite> visits;
+//        private List<Report> reports;
+//
+//        public VisitData() {
+//            this.visits = new ArrayList<>();
+//            this.reports = new ArrayList<>();
+//        }
+//
+//        public VisitData(List<Visite> visits, List<Report> reports) {
+//            this.visits = visits;
+//            this.reports = reports;
+//        }
+//
+//        @JsonProperty
+//        public List<Visite> getVisits() {
+//            return visits;
+//        }
+//
+//        public List<Report> getReports() {
+//            return reports;
+//        }
+//    }
 }

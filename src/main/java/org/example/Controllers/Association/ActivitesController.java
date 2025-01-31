@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class ActivitesController {
@@ -275,7 +276,9 @@ public class ActivitesController {
                 String selectedActivityType = activityTypeComboBox.getValue();
                 String selectedTree = activityComboBox.getValue();
                 String costText = amountField.getText();
-                String dateDePlanification = dateDePlanificationPicker.getValue() != null ? dateDePlanificationPicker.getValue().toString() : "";
+                String dateDePlanification = dateDePlanificationPicker.getValue() != null
+                        ? dateDePlanificationPicker.getValue().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                        : "";
 
                 // You can now handle the collected data (e.g., create a new Activity object, save to file, etc.)
                 System.out.println("Type d'Activité: " + selectedActivityType);
@@ -293,6 +296,7 @@ public class ActivitesController {
                                 "localisationArbre", selectedTree,
                                 "type", selectedActivityType,
                                 "rapport", "",
+                                "titre", "",
                                 "executeur", ""
                         );
 
@@ -368,7 +372,10 @@ public class ActivitesController {
                 objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, List.of());
             }
             List<Map<String, Object>> notificationsData = objectMapper.readValue(jsonFile, new TypeReference<List<Map<String, Object>>>() {});
-            nbNotificationsLabel.setText("Notification·s: " + notificationsData.size());
+            int notificationNl = (int) notificationsData.stream()
+                    .filter(notification -> notification.get("status").equals(false))
+                    .count();
+            nbNotificationsLabel.setText("Notification·s non lue·s: " + notificationNl);
 
             File jsonFile1 = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "activites.json").toFile();
             if (!jsonFile1.exists()) {

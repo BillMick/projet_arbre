@@ -266,7 +266,7 @@ public class DonateursController {
                     : 0.0;
             double newSolde = currentSolde + montant;
             accountData.put("solde", newSolde);
-            objectMapper.writeValue(jsonFile, accountData);
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, accountData);
             System.out.println("Solde mis à jour avec succès! Nouveau solde: " + newSolde);
 
             Recette r = new Recette(montant, Recette.TypeRecette.DON, donor);
