@@ -43,7 +43,7 @@
                 <Button fx:id="btnRetour"
                         alignment="BOTTOM_CENTER" maxHeight="25.0"
                         maxWidth="80.0" minHeight="25.0" minWidth="80.0"
-                        onAction="#Retours" text="Retour" textFill="#0a6d36"
+                        onAction="#Fermer" text="Retour" textFill="#0a6d36"
                         style="-fx-font-weight: bold">
                     <font>
                         <Font name="Arial Nova" size="12.0" />

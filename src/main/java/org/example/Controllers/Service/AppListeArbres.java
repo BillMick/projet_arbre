@@ -80,8 +80,6 @@ public class AppListeArbres {
         }
         initializeColumns();
         tableView.setItems(arbresList);
-
-
     }
 
     @FXML
@@ -160,17 +158,6 @@ public class AppListeArbres {
             // Fermeture de la fenêtre principale
             Stage fenetrePrincipale = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
             fenetrePrincipale.close();
-
-//            nouvelleFenetre.setOnCloseRequest(eventClose -> {
-//                eventClose.consume();
-//                Alert alert = new Alert(Alert.AlertType.ERROR);
-//                alert.setTitle("Ne pas utiliser ce bouton");
-//                alert.setHeaderText("Opération Impossible");
-//                alert.setContentText("Veuillez utiliser le bouton Quitter à la page d'Accueil ");
-//                alert.showAndWait();;
-//            });
-
-            // Affichage de la nouvelle fenêtre
             nouvelleFenetre.show();
 
         } catch (IOException e) {
@@ -231,5 +218,10 @@ public class AppListeArbres {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void Fermer(javafx.event.ActionEvent event) {
+        Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+        stage.close();
     }
 }

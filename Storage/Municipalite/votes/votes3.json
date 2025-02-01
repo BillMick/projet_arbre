@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Manguier",
+    "location": "Ile-De-France",
+    "status": "REMARQUABLE"
+  },
+  {
+    "name": "Cocotier",
+    "location": "Lille",
+    "status": "NON REMARQUABLE"
+  },
+  {
+    "name": "Goyaier",
+    "location": "Orsay",
+    "status": "ABATTU"
+  },
+  {
+    "name": "Citronier",
+    "location": "Haut-De-France",
+    "status": "REMARQUABLE"
+  },
+  {
+    "name": "Paayer",
+    "location": "Pyrennés",
+    "status": "REMARQUABLE"
+  },
+  {
+    "name": "Gyavier",
+    "location": "Orsay",
+    "status": "ABATTU"
+  }
+]

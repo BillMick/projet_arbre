@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.Controllers.Service.NotificationsController" styleClass="main-pane">
+    <top>
+        <HBox alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #4CAF50;">
+            <Label text="Notifications" style="-fx-font-size: 28; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        </HBox>
+    </top>
+
+    <left>
+        <VBox spacing="10" style="-fx-padding: 20; -fx-background-color: #f9f9f9; -fx-border-color: lightgray; -fx-border-width: 1;" alignment="CENTER">
+            <Label text="Quick Stats" style="-fx-font-weight: bold;"/>
+            <Label fx:id="nbAbonnesLabel" style="-fx-font-size: 13;"/>
+            <Separator fx:id="separator" style="-fx-padding: 5; -fx-border-width: 1px;"/>
+
+            <Button text="Faire une demande"
+                    onAction="#onSendButtonClick"
+                    style="-fx-background-color: #4CAF50; -fx-text-fill: white;"
+                    alignment="CENTER"
+            />
+            <Separator fx:id="separator1" style="-fx-padding: 5; -fx-border-width: 1px;"/>
+
+            <Button text="Gestion des arbres" fx:id="openGestionArbresInterfaceButton" prefWidth="150" onAction="#gestionArbre"/>
+            <Button text="Votes" fx:id="openVotesInterfaceButton" prefWidth="150" onAction="#onVotesButtonClick"/>
+
+            <Separator fx:id="separator2" style="-fx-padding: 5; -fx-border-width: 1px;"/>
+
+            <Button text="Fermer"
+                    onAction="#Fermer"
+                    prefWidth="150" style="-fx-background-color: #2020FF; -fx-text-fill: white;"
+                    alignment="CENTER"
+            />
+        </VBox>
+    </left>
+
+    <center>
+        <TableView fx:id="notificationsTableView" prefHeight="400" style="-fx-background-color: white;">
+            <columns>
+                <TableColumn fx:id="dateColumn" text="Date" prefWidth="150"/>
+                <TableColumn fx:id="timeColumn" text="Heure" prefWidth="100"/>
+                <TableColumn fx:id="statusColumn" text="Statut" prefWidth="100"/>
+            </columns>
+        </TableView>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #e0e0e0;">
+            <children>
+                <Label text="© 2025 Sauvons les Arbres - Application. Tous droits réservés." />
+            </children>
+        </HBox>
+    </bottom>
+</BorderPane>

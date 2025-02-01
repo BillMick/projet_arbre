@@ -274,37 +274,52 @@ public class AssociationDashboardController {
 
         // Nombre de donateurs
         File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "donors.json").toFile();
+        if(!file.exists()) { objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, List.of()); }
         List<Map<String, Object>> donors = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
 
         // Nombre de membres
         file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "members.json").toFile();
+        if(!file.exists()) { objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, List.of()); }
         List<Map<String, Object>> members = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
 
         // Nom du président
         File infoFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, "infos.json").toFile();
+        if(!file.exists()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setContentText("Opération impossible.");
+            alert.showAndWait();
+            return;
+        }
         Map<String, Object> infos = objectMapper.readValue(file, new TypeReference<Map<String, Object>>() {});
 
         // Dettes
         file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "debts.json").toFile();
+        if(!file.exists()) { objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, List.of()); }
         List<Map<String, Object>> debts = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
 
         // Dons
         file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "dons.json").toFile();
+        if(!file.exists()) { objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, List.of()); }
         List<Map<String, Object>> dons = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
 
         // Cotisations
         file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "cotisations.json").toFile();
+        if(!file.exists()) { objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, List.of()); }
         List<Map<String, Object>> cotisations = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
 
         // Activités
         file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "activites.json").toFile();
+        if(!file.exists()) { objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, List.of()); }
         List<Map<String, Object>> activities = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
 
         // Scrutin
-        // Constitution et transmission de la liste proposée pour la classification en arbres remarquables.
+        // // Constitution/Mise à jour de la liste proposée pour la classification en arbres remarquables.
         updateVotesFile();
         File voteFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "votes", "votes.json").toFile();
-        List<Map<String, Object>> votes = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
+        List<Map<String, Object>> votes = objectMapper.readValue(voteFile, new TypeReference<List<Map<String, Object>>>() {});
+        // // Envoi du scrutin final au Service des espaces verts
+        File serviceFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_SERVICE, "votes", this.infos.get("email").toString()).toFile();
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(serviceFile, votes);
 
         file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "periode.json").toFile();
         if (file.exists()) {
@@ -349,7 +364,7 @@ public class AssociationDashboardController {
         rapport.put("nombreDeDonateurs", donors.size());
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, rapport);
 
-
+        // Créer un espace donateur à l'ajout de donateur ...
     }
 
     private void updateVotesFile() throws IOException {

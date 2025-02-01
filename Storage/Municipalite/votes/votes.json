@@ -1,0 +1,51 @@
+[ {
+  "name" : "Manguier",
+  "count" : 2,
+  "location" : "Ile-De-France",
+  "status" : "REMARQUABLE"
+}, {
+  "name" : "Cocotier",
+  "count" : 2,
+  "location" : "Lille",
+  "status" : "NON REMARQUABLE"
+}, {
+  "name" : "Goyaver",
+  "count" : 1,
+  "location" : "Orsay",
+  "status" : "ABATTU"
+}, {
+  "name" : "Goyavie",
+  "count" : 1,
+  "location" : "Orsay",
+  "status" : "ABATTU"
+}, {
+  "name" : "Goavier",
+  "count" : 1,
+  "location" : "Orsay",
+  "status" : "ABATTU"
+}, {
+  "name" : "Citronier",
+  "count" : 1,
+  "location" : "Haut-De-France",
+  "status" : "REMARQUABLE"
+}, {
+  "name" : "Gyavier",
+  "count" : 1,
+  "location" : "Orsay",
+  "status" : "ABATTU"
+}, {
+  "name" : "Goyaier",
+  "count" : 1,
+  "location" : "Orsay",
+  "status" : "ABATTU"
+}, {
+  "name" : "Paayer",
+  "count" : 1,
+  "location" : "Pyrennés",
+  "status" : "REMARQUABLE"
+}, {
+  "name" : "Goyavier",
+  "count" : 1,
+  "location" : "Orsay",
+  "status" : "ABATTU"
+} ]

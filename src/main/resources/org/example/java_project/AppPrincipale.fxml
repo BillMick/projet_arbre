@@ -28,13 +28,13 @@
                 </font>
             </Button>
 
-            <Button fx:id="btnNotifications" text="Notifications" textFill="#0a6d36" prefWidth="200">
+            <Button fx:id="btnNotifications" text="Notifications" onAction="#onNotificationsButtonClick" textFill="#0a6d36" prefWidth="200">
                 <font>
                     <Font name="Arial Narrow" size="18.0" />
                 </font>
             </Button>
 
-            <Button fx:id="btnGestion" text="Gestion des Votes" textFill="#0a6d36" prefWidth="200">
+            <Button fx:id="btnGestion" onAction="#onVotesButtonClick" text="Gestion des Votes" textFill="#0a6d36" prefWidth="200">
                 <font>
                     <Font name="Arial Narrow" size="18.0" />
                 </font>

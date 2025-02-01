@@ -93,4 +93,37 @@ public class AppPrincipale {
         }
     }
 
+    @FXML
+    public void onVotesButtonClick() {
+        try {
+            // Load the new interface from the FXML file
+            FXMLLoader loader = new FXMLLoader(Application.class.getResource("serviceVotes.fxml"));
+            Parent root = loader.load();
+
+            // Create a new stage for the new interface
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Interface de Visualisation des Votes");
+
+            // Show the new stage
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void onNotificationsButtonClick() {
+        try {
+            FXMLLoader loader = new FXMLLoader(Application.class.getResource("serviceNotifications.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Interface de Gestion des Notifications");
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

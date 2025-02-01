@@ -2,10 +2,8 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
-<?import javafx.scene.control.cell.PropertyValueFactory?>
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.Controllers.Association.VotesController">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.Controllers.Service.VotesController">
     <top>
         <HBox style="-fx-padding: 10; -fx-background-color: #4CAF50;">
             <Label text="Visualisation des Votes" style="-fx-font-size: 20; -fx-text-fill: white;"/>
@@ -13,22 +11,18 @@
     </top>
     <left>
         <VBox spacing="10" style="-fx-padding: 20; -fx-background-color: #f9f9f9; -fx-border-color: lightgray; -fx-border-width: 1;" alignment="CENTER">
-<!--            <Label fx:id="soldeLabel" style="-fx-font-size: 16; -fx-font-weight: bold;"/>-->
 
             <Separator fx:id="separator" style="-fx-padding: 5; -fx-border-width: 1px;"/>
 
-            <Button text="Notifications" fx:id="openNotificationsInterfaceButton" prefWidth="150" onAction="#onNotificationsButtonClick"/>
-            <Button text="Activités" fx:id="openActivitiesInterfaceButton" prefWidth="150" onAction="#onActivitiesButtonClick"/>
-            <Button text="Membres" fx:id="openMembersInterfaceButton" prefWidth="150" onAction="#onMembersButtonClick"/>
-            <Button text="Donateurs" fx:id="openDonorsInterfaceButton" prefWidth="150" onAction="#onDonorsButtonClick"/>
-            <Button text="Trésorerie" fx:id="openTreasuryInterfaceButton" prefWidth="150" onAction="#onTreasuryButtonClick"/>
+            <Button text="Gestion des arbres" fx:id="openGestionArbresInterfaceButton" prefWidth="150" onAction="#gestionArbre"/>
+            <Button text="Notifications" fx:id="openNotificationsInterfaceButton" prefWidth="150"/>
+
 
             <Separator fx:id="separator2" style="-fx-padding: 5; -fx-border-width: 1px;"/>
 
-            <Button text="Fermer"
-                    onAction="#onBackButtonClick"
-                    prefWidth="150" textFill="#0a6d36"
-                    style="-fx-font-weight: bold"
+            <Button text="Retour"
+                    onAction="#Fermer"
+                    prefWidth="150" style="-fx-background-color: #2020FF; -fx-text-fill: white;"
                     alignment="CENTER"
             />
         </VBox>
@@ -36,7 +30,7 @@
     <center>
         <VBox spacing="10" style="-fx-padding: 20;">
             <Label text="Votes (à ce jour)" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
-            <TableView fx:id="votesTable" prefHeight="200">
+            <TableView fx:id="votesTable" minHeight="200">
                 <columns>
                     <TableColumn text="Nom commun" fx:id="nameColumn" prefWidth="150" style="-fx-font-weight: bold;"/>
                     <TableColumn text="Localisation" fx:id="locationColumn" prefWidth="200" style="-fx-font-weight: bold;"/>
