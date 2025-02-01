@@ -12,30 +12,49 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="650.0" maxWidth="1000.0" minHeight="650.0" minWidth="1000.0" prefHeight="650.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.Service.AppListeArbres">
-    <children>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane maxHeight="650.0" maxWidth="1000.0" minHeight="700.0" minWidth="1000.0" prefHeight="650.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.Service.AppListeArbres">
+    <center>
         <VBox prefHeight="750.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                 <MenuBar prefHeight="26.0" prefWidth="960.0">
                 </MenuBar>
-                <HBox prefHeight="37.0" prefWidth="1000.0">
+                <HBox prefHeight="37.0" prefWidth="1000.0" spacing="10" alignment="CENTER_LEFT">
+                    <!-- Champ de recherche et bouton "Activer la Recherche" -->
                     <children>
-                        <TextField fx:id="searchField" prefHeight="25.0" prefWidth="667.0" translateX="25.0" translateY="5.0" />
-                        <Button fx:id="btnRechercher" mnemonicParsing="false" onAction="#activerRecherche" prefHeight="25.0" prefWidth="150.0" text="Activer la Recherche" translateX="150.0" translateY="5.0" />
+                        <TextField fx:id="searchField" prefHeight="25.0" prefWidth="667.0" />
+                        <Button fx:id="btnRechercher" mnemonicParsing="false" onAction="#activerRecherche" prefHeight="25.0" prefWidth="170.0" text="Activer la Recherche" style="-fx-font-weight: bold"/>
+
+                        <Button fx:id="btnAjouter" onAction="#onTreeOperationsClick" prefHeight="25.0" prefWidth="200.0" text="Ajouter Arbre" textFill="#0a6d36"
+                                style="-fx-background-color: #0f06ba; -fx-text-fill: white; -fx-font-weight: bold">
+                        </Button>
+
                     </children>
                 </HBox>
-                <ScrollPane fitToHeight="true" prefHeight="550.0" prefWidth="1000.0">
+
+                <ScrollPane fitToHeight="true" prefWidth="1000.0">
                     <content>
                         <TableView fx:id="tableView" prefHeight="43000.0" prefWidth="2500.0">
                         </TableView>
                     </content>
                 </ScrollPane>
-                <Button fx:id="btnRetour" alignment="CENTER" maxHeight="25.0" maxWidth="80.0" minHeight="25.0" minWidth="80.0" mnemonicParsing="false" onAction="#Retours" text="Retour" textFill="#06ba6b" translateX="900.0" translateY="5.0">
+                <Button fx:id="btnRetour"
+                        alignment="BOTTOM_CENTER" maxHeight="25.0"
+                        maxWidth="80.0" minHeight="25.0" minWidth="80.0"
+                        onAction="#Retours" text="Retour" textFill="#0a6d36"
+                        style="-fx-font-weight: bold">
                     <font>
                         <Font name="Arial Nova" size="12.0" />
                     </font>
                 </Button>
             </children>
         </VBox>
-    </children>
-</AnchorPane>
+    </center>
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #e0e0e0;">
+            <Label text="© 2025 Sauvons les Arbres - Application. Tous droits réservés."/>
+        </HBox>
+    </bottom>
+</BorderPane>

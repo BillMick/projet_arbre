@@ -161,14 +161,14 @@ public class AppListeArbres {
             Stage fenetrePrincipale = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
             fenetrePrincipale.close();
 
-            nouvelleFenetre.setOnCloseRequest(eventClose -> {
-                eventClose.consume();
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Ne pas utiliser ce bouton");
-                alert.setHeaderText("Opération Impossible");
-                alert.setContentText("Veuillez utiliser le bouton Quitter à la page d'Accueil ");
-                alert.showAndWait();;
-            });
+//            nouvelleFenetre.setOnCloseRequest(eventClose -> {
+//                eventClose.consume();
+//                Alert alert = new Alert(Alert.AlertType.ERROR);
+//                alert.setTitle("Ne pas utiliser ce bouton");
+//                alert.setHeaderText("Opération Impossible");
+//                alert.setContentText("Veuillez utiliser le bouton Quitter à la page d'Accueil ");
+//                alert.showAndWait();;
+//            });
 
             // Affichage de la nouvelle fenêtre
             nouvelleFenetre.show();
@@ -217,5 +217,19 @@ public class AppListeArbres {
         // Appliquer les données filtrées au TableView
         tableView.setItems(filteredList);
 
+    }
+
+    @FXML
+    public void onTreeOperationsClick() {
+        try {
+            FXMLLoader loader = new FXMLLoader(Application.class.getResource("treeForm.fxml"));
+            Parent root = loader.load();
+            Stage nouvelleFenetre = new Stage();
+            nouvelleFenetre.setTitle("Gestion des Arbres");
+            nouvelleFenetre.setScene(new Scene(root));
+            nouvelleFenetre.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

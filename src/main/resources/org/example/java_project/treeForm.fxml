@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.Service.TreeFormController">
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 10; -fx-background-color: #4CAF50;">
+            <Label text="Service des Esp. Verts | Ajout d'arbre" style="-fx-font-size: 20; -fx-text-fill: white;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <!-- GridPane for two columns -->
+        <GridPane hgap="10" vgap="10" alignment="CENTER" style="-fx-padding: 20; -fx-background-color: #f1f1f1; -fx-border-color: lightgray; -fx-border-width: 1;">
+            <!-- Column 1 -->
+            <Label text="Type Emplacement:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <TextField fx:id="typeEmplacementField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+            <Label text="Domanialite:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <TextField fx:id="domanialiteField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+            <Label text="Arrondissement:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <TextField fx:id="arrondissementField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+            <Label text="Complement Adresse:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <TextField fx:id="complementAdresseField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+            <Label text="Numero:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+            <TextField fx:id="numeroField" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+            <Label text="Lieu / Adresse:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+            <TextField fx:id="lieuAdresseField" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+            <Label text="ID Emplacement:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+            <TextField fx:id="idEmplacementField" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+            <Label text="Libelle Francais:" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+            <TextField fx:id="libelleFrancaisField" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+
+            <Label text="Genre:" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+            <TextField fx:id="genreField" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+
+            <Label text="Espece:" GridPane.rowIndex="9" GridPane.columnIndex="0"/>
+            <TextField fx:id="especeField" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
+
+            <Label text="Variete / Cultivar:" GridPane.rowIndex="10" GridPane.columnIndex="0"/>
+            <TextField fx:id="varieteCultivarField" GridPane.rowIndex="10" GridPane.columnIndex="1"/>
+
+            <Label text="Circonference (cm):" GridPane.rowIndex="11" GridPane.columnIndex="0"/>
+            <TextField fx:id="circonferenceField" GridPane.rowIndex="11" GridPane.columnIndex="1"/>
+
+            <Label text="Hauteur (m):" GridPane.rowIndex="12" GridPane.columnIndex="0"/>
+            <TextField fx:id="hauteurField" GridPane.rowIndex="12" GridPane.columnIndex="1"/>
+
+            <Label text="Stade de Developpement:" GridPane.rowIndex="13" GridPane.columnIndex="0"/>
+            <TextField fx:id="stadeDeveloppementField" GridPane.rowIndex="13" GridPane.columnIndex="1"/>
+
+            <CheckBox fx:id="remarquableCheckbox" text="Remarquable" GridPane.rowIndex="14" GridPane.columnIndex="0" GridPane.columnSpan="2"/>
+
+            <Label text="Geo Point 2D:" GridPane.rowIndex="15" GridPane.columnIndex="0"/>
+            <TextField fx:id="geoPoint2DField" GridPane.rowIndex="15" GridPane.columnIndex="1"/>
+
+            <!-- Submit and Close Buttons -->
+            <HBox alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #e0e0e0;" GridPane.rowIndex="16" GridPane.columnSpan="2" spacing="20">
+                <Button text="Enregistrer" style="-fx-background-color: #0a6d36; -fx-text-fill: white;"/>
+                <Button text="Annuler"
+                        onAction="#onBackButtonClick"
+                        prefWidth="150" style="-fx-background-color: #ea053e; -fx-text-fill: white;"
+                        alignment="CENTER"
+                />
+            </HBox>
+        </GridPane>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #e0e0e0;">
+            <children>
+                <Label text="© 2025 Sauvons les Arbres - Application. Tous droits réservés." />
+            </children>
+        </HBox>
+    </bottom>
+</BorderPane>

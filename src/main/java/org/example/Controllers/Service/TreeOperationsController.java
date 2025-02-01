@@ -1,56 +1,44 @@
 package org.example.Controllers.Service;
 
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableCell;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.example.java_project.Application;
 
+import java.io.File;
 import java.io.IOException;
-public class AppGestion {
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Map;
+
+public class TreeOperationsController {
+
     @FXML
-    public void Gestion(javafx.event.ActionEvent event){
+    public void initialize() {
+
+    }
+
+
+    @FXML
+    public void onTreeOperationsClick() {
         try {
-            // Chargement du fichier FXML de la nouvelle vue
-            FXMLLoader loader = new FXMLLoader(Application.class.getResource("AppGestion.fxml"));
+            FXMLLoader loader = new FXMLLoader(Application.class.getResource("treeForm.fxml"));
             Parent root = loader.load();
-            Image backgroundImage = new Image(String.valueOf(Application.class.getResource("images/img2.png")));
-            BackgroundImage bgImage = new BackgroundImage(
-                    backgroundImage,
-                    BackgroundRepeat.NO_REPEAT,
-                    BackgroundRepeat.NO_REPEAT,
-                    BackgroundPosition.CENTER,
-                    new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, false, true)
-            );
-            if (root instanceof Pane) {
-                ((Pane) root).setBackground(new Background(bgImage));
-            }
             Stage nouvelleFenetre = new Stage();
-            nouvelleFenetre.setTitle("Gestion Arbres");
+            nouvelleFenetre.setTitle("Gestion des Arbres");
             nouvelleFenetre.setScene(new Scene(root));
-
-            // Désactiver la croix de fermeture
-
-//            nouvelleFenetre.setOnCloseRequest(eventClose -> {
-//                eventClose.consume();
-//                Alert alert = new Alert(Alert.AlertType.ERROR);
-//                alert.setTitle("Ne pas utiliser ce bouton");
-//                alert.setHeaderText("Opération Impossible");
-//                alert.setContentText("Veuillez utiliser le bouton Quitter à la page d'Accueil ");
-//                alert.showAndWait();;
-//            });
-
-            Stage fenetrePrincipale = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
-            fenetrePrincipale.close();
-
-            // Affichage de la nouvelle fenêtre
-            nouvelleFenetre.setResizable(false);
             nouvelleFenetre.show();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -100,7 +88,7 @@ public class AppGestion {
     }
 
 
-            //Ouvre la fenêtre permettant de modifier ou supprimer des arbres.
+    //Ouvre la fenêtre permettant de modifier ou supprimer des arbres.
 
     public void modifSuppArbre(javafx.event.ActionEvent event){
         FenetreModifSuppArbre MSA = new FenetreModifSuppArbre();

@@ -37,15 +37,15 @@ public class Main extends Application {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("AppPrincipale.fxml"));
             Parent root = loader.load();
             // Désactiver la croix de fermeture
-            primaryStage.setOnCloseRequest(event -> {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Ne pas utiliser ce bouton");
-                alert.setHeaderText("Opération Impossible");
-                alert.setContentText("Veuillez utiliser le bouton Quitter ");
-                alert.showAndWait();
-                event.consume();
-
-            });
+//            primaryStage.setOnCloseRequest(event -> {
+//                Alert alert = new Alert(Alert.AlertType.ERROR);
+//                alert.setTitle("Ne pas utiliser ce bouton");
+//                alert.setHeaderText("Opération Impossible");
+//                alert.setContentText("Veuillez utiliser le bouton Quitter ");
+//                alert.showAndWait();
+//                event.consume();
+//
+//            });
             // File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_SERVICE, "liste_arbres.csv").toFile();
             // loadCSVData(String.valueOf(file));
 

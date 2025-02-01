@@ -53,15 +53,6 @@ public class AppPrincipale {
             Stage fenetrePrincipale = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
             fenetrePrincipale.close();
 
-            // Désactiver le comportement par défaut du bouton de fermeture (croix)
-            nouvelleFenetre.setOnCloseRequest(eventClose -> {
-                eventClose.consume();
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Ne pas utiliser ce bouton");
-                alert.setHeaderText("Opération Impossible");
-                alert.setContentText("Veuillez utiliser le bouton Quitter  ");
-                alert.showAndWait();;
-            });
             // Affichage de la nouvelle fenêtre
             nouvelleFenetre.setResizable(false);
             nouvelleFenetre.show();
@@ -73,15 +64,11 @@ public class AppPrincipale {
 
     @FXML
     public void gestionArbre(javafx.event.ActionEvent event){
-        AppGestion AG = new AppGestion();
-        AG.Gestion(event);
-    }
-
-    @FXML
-    public void listeArbres(javafx.event.ActionEvent event){
         AppListeArbres AL = new AppListeArbres();
         AL.afficheTableau(event);
     }
+
+
     public void Fermer(javafx.event.ActionEvent event) {
         // Ferme la fenêtre de l'application
         Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();

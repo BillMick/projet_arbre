@@ -9,36 +9,53 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="400.0" maxWidth="600.0" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.Controllers.Service.AppPrincipale">
-   <children>
-      <VBox prefHeight="407.0" prefWidth="602.0">
-         <children>
-            <MenuBar maxHeight="400.0" maxWidth="600.0" minWidth="600.0">
-              <menus>
-                <Menu mnemonicParsing="false" text="Notifications">
-                  <items>
-                      <MenuItem mnemonicParsing="false" text="Afficher Notifications" onAction="#ouvrirNotifications"/>
-                  </items>
-                </Menu>
-              </menus>
-            </MenuBar>
-            <HBox prefHeight="300.0" prefWidth="600.0">
-               <children>
-                  <Button fx:id="btnGestion" mnemonicParsing="false" onAction="#gestionArbre" prefHeight="40.0" prefWidth="160.0" text="Gestion des Arbres" textFill="#06ba6b" translateX="100.0" translateY="170.0">
-                     <font>
-                        <Font name="Arial Narrow" size="18.0" />
-                     </font></Button>
-                  <Button fx:id="btnlisteArbre" mnemonicParsing="false" onAction="#listeArbres" prefHeight="40.0" prefWidth="150.0" text="Liste des Arbres" textFill="#06ba6b" translateX="200.0" translateY="170.0">
-                     <font>
-                        <Font name="Arial Narrow" size="18.0" />
-                     </font></Button>
-               </children>
-            </HBox>
-            <Button fx:id="btnQuitter" alignment="CENTER" maxHeight="25.0" maxWidth="80.0" minHeight="25.0" minWidth="80.0" mnemonicParsing="false" onAction="#Fermer" text="Quitter" textFill="#06ba6b" translateX="500.0" translateY="25.0">
-               <font>
-                  <Font name="Arial Nova" size="12.0" />
-               </font></Button>
-         </children>
-      </VBox>
-   </children>
-</AnchorPane>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<BorderPane minHeight="400.0" minWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.Controllers.Service.AppPrincipale">
+    <top>
+        <HBox alignment="CENTER" style="-fx-padding: 15; -fx-border-radius: 10;">
+            <Label text="Bienvenu·e" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: black;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="20" style="-fx-padding: 20;" alignment="BASELINE_CENTER">
+
+            <Button fx:id="btnlisteArbre" onAction="#gestionArbre" text="Gestion des Arbres" textFill="#0a6d36" prefWidth="200">
+                <font>
+                    <Font name="Arial Narrow" size="18.0" />
+                </font>
+            </Button>
+
+            <Button fx:id="btnNotifications" text="Notifications" textFill="#0a6d36" prefWidth="200">
+                <font>
+                    <Font name="Arial Narrow" size="18.0" />
+                </font>
+            </Button>
+
+            <Button fx:id="btnGestion" text="Gestion des Votes" textFill="#0a6d36" prefWidth="200">
+                <font>
+                    <Font name="Arial Narrow" size="18.0" />
+                </font>
+            </Button>
+
+            <Separator fx:id="separator" style="-fx-background-color: #1e1c1b; -fx-border-width: 1px; -fx-pref-width: 70px" />
+            <Button text="Quitter"
+                    onAction="#Fermer"
+                    prefWidth="150" style="-fx-background-color: #d02a0b; -fx-text-fill: white;"
+                    alignment="CENTER"
+            />
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #e0e0e0;">
+            <children>
+                <Label text="© 2025 Sauvons les Arbres - Application. Tous droits réservés." />
+            </children>
+        </HBox>
+    </bottom>
+
+</BorderPane>
+
