@@ -90,7 +90,6 @@ public class NotificationsController {
                 boolean status = (Boolean) value;
                 return new ReadOnlyObjectWrapper<>(status ? "Lu" : "Non lu");
             }
-            // If the value is not a Boolean or null, return a default value
             return new ReadOnlyObjectWrapper<>("Non lu");
         });
 
@@ -107,13 +106,11 @@ public class NotificationsController {
     }
 
     private void loadNotifications() throws IOException {
-        File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_SERVICE,"notifications.json").toFile();
+        File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_SERVICE, "notifications.json").toFile();
         if (!file.exists()) {
             System.out.println("No notifications found.");
             return;
         }
-
-        // Lire le fichier JSON dans une liste de cartes
         List<Map<String, Object>> data = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
         notificationsData.setAll(data);
     }
@@ -139,7 +136,6 @@ public class NotificationsController {
                     selectedNotification.put("status", true);
                     notificationsTableView.refresh();
                     saveNotifications();
-                    updateNbLabels();
                 }
             }
         }
@@ -171,11 +167,8 @@ public class NotificationsController {
 
         ComboBox<String> treesComboBox = new ComboBox<>();
         treesComboBox.setPromptText("Choisir un arbre");
-        File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_SERVICE, "notifications.json").toFile();
-        if(!file.exists()) { objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, List.of()); }
-
         for (Arbre arbre : LectureCSV.arbresList) {
-            treesComboBox.getItems().add(arbre.getLibelleFr());
+            treesComboBox.getItems().add(arbre.getLibelleFr() + " | " + arbre.getLieuAdresse());
         }
 
         TextArea messageField = new TextArea();
@@ -202,26 +195,52 @@ public class NotificationsController {
                 String message = messageField.getText();
                 System.out.println("selectedType: " + selectedType + " selectedTree: " + selectedTree + " Message: " + message);
                 // Handle the request logic
-
+                Map<String, Object> notification = new HashMap<>();
+                notification.put("timestamps", new Date());
+                if(selectedTree != null) {
+                    notification.put("message", "Type: " + selectedType + "\nArbre existant concerné: " + selectedTree + "\nContenu: " + message);
+                }
+                else {
+                    notification.put("message", "Type: " + selectedType + "\nContenu: " + message);
+                }
+                notification.put("sender", "Service des Espaces verts");
+                notification.put("status", false);
+                File aFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_SERVICE, "abonnes.json").toFile();
+                if(!aFile.exists()) {
+                    try {
+                        objectMapper.writerWithDefaultPrettyPrinter().writeValue(aFile, List.of());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                try {
+                    List<Map<String, Object>> abonnes = objectMapper.readValue(aFile, new TypeReference<List<Map<String, Object>>>() {});
+                    if(abonnes.size() > 0) {
+                        for (Map<String, Object> ab : abonnes) {
+                            File abNotifFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, ab.get("email").toString(), "notifications.json").toFile();
+                            if (!abNotifFile.exists()) {
+                                objectMapper.writerWithDefaultPrettyPrinter().writeValue(abNotifFile, List.of());
+                            }
+                            List<Map<String, Object>> notifications = objectMapper.readValue(abNotifFile, new TypeReference<List<Map<String, Object>>>() {});
+                            notifications.add(notification);
+                            objectMapper.writerWithDefaultPrettyPrinter().writeValue(abNotifFile, notifications);
+                        }
+                    }
+                    notificationsData.add(notification);
+                    saveNotifications();
+//                    File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_SERVICE, "notifications.json").toFile();
+//                    if(!file.exists()) { objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, List.of()); }
+//                    List<Map<String, Object>> notificationsS = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
+//                    notificationsS.add(notification);
+//                    objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, notificationsS);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
             return null;
         });
 
         dialog.showAndWait();
-    }
-
-    @FXML
-    public void onVotesButtonClick() {
-        try {
-            FXMLLoader loader = new FXMLLoader(Application.class.getResource("serviceVotes.fxml"));
-            Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Interface de Visualisation des Votes");
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private void updateNbLabels() {
