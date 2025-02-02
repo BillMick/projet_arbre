@@ -18,12 +18,13 @@ Dans ce cas, l'algorithme mis en place considérera que l'année est lancée le 
   - Membre
 > Il peut créditer son solde à partir d'un solde prévu à cet effet. Le montant de sa cotisation est défalqué de son solde lorsqu'il décide de le payer et que son compte ne risque pas d'être à découvert.
   - Association
-> Au lancement de son année d'exercice budgétaire, on lui assigne certaines factures pour couvrir ses besoins en fonds de roulement notamment et une autre, fonction du nombre de ses membres.
+> Au lancement de son année d'exercice budgétaire, on lui assigne certaines factures pour couvrir ses besoins en fonds de roulement notamment et une autre, plus ou moins arbitraire.
 > Elle peut payer ses dettes à tout moment avec un compte pouvant être à découvert. Ses demandes de dons sont automatiquement créditées sur son compte.
 
 - **Service des espaces verts**
   - Ajout d'arbre
-> L'ajout d'un arbre entraîne la 
+> L'ajout d'un arbre entraîne l'ajout au fichier liste_arbres.csv et l'envoie d'une notification de plantation d'un nouvel arbre aux abonnés.
+
 # Contraintes de développement
 - Les dépendances sont présentes dans le pom.xml
 - Version de Java utilisée: 21
