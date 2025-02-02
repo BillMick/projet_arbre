@@ -38,7 +38,8 @@
             <columns>
                 <TableColumn fx:id="dateColumn" text="Date" prefWidth="150"/>
                 <TableColumn fx:id="timeColumn" text="Heure" prefWidth="100"/>
-                <TableColumn fx:id="statusColumn" text="Statut" prefWidth="100"/>
+                <TableColumn fx:id="senderColumn" text="Émetteur" prefWidth="150"/>
+                <TableColumn fx:id="statusColumn" text="Statut" prefWidth="70"/>
             </columns>
         </TableView>
     </center>

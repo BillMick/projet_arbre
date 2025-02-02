@@ -54,6 +54,9 @@ public class NotificationsController {
     private TableColumn<Map<String, Object>, String> timeColumn;
 
     @FXML
+    private TableColumn<Map<String, Object>, String> senderColumn;
+
+    @FXML
     private TableColumn<Map<String, Object>, String> statusColumn;
 
     @FXML
@@ -98,6 +101,11 @@ public class NotificationsController {
                 return new ReadOnlyObjectWrapper<>(dateFormat.format(timestamp));
             }
             return new ReadOnlyObjectWrapper<>("");
+        });
+
+        senderColumn.setCellValueFactory(cellData -> {
+            Object value = cellData.getValue().get("sender");
+            return value == null ? null : new ReadOnlyObjectWrapper<>(value.toString());
         });
 
         statusColumn.setCellValueFactory(cellData -> {
