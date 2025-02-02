@@ -124,8 +124,8 @@ public class FenetreModifSuppArbre {
         colStadeDev = new TableColumn<Arbre, String>("STADE DE DEVELOPPEMENT");
         colStadeDev.setCellValueFactory(new PropertyValueFactory<Arbre, String>("stadeDeveloppement"));
 
-        colRemarquable = new TableColumn<Arbre, String>("REMARQUABLE");
-        colRemarquable.setCellValueFactory(new PropertyValueFactory<Arbre, String>("remarquable"));
+        colRemarquable = new TableColumn<Arbre, String>("STATUT");
+        colRemarquable.setCellValueFactory(new PropertyValueFactory<Arbre, String>("statut"));
 
         colGeo2D = new TableColumn<Arbre, String>("GEO_2D");
         colGeo2D.setCellValueFactory(new PropertyValueFactory<Arbre, String>("geo2D"));

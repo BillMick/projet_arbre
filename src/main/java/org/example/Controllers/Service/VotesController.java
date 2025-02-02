@@ -191,6 +191,20 @@ public class VotesController {
         }
     }
 
+    @FXML
+    public void onNotificationsButtonClick(){
+        try {
+            FXMLLoader loader = new FXMLLoader(Application.class.getResource("serviceNotifications.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Interface de Gestion des Notifications");
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void Fermer(javafx.event.ActionEvent event) {
         Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
         stage.close();

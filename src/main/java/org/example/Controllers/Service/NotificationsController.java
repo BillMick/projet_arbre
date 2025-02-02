@@ -119,10 +119,21 @@ public class NotificationsController {
         if (event.getClickCount() == 2) {
             Map<String, Object> selectedNotification = notificationsTableView.getSelectionModel().getSelectedItem();
             if (selectedNotification != null) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                SimpleDateFormat hourFormat = new SimpleDateFormat("HH:mm");
                 String message = (String) selectedNotification.get("message");
-                String date = (String) selectedNotification.get("date");
-                String time = (String) selectedNotification.get("time");
+                String date = dateFormat.format(new Date((Long) selectedNotification.get("timestamps")));
+                String time = hourFormat.format(new Date((Long) selectedNotification.get("timestamps")));
                 Boolean status = (boolean) selectedNotification.get("status");
+
+                dateColumn.setCellValueFactory(cellData -> {
+                    Long timestampLong = (Long) cellData.getValue().get("timestamps");
+                    if (timestampLong != null) {
+                        Date timestamp = new Date(timestampLong);
+                        return new ReadOnlyObjectWrapper<>(dateFormat.format(timestamp));
+                    }
+                    return new ReadOnlyObjectWrapper<>("");
+                });
 
                 // Afficher le contenu de la notification dans une alerte
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -194,53 +205,57 @@ public class NotificationsController {
                 String selectedTree = treesComboBox.getValue();
                 String message = messageField.getText();
                 System.out.println("selectedType: " + selectedType + " selectedTree: " + selectedTree + " Message: " + message);
-                // Handle the request logic
-                Map<String, Object> notification = new HashMap<>();
-                notification.put("timestamps", new Date());
-                if(selectedTree != null) {
-                    notification.put("message", "Type: " + selectedType + "\nArbre existant concerné: " + selectedTree + "\nContenu: " + message);
-                }
-                else {
-                    notification.put("message", "Type: " + selectedType + "\nContenu: " + message);
-                }
-                notification.put("sender", "Service des Espaces verts");
-                notification.put("status", false);
-                File aFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_SERVICE, "abonnes.json").toFile();
-                if(!aFile.exists()) {
-                    try {
-                        objectMapper.writerWithDefaultPrettyPrinter().writeValue(aFile, List.of());
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                try {
-                    List<Map<String, Object>> abonnes = objectMapper.readValue(aFile, new TypeReference<List<Map<String, Object>>>() {});
-                    if(abonnes.size() > 0) {
-                        for (Map<String, Object> ab : abonnes) {
-                            File abNotifFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, ab.get("email").toString(), "notifications.json").toFile();
-                            if (!abNotifFile.exists()) {
-                                objectMapper.writerWithDefaultPrettyPrinter().writeValue(abNotifFile, List.of());
-                            }
-                            List<Map<String, Object>> notifications = objectMapper.readValue(abNotifFile, new TypeReference<List<Map<String, Object>>>() {});
-                            notifications.add(notification);
-                            objectMapper.writerWithDefaultPrettyPrinter().writeValue(abNotifFile, notifications);
-                        }
-                    }
-                    notificationsData.add(notification);
-                    saveNotifications();
-//                    File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_SERVICE, "notifications.json").toFile();
-//                    if(!file.exists()) { objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, List.of()); }
-//                    List<Map<String, Object>> notificationsS = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
-//                    notificationsS.add(notification);
-//                    objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, notificationsS);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+
+                handleNewNotification(selectedType, selectedTree, message);
             }
             return null;
         });
 
         dialog.showAndWait();
+    }
+
+    public void handleNewNotification(String selectedType, String selectedTree, String message) {
+        Map<String, Object> notification = new HashMap<>();
+        notification.put("timestamps", new Date());
+        if(selectedTree != null) {
+            notification.put("message", "Type: " + selectedType + "\nArbre existant concerné: " + selectedTree + "\nContenu: " + message);
+        }
+        else {
+            notification.put("message", "Type: " + selectedType + "\nContenu: " + message);
+        }
+        notification.put("sender", "Service des Espaces verts");
+        notification.put("status", false);
+        File aFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_SERVICE, "abonnes.json").toFile();
+        if(!aFile.exists()) {
+            try {
+                objectMapper.writerWithDefaultPrettyPrinter().writeValue(aFile, List.of());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        try {
+            List<Map<String, Object>> abonnes = objectMapper.readValue(aFile, new TypeReference<List<Map<String, Object>>>() {});
+            if(abonnes.size() > 0) {
+                for (Map<String, Object> ab : abonnes) {
+                    File abNotifFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, ab.get("email").toString(), "notifications.json").toFile();
+                    if (!abNotifFile.exists()) {
+                        objectMapper.writerWithDefaultPrettyPrinter().writeValue(abNotifFile, List.of());
+                    }
+                    List<Map<String, Object>> notifications = objectMapper.readValue(abNotifFile, new TypeReference<List<Map<String, Object>>>() {});
+                    notifications.add(notification);
+                    objectMapper.writerWithDefaultPrettyPrinter().writeValue(abNotifFile, notifications);
+                }
+            }
+            notificationsData.add(notification);
+            saveNotifications();
+//                    File file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_SERVICE, "notifications.json").toFile();
+//                    if(!file.exists()) { objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, List.of()); }
+//                    List<Map<String, Object>> notificationsS = objectMapper.readValue(file, new TypeReference<List<Map<String, Object>>>() {});
+//                    notificationsS.add(notification);
+//                    objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, notificationsS);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void updateNbLabels() {
@@ -268,6 +283,20 @@ public class NotificationsController {
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Interface de Gestion des Arbres");
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void onVotesButtonClick(){
+        try {
+            FXMLLoader loader = new FXMLLoader(Application.class.getResource("serviceVotes.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Interface de Gestion des Votes");
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();

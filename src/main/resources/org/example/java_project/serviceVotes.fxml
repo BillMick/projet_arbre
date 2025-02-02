@@ -15,7 +15,7 @@
             <Separator fx:id="separator" style="-fx-padding: 5; -fx-border-width: 1px;"/>
 
             <Button text="Gestion des arbres" fx:id="openGestionArbresInterfaceButton" prefWidth="150" onAction="#gestionArbre"/>
-            <Button text="Notifications" fx:id="openNotificationsInterfaceButton" prefWidth="150"/>
+            <Button text="Notifications" fx:id="openNotificationsInterfaceButton" prefWidth="150" onAction="#onNotificationsButtonClick"/>
 
 
             <Separator fx:id="separator2" style="-fx-padding: 5; -fx-border-width: 1px;"/>

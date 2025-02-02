@@ -215,9 +215,11 @@ public class NotificationsController {
         if (event.getClickCount() == 2) { // Vérifie si l'utilisateur double-clique
             Map<String, Object> selectedNotification = notificationsTableView.getSelectionModel().getSelectedItem();
             if (selectedNotification != null) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                SimpleDateFormat hourFormat = new SimpleDateFormat("HH:mm");
                 String message = (String) selectedNotification.get("message");
-                String date = (String) selectedNotification.get("date");
-                String time = (String) selectedNotification.get("time");
+                String date = dateFormat.format(new Date((Long) selectedNotification.get("timestamps")));
+                String time = hourFormat.format(new Date((Long) selectedNotification.get("timestamps")));
                 Boolean status = (boolean) selectedNotification.get("status");
 
                 // Afficher le contenu de la notification dans une alerte

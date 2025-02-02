@@ -1,5 +1,12 @@
 package org.example.Models;
+
 public class Arbre {
+    public enum StatutArbre {
+        REMARQUABLE,
+        NONREMARQUABLE,
+        ABATTU
+    }
+
     private String idBase;
     private String typeEmplacement;
     private String domanialite;
@@ -15,7 +22,7 @@ public class Arbre {
     private String circonference;
     private String hauteur;
     private String stadeDeveloppement;
-    private String remarquable;
+    private String statut;
     private String geo2D;
 
     // Constructeur
@@ -23,7 +30,7 @@ public class Arbre {
                  String complementAdresse, String numero, String lieuAdresse, String idEmplacement,
                  String libelleFr, String genre, String espece, String varieteOuCultivar,
                  String circonference, String hauteur, String stadeDeveloppement,
-                 String remarquable, String geo2D) {
+                 String statut, String geo2D) {
         this.idBase = idBase != null ? idBase : "";
         this.typeEmplacement = typeEmplacement != null ? typeEmplacement : "";
         this.domanialite = domanialite != null ? domanialite : "";
@@ -39,8 +46,8 @@ public class Arbre {
         this.circonference = circonference != null ? circonference : "";
         this.hauteur = hauteur != null ? hauteur : "";
         this.stadeDeveloppement = stadeDeveloppement != null ? stadeDeveloppement : "";
-        this.remarquable = remarquable != null ? remarquable : "";
         this.geo2D = geo2D != null ? geo2D : "";
+        this.statut = statut;
     }
 
     public Arbre(Arbre autreArbre) {
@@ -59,7 +66,7 @@ public class Arbre {
         this.circonference = autreArbre.circonference;
         this.hauteur = autreArbre.hauteur;
         this.stadeDeveloppement = autreArbre.stadeDeveloppement;
-        this.remarquable = autreArbre.remarquable;
+        this.statut = autreArbre.statut;
         this.geo2D = autreArbre.geo2D;
     }
 
@@ -109,9 +116,31 @@ public class Arbre {
     public String getStadeDeveloppement() { return stadeDeveloppement; }
     public void setStadeDeveloppement(String stadeDeveloppement) { this.stadeDeveloppement = stadeDeveloppement; }
 
-    public String getRemarquable() { return remarquable; }
-    public void setRemarquable(String remarquable) { this.remarquable = remarquable; }
+    public String getStatut() { return statut; }
+    public void setStatut(String statut) { this.statut = statut; }
 
     public String getGeo2D() { return geo2D; }
     public void setGeo2D(String geo2D) { this.geo2D = geo2D; }
+
+    @Override
+    public String toString() {
+        return "Arbre { typeEmplacement='" + typeEmplacement + '\'' +
+                ", domanialite='" + domanialite + '\'' +
+                ", arrondissement='" + arrondissement + '\'' +
+                ", complementAdresse='" + complementAdresse + '\'' +
+                ", numero='" + numero + '\'' +
+                ", lieuAdresse='" + lieuAdresse + '\'' +
+                ", idEmplacement='" + idEmplacement + '\'' +
+                ", libelleFr='" + libelleFr + '\'' +
+                ", genre='" + genre + '\'' +
+                ", espece='" + espece + '\'' +
+                ", varieteOuCultivar='" + varieteOuCultivar + '\'' +
+                ", circonference='" + circonference + '\'' +
+                ", hauteur='" + hauteur + '\'' +
+                ", stadeDeveloppement='" + stadeDeveloppement + '\'' +
+                ", statut=" + statut +
+                ", geo2D='" + geo2D + '\'' +
+                '}';
+    }
+
 }

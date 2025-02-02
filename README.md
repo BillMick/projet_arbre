@@ -22,7 +22,8 @@ Dans ce cas, l'algorithme mis en place considérera que l'année est lancée le 
 > Elle peut payer ses dettes à tout moment avec un compte pouvant être à découvert. Ses demandes de dons sont automatiquement créditées sur son compte.
 
 - **Service des espaces verts**
-
+  - Ajout d'arbre
+> L'ajout d'un arbre entraîne la 
 # Contraintes de développement
 - Les dépendances sont présentes dans le pom.xml
 - Version de Java utilisée: 21

@@ -192,7 +192,7 @@ public class FenetreModifierArbre {
         txtCirconference.setText(arbreAModifier.getCirconference());
         txtHauteur.setText(arbreAModifier.getHauteur());
         txtStadeDeveloppement.setText(arbreAModifier.getStadeDeveloppement());
-        txtRemarquable.setText(arbreAModifier.getRemarquable());
+        txtRemarquable.setText(arbreAModifier.getStatut());
         txtGeo.setText(arbreAModifier.getGeo2D());
     }
 

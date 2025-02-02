@@ -130,8 +130,8 @@ public class AppListeArbres {
         colStadeDev = new TableColumn<Arbre, String>("STADE DE DEVELOPPEMENT");
         colStadeDev.setCellValueFactory(new PropertyValueFactory<Arbre, String>("stadeDeveloppement"));
 
-        colRemarquable = new TableColumn<Arbre, String>("REMARQUABLE");
-        colRemarquable.setCellValueFactory(new PropertyValueFactory<Arbre, String>("remarquable"));
+        colRemarquable = new TableColumn<Arbre, String>("STATUT");
+        colRemarquable.setCellValueFactory(new PropertyValueFactory<Arbre, String>("statut"));
 
         colGeo2D = new TableColumn<Arbre, String>("GEO_2D");
         colGeo2D.setCellValueFactory(new PropertyValueFactory<Arbre, String>("geo2D"));
@@ -156,8 +156,8 @@ public class AppListeArbres {
             initialize();
 
             // Fermeture de la fenêtre principale
-            Stage fenetrePrincipale = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
-            fenetrePrincipale.close();
+//            Stage fenetrePrincipale = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+//            fenetrePrincipale.close();
             nouvelleFenetre.show();
 
         } catch (IOException e) {
