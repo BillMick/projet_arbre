@@ -20,6 +20,7 @@ Dans ce cas, l'algorithme mis en place considérera que l'année est lancée le 
   - Association
 > Au lancement de son année d'exercice budgétaire, on lui assigne certaines factures pour couvrir ses besoins en fonds de roulement notamment et une autre, plus ou moins arbitraire.
 > Elle peut payer ses dettes à tout moment avec un compte pouvant être à découvert. Ses demandes de dons sont automatiquement créditées sur son compte.
+> Par ailleurs, l'acceptation d'une activité proposée, par un membre entraine une dette de nature DEFRAIEMENT qui a pour valeur celle mentionnée dans les attributs de l'activité.
 
 - **Service des espaces verts**
   - Ajout d'arbre
@@ -43,6 +44,11 @@ Dans ce cas, l'algorithme mis en place considérera que l'année est lancée le 
 > A ce niveau, créer un compte puisqu'il n'y a pas d'association prédéfinie.
 > Ajouter des membres, définissez un président, etc.
 > Il est possible qu'il y ait des messages d'erreurs signalant l'inexistence de certains fichiers. Cela ne devrait pas empêcher la continuation des tests.
+
+PS:
+> Les interfaces qui rechargent la liste originale des arbres (gestion des arbres et notifications dans l'application Services des Espaces verts, notamment), prennent un peu de temps à charger (quelques 5 longues secondes)
+> Dans les applications des Associations et Membres, nous n'affichons pas la liste réelle des arbres. Celle affichée est juste symbolique.
+> 
 
 **Problèmes rencontrés**
 > Utilisation de JavaFX et Maven

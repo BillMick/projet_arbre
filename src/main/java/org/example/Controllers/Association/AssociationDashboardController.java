@@ -290,7 +290,7 @@ public class AssociationDashboardController {
             alert.showAndWait();
             return;
         }
-        Map<String, Object> infos = objectMapper.readValue(file, new TypeReference<Map<String, Object>>() {});
+        Map<String, Object> infos = objectMapper.readValue(infoFile, new TypeReference<Map<String, Object>>() {});
 
         // Dettes
         file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "debts.json").toFile();
@@ -318,7 +318,7 @@ public class AssociationDashboardController {
         File voteFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "votes", "votes.json").toFile();
         List<Map<String, Object>> votes = objectMapper.readValue(voteFile, new TypeReference<List<Map<String, Object>>>() {});
         // // Envoi du scrutin final au Service des espaces verts
-        File serviceFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_SERVICE, "votes", this.infos.get("email").toString()).toFile();
+        File serviceFile = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_SERVICE, "votes", this.infos.get("email").toString() + ".json").toFile();
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(serviceFile, votes);
 
         file = Paths.get(REPERTOIRE_DE_BASE, REPERTOIRE_ASSOC, REPERTOIRE_PROPRIETAIRE, REPERTOIRE_COURANT, "periode.json").toFile();
@@ -353,9 +353,9 @@ public class AssociationDashboardController {
         rapport.put("activites", activities);
         rapport.put("cotisations", cotisations);
         rapport.put("SommeCotisations", sommeC);
-        rapport.put("dons", sommeD);
-        rapport.put("SommeDons", debts);
-        rapport.put("recetteTotale", dons);
+        rapport.put("Dons", dons);
+        rapport.put("SommeDons", sommeD);
+        rapport.put("recetteTotale", sommeD + sommeC);
         rapport.put("dettes", debts);
         rapport.put("SommeDettes", sommeDe);
         rapport.put("soldeFinal", infos.get("solde"));

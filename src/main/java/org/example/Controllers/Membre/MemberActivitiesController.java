@@ -237,8 +237,9 @@ public class MemberActivitiesController {
                     dette1.put("type", Dette.TypeDette.DEFRAIEMENT);
                     dette1.put("crediteur", infos.get("nom") + " " + infos.get("prenom"));
                     dette1.put("montant", selectedVisit.getCout());
-                    objectMapper.writerWithDefaultPrettyPrinter().writeValue(dir, List.of(dette1));
-
+                    List<Map<String, Object>> dettes = objectMapper.readValue(dir, new TypeReference<List<Map<String, Object>>>() {});
+                    dettes.add(dette1);
+                    objectMapper.writerWithDefaultPrettyPrinter().writeValue(dir, dettes);
                     break;
                 }
             }

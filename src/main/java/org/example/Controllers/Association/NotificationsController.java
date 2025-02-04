@@ -134,6 +134,7 @@ public class NotificationsController {
 
     private void subscription() {
         if ((Boolean) this.infos.get("souscription")){
+            System.out.println(this.infos.get("souscription") + "bla");
             subscribeButton.setText("Se désinscrire");
             subscribeButton.setStyle("-fx-background-color: #ea053e; -fx-text-fill: white;");
             return;
@@ -165,10 +166,6 @@ public class NotificationsController {
                 boolean a1 = ab.get("nom").equals(this.infos.get("nom"));
                 boolean a2 = ab.get("email").equals(this.infos.get("email"));
                 boolean a = a1 && a2;
-                System.out.println("Notiiiiiiiiification");
-                System.out.println(a1);
-                System.out.println(a2);
-                System.out.println(a);
                 return a;
             });
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, abonnes);
