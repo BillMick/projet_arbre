@@ -140,7 +140,7 @@ public class TreeFormController {
 
     public static void saveArbresListToCSV(Arbre arbre, String filePath) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            writer.write(String.valueOf(LectureCSV.arbresList.get(-1))); ///
+            writer.write("IDBASE;TYPE EMPLACEMENT;DOMANIALITE;ARRONDISSEMENT;COMPLEMENT ADRESSE;NUMERO;LIEU / ADRESSE;IDEMPLACEMENT;LIBELLE FRANCAIS;GENRE;ESPECE;VARIETE OUCULTIVAR;CIRCONFERENCE (cm);HAUTEUR (m);STADE DE DEVELOPPEMENT;REMARQUABLE;geo_point_2d"); ///
             writer.newLine();
             for (int i=0; i < LectureCSV.arbresList.size(); i++) {
                 writer.write(arbreToCSVLine(LectureCSV.arbresList.get(i)));

@@ -18,7 +18,7 @@
             <Label fx:id="nbAbonnesLabel" style="-fx-font-size: 13;"/>
             <Separator fx:id="separator" style="-fx-padding: 5; -fx-border-width: 1px;"/>
 
-            <Button text="Faire une demande"
+            <Button text="Envoyer une notification"
                     onAction="#onSendButtonClick"
                     style="-fx-background-color: #4CAF50; -fx-text-fill: white;"
                     alignment="CENTER"

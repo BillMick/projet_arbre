@@ -64,21 +64,33 @@ public class NotificationsController {
     @FXML
     public void initialize() {
         dateColumn.setCellValueFactory(cellData -> {
-            Long timestampLong = (Long) cellData.getValue().get("timestamps");
-            if (timestampLong != null) {
-                Date timestamp = new Date(timestampLong);
+            if(cellData.getValue().get("timestamps") instanceof Date) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-                return new ReadOnlyObjectWrapper<>(dateFormat.format(timestamp));
+                return new ReadOnlyObjectWrapper<>(dateFormat.format(cellData.getValue().get("timestamps")));
+            }
+            else {
+                Long timestampLong = (Long) cellData.getValue().get("timestamps");
+                if (timestampLong != null) {
+                    Date timestamp = new Date(timestampLong);
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                    return new ReadOnlyObjectWrapper<>(dateFormat.format(timestamp));
+                }
             }
             return new ReadOnlyObjectWrapper<>("");
         });
 
         timeColumn.setCellValueFactory(cellData -> {
-            Long timestampLong = (Long) cellData.getValue().get("timestamps");
-            if (timestampLong != null) {
-                Date timestamp = new Date(timestampLong);
+            if(cellData.getValue().get("timestamps") instanceof Date) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
-                return new ReadOnlyObjectWrapper<>(dateFormat.format(timestamp));
+                return new ReadOnlyObjectWrapper<>(dateFormat.format(cellData.getValue().get("timestamps")));
+            }
+            else {
+                Long timestampLong = (Long) cellData.getValue().get("timestamps");
+                if (timestampLong != null) {
+                    Date timestamp = new Date(timestampLong);
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+                    return new ReadOnlyObjectWrapper<>(dateFormat.format(timestamp));
+                }
             }
             return new ReadOnlyObjectWrapper<>("");
         });
@@ -122,18 +134,25 @@ public class NotificationsController {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
                 SimpleDateFormat hourFormat = new SimpleDateFormat("HH:mm");
                 String message = (String) selectedNotification.get("message");
-                String date = dateFormat.format(new Date((Long) selectedNotification.get("timestamps")));
-                String time = hourFormat.format(new Date((Long) selectedNotification.get("timestamps")));
-                Boolean status = (boolean) selectedNotification.get("status");
 
-                dateColumn.setCellValueFactory(cellData -> {
-                    Long timestampLong = (Long) cellData.getValue().get("timestamps");
-                    if (timestampLong != null) {
-                        Date timestamp = new Date(timestampLong);
-                        return new ReadOnlyObjectWrapper<>(dateFormat.format(timestamp));
-                    }
-                    return new ReadOnlyObjectWrapper<>("");
-                });
+                String date = "";
+                if(selectedNotification.get("timestamps") instanceof Date) {
+                    date = dateFormat.format(selectedNotification.get("timestamps"));
+                }
+                else {
+                    date = dateFormat.format(new Date((Long) selectedNotification.get("timestamps")));
+                }
+
+                String time;
+                if(selectedNotification.get("timestamps") instanceof Date) {
+                    time = hourFormat.format(selectedNotification.get("timestamps"));
+                }
+                else {
+                    time = hourFormat.format(new Date((Long) selectedNotification.get("timestamps")));
+                }
+
+                // String time = hourFormat.format(new Date((Long) selectedNotification.get("timestamps")));
+                Boolean status = (boolean) selectedNotification.get("status");
 
                 // Afficher le contenu de la notification dans une alerte
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
